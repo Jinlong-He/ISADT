@@ -13,17 +13,17 @@
 namespace isadt {
   /// \breif the attribute term in the action
   class AttributeTerm : public Term {
-  private:
-    Attribute* attribute;       //< attribute of the term
   public:
     AttributeTerm();
-    AttributeTerm(Attribute* _attribute);
+    AttributeTerm(Attribute* attribute);
     AttributeTerm(const string& toParse);
 
     bool isAMethodCall();
     bool isAVariableSetting();
     bool containAMethodCall();
     string to_stirng() const;
+  private:
+    Attribute* attribute_;       //< attribute of the term
   };
 }
 

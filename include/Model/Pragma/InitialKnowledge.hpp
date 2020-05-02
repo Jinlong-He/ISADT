@@ -13,10 +13,10 @@ namespace isadt {
     class InitialKnowledge {
     public:
         InitialKnowledge();
-        InitialKnowledge(Process* _process, Attribute* attribute);
+        InitialKnowledge(Process* process, Attribute* attribute);
     private:
-        Process* process;
-        Attribute* attribute;
+        Process* process_;
+        Attribute* attribute_;
     };
 }
 

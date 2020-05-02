@@ -11,7 +11,7 @@
 #include "SdVertex.hpp"
 using std::list;
 
-namespace esc {
+namespace isadt {
     class Model;
 
     /// \brief SequenceDiagram class

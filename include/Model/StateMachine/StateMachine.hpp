@@ -17,10 +17,10 @@ namespace isadt {
     /// \brief StateMachine class
 	class StateMachine {
 	private:
-    	std::list<Vertex*> vertexes;    //< the set of the states of this fsm.
-    	std::list<Edge*> edges;         //< the set of the transitions of this fsm.
-    	Vertex* startVertex;            //< record the start state of this fsm.
-    	Process* process;               //< the StateMachine belongs to the process.
+    	std::list<Vertex*> vertexes_;    //< the set of the states of this fsm.
+    	std::list<Edge*> edges_;         //< the set of the transitions of this fsm.
+    	Vertex* startVertex_;            //< record the start state of this fsm.
+    	Process* process_;               //< the StateMachine belongs to the process.
 	};
 }
 #endif /* Model_StateMachine_hpp */

@@ -18,24 +18,24 @@ namespace isadt {
     class Process {
     public:
         Process();
-        Process(Model* _model);
+        Process(Model* model);
         ~Process() {
             //delete attributes, methods, signals and fst.
         }
 
         Model* getModel() const;
-        void setModel(Model* _model);
+        void setModel(Model* model);
 
         Attribute* mkAttribute(Type* type, const string& name);
-        Method* mkMethod(const string& _name, Type* _returnType, list<Attribute*> _parameters);
-        CommMethod* mkCommMethod(const string& _name, bool _inout, Attribute* _parameter);
+        Method* mkMethod(const string& name, Type* returnType, list<Attribute*> parameters);
+        CommMethod* mkCommMethod(const string& name, bool inout, Attribute* parameter);
         StateMachine* mkFst();
     private:
-        list<Attribute*> attributes;        ///< the attributes for this process.
-        list<Method*> methods;              ///< the methods for this process.
-        list<CommMethod*> commMethods;      ///< the communication methods for this process.
-        list<StateMachine*> statemachines;  ///< the finite state machines for this process.
-        Model* model;                       ///< the model this process from.
+        list<Attribute*> attributes_;        ///< the attributes for this process.
+        list<Method*> methods_;              ///< the methods for this process.
+        list<CommMethod*> commMethods_;      ///< the communication methods for this process.
+        list<StateMachine*> statemachines_;  ///< the finite state machines for this process.
+        Model* model_;                       ///< the model this process from.
     };
 }
 

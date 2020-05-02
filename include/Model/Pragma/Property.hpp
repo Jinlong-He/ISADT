@@ -17,24 +17,24 @@ namespace isadt {
 
     class ConfidentialProperty : public Property {
         ConfidentialProperty();
-        ConfidentialProperty(Process* _process, Attribute* _attribute);
+        ConfidentialProperty(Process* process, Attribute* attribute);
     private:
-        Process* process;
-        Attribute* attribute;
+        Process* process_;
+        Attribute* attribute_;
     };
 
     class AuthenticityProperty : public Property {
         AuthenticityProperty();
-        AuthenticityProperty(Process* _process1, Vertex* _vertex1, Attribute* _attribute1,
-                             Process* _process2, Vertex* _vertex2, Attribute* _attribute2);
+        AuthenticityProperty(Process* process1, Vertex* vertex1, Attribute* attribute1,
+                             Process* process2, Vertex* vertex2, Attribute* attribute2);
     private:
         struct Value {
             Process* process;
             Vertex* vertex;
             Attribute* attribute;
         };
-        Value* value1;
-        Value* value2;
+        Value* value1_;
+        Value* value2_;
     };
 }
 

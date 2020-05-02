@@ -1,22 +1,22 @@
 #include "Model/Process/Attribute.hpp"
 namespace isadt {
     Type* Attribute::getType() const {
-        return type;
+        return type_;
     }
 
-    void Attribute::setType(Type* _type) {
-        type = _type;
+    void Attribute::setType(Type* type) {
+        type_ = type;
     }
 
     const string& Attribute::getIdentifier() const {
-        return identifier;
+        return identifier_;
     }
 
-    void Attribute::setIdentifier(const string& _identifier) {
-        identifier = _identifier;
+    void Attribute::setIdentifier(const string& identifier) {
+        identifier_ = identifier;
     }
 
     const string Attribute::toString() const {
-        return type -> getName() + " " + identifier;
+        return type_ -> getName() + " " + identifier_;
     }
 }

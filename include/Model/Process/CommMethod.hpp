@@ -13,9 +13,17 @@ namespace isadt {
     /// \brief the signal of process.
     class CommMethod {
         CommMethod();
-        CommMethod(const string& _name, bool _inout, Attribute* _parameter);
+        CommMethod(const string& name, 
+                   bool inout, 
+                   Attribute* parameter, 
+                   const string& commId)
+            : name_(name),
+              inout_(inout),
+              parameter_(parameter),
+              commId_(commId) {}
+
         ~CommMethod() {
-            delete parameter;
+            delete parameter_;
         }
 
         const string& getName() const;
@@ -28,9 +36,10 @@ namespace isadt {
         void setParameters(Attribute* _parameter);
 
     private:
-        string name;                //< the signal name.
-        bool inout;                 //< the in_out value.
-        Attribute* parameter;       //< the parameter to send/receive.
+        string name_;                //< the signal name.
+        bool inout_;                 //< the in_out value.
+        Attribute* parameter_;       //< the parameter to send/receive.
+        const string& commId_;       //< the communication identifier.
     };
 }
 

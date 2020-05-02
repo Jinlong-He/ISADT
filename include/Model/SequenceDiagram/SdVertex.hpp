@@ -8,10 +8,10 @@
 #ifndef Model_SdVertex_hpp
 #define Model_SdVertex_hpp
 #include <string>
-#include "../FiniteStateMachine/Term.hpp"
+#include "../StateMachine/Term/Term.hpp"
 using std::string;
 
-namespace esc{
+namespace isadt {
     class SdEdge;
     class Process;
 

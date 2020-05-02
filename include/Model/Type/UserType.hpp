@@ -19,17 +19,21 @@ namespace isadt {
     public:
         UserType();
 
-        UserType(const string& _name, list<Attribute*> _parameters) :
-            name(_name),
-            parameters(_parameters) {}
+        UserType(const string& name, 
+                 const list<Attribute*>& parameters, 
+                 UserType* base = nullptr) :
+            name_(name),
+            parameters_(parameters),
+            base_(base) {}
 
         const list<Attribute*>& getParameters() const;
         void setParameters(const list<Attribute*>& _parameters);
         void addParameter(Attribute* attr);
 
     private:
-        string name;                     //< the name of this type.
-        list<Attribute*> parameters;     //< the parameter list of this type.
+        string name_;                     //< the name of this type.
+        list<Attribute*> parameters_;     //< the parameter list of this type.
+        UserType* base_;                  //< the base type of this type.
     };
 }
 

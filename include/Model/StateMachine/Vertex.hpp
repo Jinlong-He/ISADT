@@ -18,28 +18,23 @@ namespace isadt {
 	/// \brief State in FSM.
 	class Vertex {
 	private:
-		string name; //< State Name
-		list<Edge*> nexts;
+		string name_;           //< the name of this state. 
+		list<Edge*> nexts_;     //< the next states of this state.
 	public:
-		/// constructor
 		Vertex();
 
-		Vertex(string _name) : name(_name) {}
+		Vertex(string name) : name_(name) {}
 
-		Vertex(string _name, list<Edge*> _nexts) : name(_name), nexts(_nexts) {}
+		Vertex(string name, const list<Edge*>& nexts) 
+            : name_(name), 
+              nexts_(nexts) {}
 
-		/// \brief set the State name
-		/// \param string newName : new state name
-		void setName(string _Name)
-		{
-			this -> name = _Name;
+		void setName(string name) {
+			name_ = name;
 		}
 
-		/// \brief get the state name
-		/// \return the state name
-		string getName()
-		{
-			return name;
+		const string& getName() {
+			return name_;
 		}
 	};
 }

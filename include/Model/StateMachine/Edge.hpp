@@ -14,41 +14,41 @@
 using std::list;
 
 namespace isadt {
-	/// \brief transition in the FSM
+	/// \brief transition in the StateMachine 
 	class Edge {
-	private:
-    	Vertex* from; //< from Vertex
-    	Vertex* to; //< to Vertex
-    	Guard* guard; //< transtion guard
-    	list<Action*> actions; //< actions on the transition
-
     public:
     	/// \brief Edge constructor 
-    	Edge(Vertex* _from, Vertex* _to, Guard* _guard, list<Action*> _actions);
+    	Edge(Vertex* from, 
+             Vertex* to, 
+             Guard* guard, 
+             const list<Action*>& actions)
+            : from_(from),
+              to_(to),
+              guard_(guard),
+              actions_(actions) {}
 
-    	Guard* getGuard()
-    	{
-    		return guard;
+    	Guard* getGuard() {
+    		return guard_;
     	}
+    	void setGuard(Guard* guard);
+    	void setGuard(string guard);
 
-    	Vertex* getFromVertex();
+    	Vertex* getFromVertex() {
+            return from_;
+        }
+    	void SetFromVertex(Vertex* from);
 
-    	void SetFromVertex(Vertex* _from);
+    	Vertex* getToVertex() {
+            return to_;
+        }
+    	void SetToVertex(Vertex* to);
 
-    	Vertex* getToVertex();
-
-    	void SetToVertex(Vertex* _to);
-
-    	void setGuard(Guard* _guard);
-
-    	void setGuard(string _guard);
-
-    	list<Action*> getActions();
-
-    	Action getActionByIndex(int index);
+    	const list<Action*>& getActions() {
+            return actions_;
+        }
+    	Action* getActionByIndex(int index);
 
     	void addAction(string _action);
-
     	void addAction(Action* _action);
 
     	bool hasNonDeterministicGuard();
@@ -60,6 +60,11 @@ namespace isadt {
     	void removeAllActions();
 
     	void removeFirstAction();
+	private:
+    	Vertex* from_;               //< from Vertex
+    	Vertex* to_;                 //< to Vertex
+    	Guard* guard_;               //< transtion guard
+    	list<Action*> actions_;      //< actions on the transition
 	};
 }
 

@@ -13,24 +13,23 @@ using std::string;
 namespace isadt {
   /// \brief Expression in the Guard condition.
   class Expression {
-  private:
-    Expression* expressionA;
-    Expression* expressionB;
-    bool isSingleExpression;
-    string binaryOp;
-
-    string xml_value;
-
   public:
     Expression();
-    Expression(string _value);
+    Expression(string value);
 
-    Expression(Expression* _expressionA);
-    Expression(Expression* _expressionA, Expression* _expressionB, string _binaryOp);
+    Expression(Expression* expressionA);
+    Expression(Expression* expressionA, Expression* expressionB, string binaryOp);
     Expression* getExpressionA();
     Expression* getExpressionB();
     string getBinaryOp();
     bool isSingledExpression();
+  private:
+    Expression* expressionA_;
+    Expression* expressionB_;
+    bool isSingleExpression_;
+    string binaryOp_;
+    string xml_;
+
   };
 }
 

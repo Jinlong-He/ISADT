@@ -14,9 +14,9 @@ namespace isadt {
     /// \brief the data type.
     class Type {
     public:
-        Type() : name("") {}
+        Type() : name_("") {}
 
-        Type(const string& _name) : name(_name) {}
+        Type(const string& name) : name_(name) {}
 
         /// \brief Gets the name of type.
         /// \return the const reference of string.
@@ -24,10 +24,10 @@ namespace isadt {
 
         /// \brief Sets the name of type.
         /// \param _name.
-        void setName(const string& _name);
+        void setName(const string& name);
 
     private:
-        string name;
+        string name_;
     };
 
     /// \brief the bool data type.
@@ -35,7 +35,7 @@ namespace isadt {
     public:
         BoolType() : Type("Bool") {}
 
-        BoolType(const string& _name) : Type(_name) {}
+        BoolType(const string& name) : Type(name) {}
     };
 
     /// \brief the int data type.
@@ -43,7 +43,7 @@ namespace isadt {
     public:
         IntType() : Type("Int") {}
 
-        IntType(const string& _name) : Type(_name) {}
+        IntType(const string& name) : Type(name) {}
     };
 }
 

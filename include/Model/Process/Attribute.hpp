@@ -14,23 +14,23 @@ namespace isadt {
     class Attribute {
     public:
         Attribute()
-            : type(nullptr) {}
+            : type_(nullptr) {}
 
-        Attribute(Type* _type, const string& _identifier) 
-            : type(_type),
-              identifier(_identifier) {}
+        Attribute(Type* type, const string& identifier) 
+            : type_(type),
+              identifier_(identifier) {}
 
         ~Attribute() {}
 
         Type* getType() const;
-        void setType(Type* _type);
+        void setType(Type* type);
         const string& getIdentifier() const;
-        void setIdentifier(const string& _identifier);
+        void setIdentifier(const string& identifier);
         const string toString() const;
 
     private:
-        Type* type;
-        string identifier;
+        Type* type_;
+        string identifier_;
     };
 }
 

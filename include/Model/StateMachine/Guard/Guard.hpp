@@ -14,16 +14,16 @@ using std::string;
 namespace isadt {
 	/// \brief Guard condition on the transition.
 	class Guard {
-    private:
-        Expression* expression;
       public:
         Guard();
         Guard(const string& toParse);
-        Guard(Expression* _expression);
+        Guard(Expression* expression);
 
         Expression* getGuardExpression();
-        void setGuardExpression(Expression* _expression);
+        void setGuardExpression(Expression* expression);
         string to_stirng() const;
+    private:
+        Expression* expression_;
 	};
 }
 

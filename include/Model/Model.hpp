@@ -7,6 +7,7 @@
 
 #ifndef Model_Model_hpp
 #define Model_Model_hpp 
+#include "Type/UserType.hpp"
 #include "Process/Process.hpp"
 #include "Pragma/Property.hpp"
 #include "Pragma/InitialKnowledge.hpp"
@@ -24,19 +25,20 @@ namespace isadt {
         Process* mkProcess();
 
         ConfidentialProperty*
-        mkConfidentialProperty(Process* _process, Attribute* _attribute);
+        mkConfidentialProperty(Process* process, Attribute* attribute);
 
         AuthenticityProperty* 
-        mkAuthenticityProperty(Process* _process1, Vertex* _vertex1, Attribute* _attribute1,
-                               Process* _process2, Vertex* _vertex2, Attribute* _attribute2);
+        mkAuthenticityProperty(Process* process1, Vertex* vertex1, Attribute* attribute1,
+                               Process* process2, Vertex* vertex2, Attribute* attribute2);
 
         InitialKnowledge* 
-        mkInitialKnowledge(Process* _process, Attribute* attribute);
+        mkInitialKnowledge(Process* process, Attribute* attribute);
     private:
-        list<Process*> processes;
-        list<Property*> properties;
-        list<InitialKnowledge*> initialKnowledges;
-        SequenceDiagram* sd;
+        list<Process*> processes_;
+        list<Property*> properties_;
+        list<InitialKnowledge*> initialKnowledges_;
+        list<UserType*> userTypes_;
+        SequenceDiagram* sd_;
     };
 }
 
