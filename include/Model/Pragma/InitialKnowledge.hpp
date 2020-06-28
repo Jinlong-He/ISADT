@@ -14,9 +14,11 @@ namespace isadt {
     public:
         InitialKnowledge();
         InitialKnowledge(Process* process, Attribute* attribute);
+        bool isKeyPair();
     private:
         Process* process_;
         Attribute* attribute_;
+        InitialKnowledge* pkKnowledge_;
     };
 }
 

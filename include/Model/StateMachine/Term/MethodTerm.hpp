@@ -8,7 +8,7 @@
 #ifndef Model_MethodTerm_hpp
 #define Model_MethodTerm_hpp
 #include "Term.hpp"
-#include "../../Process/Method.hpp"
+#include "../../Process/MethodBase.hpp"
 
 namespace isadt {
   /// \breif the method term in the action
@@ -29,7 +29,7 @@ namespace isadt {
     string to_stirng() const;
   private:
     list<Term*> args_;  //< the args in the method term
-    Method* method_;    //< the method in the method term
+    MethodBase* method_;    //< the method in the method term
   };
 }
 

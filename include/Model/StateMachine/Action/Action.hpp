@@ -16,8 +16,7 @@ namespace isadt {
 		Action();
         Action(const string& toParse);
 
-        virtual string to_stirng() const;
+        virtual string to_string() const;
 	};
 }
-
 #endif /* Model_Action_hpp */

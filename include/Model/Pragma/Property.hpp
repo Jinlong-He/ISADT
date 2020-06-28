@@ -12,10 +12,19 @@
 namespace isadt {
     class Property {
         Property();
+        private:
+    };
+    class SecurityProperty : Property {
+        SecurityProperty();
     private:
     };
 
-    class ConfidentialProperty : public Property {
+    class SafetyProperty : Property{
+        SafetyProperty();
+    private:
+    };
+
+    class ConfidentialProperty : public SecurityProperty {
         ConfidentialProperty();
         ConfidentialProperty(Process* process, Attribute* attribute);
     private:
@@ -23,9 +32,24 @@ namespace isadt {
         Attribute* attribute_;
     };
 
-    class AuthenticityProperty : public Property {
+    class AuthenticityProperty : public SecurityProperty {
         AuthenticityProperty();
         AuthenticityProperty(Process* process1, Vertex* vertex1, Attribute* attribute1,
+                             Process* process2, Vertex* vertex2, Attribute* attribute2);
+    private:
+        struct Value {
+            Process* process;
+            Vertex* vertex;
+            Attribute* attribute;
+            Attribute* inner;
+        };
+        Value* value1_;
+        Value* value2_;
+    };
+
+    class IntegratyProperty : public SecurityProperty {
+        IntegratyProperty();
+        IntegratyProperty(Process* process1, Vertex* vertex1, Attribute* attribute1,
                              Process* process2, Vertex* vertex2, Attribute* attribute2);
     private:
         struct Value {
@@ -35,6 +59,18 @@ namespace isadt {
         };
         Value* value1_;
         Value* value2_;
+    };
+    
+    class CTLProperty : public SafetyProperty{
+        CTLProperty();
+        private:
+            string CTLString;
+    };
+
+    class InvariantProperty : public SafetyProperty{
+        InvariantProperty();
+        private:
+            string InvariantString;
     };
 }
 

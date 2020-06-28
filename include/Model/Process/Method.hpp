@@ -9,39 +9,19 @@
 #define Model_Method_hpp 
 #include <list>
 #include "Attribute.hpp"
+#include "MethodBase.hpp"
 using std::list;
 
 namespace isadt {
     /// \brief the method of process.
-    class Method {
-        Method()
-            : returnType_(nullptr) {}
+    class Method : public MethodBase{
+    public:
+        Method();
 
-        Method(const string& name, 
-               Type* returnType, 
-               const list<Attribute*>& parameters,
-               const string& algorithmId,
-               const string& userCode)
-            : name_(name),
-              returnType_(returnType),
-              parameters_(parameters),
-              algorithmId_(algorithmId),
-              userCode_(userCode) {}
+        Method(const string& algorithmId,
+               const string& userCode);
 
-        ~Method() {
-            for (auto p : parameters_) {
-                delete p;
-            }
-        }
-
-        const string& getName() const;
-        void setName(const string& name) ;
-
-        Type* getReturnType() const ;
-        void setReturnType(Type* returnType);
-
-        const list<Attribute*>& getParamters() const;
-        void setParameters(const list<Attribute*>& parameters);
+        ~Method();
 
         const string& getAlgorithmId() const;
         void setAlgorithmId(const string& algorithmId);
@@ -49,11 +29,10 @@ namespace isadt {
         const string& getUserCode() const;
         void setUserCode(const string& userCode);
 
+
+        const string& getName();
     private:
-        string name_;                    //< the method name.
-        Type* returnType_;               //< the return data type.
-        list<Attribute*> parameters_;    //< the parameters.
-        string algorithmId_;             //< the algorithm identifier.
+        string algorithmId_;             //< the algorithm identifier. encryption and decryption: not null ==> .
         string userCode_;                //< the user insertion code.
     };
 }

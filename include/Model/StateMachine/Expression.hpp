@@ -8,6 +8,7 @@
 #ifndef Model_Expression_hpp
 #define Model_Expression_hpp
 #include <string>
+#include "Term/Term.hpp"
 using std::string;
 
 namespace isadt {
@@ -30,6 +31,15 @@ namespace isadt {
     string binaryOp_;
     string xml_;
 
+  };
+
+  class atomicExpression : public Expression {
+    private:
+      Term* termA_;
+      Term* termB_;
+      bool isSingleTerm_;
+      string binaryOp_;
+      string xml_;
   };
 }
 

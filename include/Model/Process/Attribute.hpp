@@ -8,7 +8,6 @@
 #ifndef Model_Attribute_hpp
 #define Model_Attribute_hpp 
 #include "../Type/Type.hpp"
-
 namespace isadt {
     /// \brief the attribute of process.
     class Attribute {

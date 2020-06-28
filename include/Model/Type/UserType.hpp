@@ -33,6 +33,7 @@ namespace isadt {
     private:
         string name_;                     //< the name of this type.
         list<Attribute*> parameters_;     //< the parameter list of this type.
+        list<Method*> methods_;
         UserType* base_;                  //< the base type of this type.
     };
 }

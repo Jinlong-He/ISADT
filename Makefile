@@ -1,11 +1,35 @@
-#---------------------------------------
-# RULES
-#---------------------------------------
-include Make.properties
+#
+# Makefile in src
+#
+include ../Make.properties
+TARGET=libcgh.a
+BIN=isadt
 
-all:
-	(cd $(SRCDIR) && make -f $(MAKEFILE)) || exit 1;
-bin:
-	(cd $(SRCDIR) && make -f $(MAKEFILE) bin) || exit 1;
+# subdirs
+SUBDIRS=$(foreach dir,$(shell find . -mindepth 1 -type d),$(shell echo $(dir) ' '))
+
+
+# objs
+ALL_OBJS = $(subst .cpp,.o,$(foreach dir,$(SUBDIRS),$(wildcard $(dir)/*.cpp)))
+
+
+all: $(TARGET)
+	mv $(TARGET) $(LIBDIR)
+
+bin: $(BIN)
+	mv $(BIN) ../
+	
+$(BIN): $(ALL_OBJS) main.o
+	$(CC) $(CPP_FLAGS) -o $@ $^
+
+
+$(TARGET): $(ALL_OBJS)
+	ar -r $@ $^
+
+.PHONY:clean
 clean:
-	(cd $(SRCDIR) && make -f $(MAKEFILE) clean) || exit 1;
+	@for i in $(ALL_OBJS); do \
+		echo "$$i"; \
+		rm $$i; \
+		done
+	rm main.o

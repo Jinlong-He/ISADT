@@ -21,7 +21,7 @@ namespace isadt {
 
         Expression* getGuardExpression();
         void setGuardExpression(Expression* expression);
-        string to_stirng() const;
+        string to_string() const;
     private:
         Expression* expression_;
 	};
