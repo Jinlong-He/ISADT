@@ -12,14 +12,14 @@
 
 namespace isadt {
   /// \breif the method term in the action
-  /// \breif the metho term can be a method with a series of args.
+  /// \breif the method term can be a method with a series of args.
   class MethodTerm : public Term {
   public:
     MethodTerm();
-    MethodTerm(Method* method, list<Term*> args);
+    MethodTerm(MethodBase* method, list<Term*> args);
     MethodTerm(const string& toParse); // create a method term from string.
 
-    Method* getMethod();
+    MethodBase* getMethod();
     const list<Term*>& getArgs() const;
 
     bool isAMethodCall() {return true;};
