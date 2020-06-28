@@ -7,5 +7,4 @@ using namespace std;
 using namespace isadt;
 
 int main() {
-       
 }

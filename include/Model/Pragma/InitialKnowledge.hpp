@@ -7,9 +7,10 @@
 
 #ifndef Model_InitialKnowledge_hpp
 #define Model_InitialKnowledge_hpp 
-#include "../Process/Process.hpp"
+#include "../Process/Attribute.hpp"
 
 namespace isadt {
+    class Process;
     class InitialKnowledge {
     public:
         InitialKnowledge();
