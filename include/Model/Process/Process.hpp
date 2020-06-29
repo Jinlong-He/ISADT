@@ -7,7 +7,8 @@
 
 #ifndef Model_Process_hpp
 #define Model_Process_hpp
-#include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include "Method.hpp"
 #include "CommMethod.hpp"
 #include "Attribute.hpp"
@@ -25,23 +26,44 @@ namespace isadt {
     /// \brief the process of model.
     class Process {
     public:
-        Process();
-        Process(Model* model);
-        ~Process();
+        Process()
+            : model_(nullptr) {}
+
+        Process(Model* model) 
+            : model_(model) {}
+
+        ~Process() {
+            for (auto attr : attributes_) {
+                delete attr;
+                attr = nullptr;
+            }
+            for (auto method : methods_) {
+                delete method;
+                method = nullptr;
+            }
+            for (auto commMethod : commMethods_) {
+                delete commMethod;
+                commMethod = nullptr;
+            }
+            for (auto stateMachine : stateMachines_) {
+                delete stateMachine;
+                stateMachine = nullptr;
+            }
+            delete stateMachine_;
+            stateMachine_ = nullptr;
+        }
 
         Model* getModel() const;
         void setModel(Model* model);
-
-        Attribute* mkAttribute(Type* type, const string& name);
-        Method* mkMethod(const string& name, Type* returnType, list<Attribute*> parameters);
-        CommMethod* mkCommMethod(const string& name, bool inout, Attribute* parameter);
         
-        StateMachine* mkFst();
+        StateMachine* mkStateMachine();
 
         const list<Attribute*>& getAttributes();
+        void addAttribute(Attribute* attr);
+        void addMethod(Method* m);
+        void addCommMethod(CommMethod* m);
 
         const std::string& getProcName();
-
         void setProcName(std::string procName);
 
         const list<Method*>& getMethods() const;
@@ -49,15 +71,16 @@ namespace isadt {
         const StateMachine* getStateMachine();
         
     private:
+        Model* model_;                       ///< the model this process from.
         std::string procName_;
         list<Attribute*> attributes_;        ///< the attributes for this process.
         list<Method*> methods_;              ///< the methods for this process.
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm
-        std::map<VertexSmPair*, StateMachine*> stateSmMap;
+        std::unordered_map<VertexSmPair*, StateMachine*> stateSmMap;
         StateMachine* stateMachine_;
-        Model* model_;                       ///< the model this process from.
+        std::unordered_set<std::string> nameSet_;
     };
 }
 

@@ -16,21 +16,34 @@ namespace isadt {
     /// \brief the method of process.
     class Method : public MethodBase{
     public:
-        Method();
+        Method()
+            : MethodBase() {}
 
-        Method(const string& algorithmId,
-               const string& userCode);
+        Method(const string& name, 
+               Type* returnType,
+               const std::initializer_list<Attribute*>& parameters,
+               const string& algorithmId,
+               const string& userCode = "")
+            : MethodBase(name, returnType, parameters),
+              algorithmId_(algorithmId),
+              userCode_(userCode) {}
 
-        ~Method();
+        Method(const string& name, 
+               Type* returnType,
+               const string& algorithmId,
+               const string& userCode = "")
+            : MethodBase(name, returnType),
+              algorithmId_(algorithmId),
+              userCode_(userCode) {}
+
+
+        ~Method() {}
 
         const string& getAlgorithmId() const;
         void setAlgorithmId(const string& algorithmId);
 
         const string& getUserCode() const;
         void setUserCode(const string& userCode);
-
-
-        const string& getName();
     private:
         string algorithmId_;             //< the algorithm identifier. encryption and decryption: not null ==> .
         string userCode_;                //< the user insertion code.

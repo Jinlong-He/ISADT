@@ -14,13 +14,28 @@ namespace isadt {
     /// \brief the method of process.
     class MethodBase {
         public:
-            MethodBase();
+            MethodBase()
+                : name_(""),
+                  returnType_(nullptr) {}
     
             MethodBase(const string& name, 
-                   Type* returnType, 
-                   const list<Attribute*>& parameters);
+                       Type* returnType,
+                       const std::initializer_list<Attribute*>& parameters)
+                : name_(name),
+                  returnType_(returnType),
+                  parameters_(parameters) {}
     
-            ~MethodBase();
+            MethodBase(const string& name, 
+                       Type* returnType)
+                : name_(name),
+                  returnType_(returnType) {}
+    
+            ~MethodBase() {
+                for (auto p : parameters_) {
+                    delete p;
+                    p = nullptr;
+                }
+            }
     
             const string& getName() const;
             void setName(const string& name) ;
@@ -29,9 +44,7 @@ namespace isadt {
             void setReturnType(Type* returnType);
     
             const list<Attribute*>& getParameters() const;
-            void setParameters(const list<Attribute*>& parameters);
-    
-            const string& getName();
+            void addParameter(Attribute* attr);
         private:
            string name_;
            Type* returnType_;

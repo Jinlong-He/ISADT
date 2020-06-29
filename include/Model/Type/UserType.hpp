@@ -10,6 +10,7 @@
 #include <list>
 #include "Type.hpp"
 #include "../Process/Attribute.hpp"
+#include "../Process/Method.hpp"
 
 using std::list;
 
@@ -17,21 +18,39 @@ namespace isadt {
     /// \brief the user defined data type of process.
     class UserType : public Type {
     public:
-        UserType();
+        UserType()
+            : Type() {}
 
         UserType(const string& name, 
-                 const list<Attribute*>& parameters, 
-                 UserType* base = nullptr) :
-            name_(name),
-            parameters_(parameters),
-            base_(base) {}
+                 UserType* base = nullptr)
+            : Type(name),
+              base_(base) {}
+
+        UserType(const string& name, 
+                 const std::initializer_list<Attribute*>& parameters, 
+                 UserType* base = nullptr)
+            : Type(name),
+              parameters_(parameters),
+              base_(base) {}
+
+        ~UserType() {
+            for (auto attr : parameters_) {
+                delete attr;
+                attr = nullptr;
+            }
+            for (auto m : methods_) {
+                delete m;
+                m = nullptr;
+            }
+        }
 
         const list<Attribute*>& getParameters() const;
         void setParameters(const list<Attribute*>& _parameters);
-        void addParameter(Attribute* attr);
+        void addAttribute(Attribute* attr);
+        void addMethod(Method* m);
+        void setBase(UserType* base);
 
     private:
-        string name_;                     //< the name of this type.
         list<Attribute*> parameters_;     //< the parameter list of this type.
         list<Method*> methods_;
         UserType* base_;                  //< the base type of this type.

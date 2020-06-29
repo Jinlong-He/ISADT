@@ -12,11 +12,26 @@
 
 namespace isadt {
     /// \brief the signal of process.
-    class CommMethod : MethodBase{
-        CommMethod();
-        CommMethod(bool inout, 
-                   const string& commId)
-            : inout_(inout),
+    class CommMethod : public MethodBase{
+    public:
+        CommMethod()
+            : MethodBase() {}
+
+        CommMethod(const string& name, 
+                   Type* returnType,
+                   const std::initializer_list<Attribute*>& parameters,
+                   bool inout, 
+                   const string& commId = "")
+            : MethodBase(name, returnType, parameters),
+              inout_(inout),
+              commId_(commId) {}
+
+        CommMethod(const string& name, 
+                   Type* returnType,
+                   bool inout, 
+                   const string& commId = "")
+            : MethodBase(name, returnType),
+              inout_(inout),
               commId_(commId) {}
 
         ~CommMethod() {

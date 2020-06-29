@@ -13,11 +13,11 @@ namespace esc {
 	/// \brief the attack protocal bound to attack nodes or attack trees.
 	class Attack {
 	private:
-		bool enable;
-		AttackNode* originNode;
-		bool isLeaf;
-		bool isFinal;
-		bool isRoot;
+		bool enable_;
+		AttackNode* originNode_;
+		bool isLeaf_;
+		bool isFinal_;
+		bool isRoot_;
 	};
 }
 

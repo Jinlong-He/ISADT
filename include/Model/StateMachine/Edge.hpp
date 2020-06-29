@@ -21,11 +21,16 @@ namespace isadt {
     	Edge(Vertex* from, 
              Vertex* to, 
              Guard* guard, 
-             const list<Action*>& actions)
+             const std::initializer_list<Action*>& actions)
             : from_(from),
               to_(to),
               guard_(guard),
               actions_(actions) {}
+
+    	Edge(Vertex* from, 
+             Vertex* to, 
+             const string& guardStr, 
+             const std::initializer_list<string>& actionStrs);
 
     	Guard* getGuard() {
     		return guard_;

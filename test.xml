@@ -1,0 +1,848 @@
+<Protocol_VM name="协议1">
+  <ClassDiagram_P_VM>
+    <UserType_VM x="20" y="20" name="int" id="1" basic="true" />
+    <UserType_VM x="20" y="50" name="bool" id="2" basic="true" />
+    <UserType_VM x="20" y="80" name="number" id="3" basic="true" />
+    <UserType_VM x="20" y="110" name="byte" id="4" basic="true" />
+    <UserType_VM x="20.799999999999983" y="131.2" name="ByteVec" id="5" basic="middle" />
+    <UserType_VM x="21.59999999999988" y="179.20000000000002" name="Timer" id="6" basic="middle" />
+    <UserType_VM x="188.8" y="13.600000000000023" name="Head" id="7" basic="false" parent_ref="-1">
+      <Attribute type_ref="1" identifier="version" id="10" />
+      <Attribute type_ref="1" identifier="msgType" id="11" />
+      <Attribute type_ref="1" identifier="seq" id="12" />
+      <Attribute type_ref="6" identifier="timeStamp" id="13" />
+      <Attribute type_ref="1" identifier="length" id="14" />
+    </UserType_VM>
+    <UserType_VM x="318.40000000000003" y="14.400000000000034" name="GW_Adv_Msg" id="8" basic="false" parent_ref="5">
+      <Attribute type_ref="7" identifier="head" id="15" />
+      <Attribute type_ref="1" identifier="gateway" id="16" />
+      <Attribute type_ref="1" identifier="gw_info" id="17" />
+      <Attribute type_ref="5" identifier="signature" id="18" />
+    </UserType_VM>
+    <UserType_VM x="528.8" y="16.799999999999955" name="Auth_Req_Msg" id="9" basic="false" parent_ref="5">
+      <Attribute type_ref="7" identifier="head" id="19" />
+      <Attribute type_ref="1" identifier="host" id="20" />
+      <Attribute type_ref="1" identifier="gateway" id="21" />
+      <Attribute type_ref="5" identifier="signature" id="29" />
+    </UserType_VM>
+    <UserType_VM x="747.1999999999999" y="15.200000000000045" name="Auth_Que_Msg" id="10" basic="false" parent_ref="5">
+      <Attribute type_ref="7" identifier="head" id="22" />
+      <Attribute type_ref="1" identifier="host" id="23" />
+      <Attribute type_ref="1" identifier="server" id="24" />
+      <Attribute type_ref="1" identifier="gateway" id="25" />
+      <Attribute type_ref="5" identifier="signature" id="30" />
+    </UserType_VM>
+    <UserType_VM x="964.8" y="16.799999999999983" name="Que_Resp_Msg" id="11" basic="false" parent_ref="5">
+      <Attribute type_ref="7" identifier="head" id="26" />
+      <Attribute type_ref="1" identifier="host" id="27" />
+      <Attribute type_ref="1" identifier="nonce" id="28" />
+      <Attribute type_ref="5" identifier="signature" id="31" />
+    </UserType_VM>
+    <UserType_VM x="1183.9999999999998" y="17.599999999999966" name="Auth_Resp_Msg" id="12" basic="false" parent_ref="5">
+      <Attribute type_ref="7" identifier="head" id="32" />
+      <Attribute type_ref="1" identifier="host" id="33" />
+      <Attribute type_ref="1" identifier="result" id="34" />
+      <Attribute type_ref="1" identifier="authority" id="35" />
+      <Attribute type_ref="1" identifier="hostIP" id="36" />
+      <Attribute type_ref="1" identifier="gateway" id="37" />
+      <Attribute type_ref="5" identifier="sec_hostIpKey" id="38" />
+      <Attribute type_ref="1" identifier="server" id="39" />
+      <Attribute type_ref="5" identifier="signature" id="40" />
+    </UserType_VM>
+    <UserType_VM x="189.60000000000036" y="191.99999999999991" name="Key" id="13" basic="false" parent_ref="5">
+      <Attribute type_ref="1" identifier="k" id="41" />
+    </UserType_VM>
+    <Process_VM x="7.19999999999996" y="337.59999999999997" name="Host" id="1">
+      <Attribute type_ref="1" identifier="hostID" id="49" />
+      <Attribute type_ref="1" identifier="gateway" id="50" />
+      <Attribute type_ref="1" identifier="nonce" id="51" />
+      <Attribute type_ref="1" identifier="serverPk" id="52" />
+      <Attribute type_ref="8" identifier="gw_adv_msg" id="53" />
+      <Attribute type_ref="9" identifier="auth_req_msg" id="54" />
+      <Attribute type_ref="10" identifier="auth_que_msg" id="55" />
+      <Attribute type_ref="11" identifier="que_resp_msg" id="56" />
+      <Attribute type_ref="12" identifier="auth_resp_msg" id="57" />
+      <Attribute type_ref="1" identifier="hostIdSk" id="58" />
+      <Attribute type_ref="1" identifier="hostIdPk" id="59" />
+      <Attribute type_ref="1" identifier="hostIP" id="60" />
+      <Attribute type_ref="13" identifier="hostIpKey" id="61" />
+      <Method returnType_ref="5" name="Sign" cryptoSuffix="RSA" id="1">
+        <Parameter type_ref="5" identifier="msg" id="63" />
+        <Parameter type_ref="1" identifier="skey" id="64" />
+      </Method>
+      <Method returnType_ref="2" name="Verify" cryptoSuffix="RSA" id="2">
+        <Parameter type_ref="5" identifier="msg" id="65" />
+        <Parameter type_ref="1" identifier="pkey" id="66" />
+      </Method>
+      <Method returnType_ref="5" name="SymDec" cryptoSuffix="AES" id="8">
+        <Parameter type_ref="5" identifier="msg" id="131" />
+        <Parameter type_ref="1" identifier="key" id="132" />
+      </Method>
+      <CommMethod name="recieve" inOutSuffix="In" id="1">
+        <Parameter type_ref="5" identifier="msg" id="67" />
+      </CommMethod>
+      <CommMethod name="send" inOutSuffix="Out" id="2">
+        <Parameter type_ref="5" identifier="msg" id="68" />
+      </CommMethod>
+    </Process_VM>
+    <Process_VM x="299.20000000000016" y="356.79999999999995" name="Gateway" id="2">
+      <Attribute type_ref="1" identifier="hostID" id="69" />
+      <Attribute type_ref="1" identifier="gateway" id="70" />
+      <Attribute type_ref="1" identifier="serverIP" id="71" />
+      <Attribute type_ref="5" identifier="msg" id="72" />
+      <Attribute type_ref="1" identifier="hostIdPk" id="129" />
+      <Attribute type_ref="1" identifier="serverPk" id="130" />
+      <Method returnType_ref="5" name="Sign" cryptoSuffix="RSA" id="3">
+        <Parameter type_ref="5" identifier="msg" id="73" />
+        <Parameter type_ref="1" identifier="skey" id="74" />
+      </Method>
+      <Method returnType_ref="2" name="Verify" cryptoSuffix="RSA" id="4">
+        <Parameter type_ref="5" identifier="msg" id="75" />
+        <Parameter type_ref="1" identifier="pkey" id="76" />
+      </Method>
+      <CommMethod name="revFromHost" inOutSuffix="In" id="3">
+        <Parameter type_ref="5" identifier="msg" id="77" />
+      </CommMethod>
+      <CommMethod name="send2Host" inOutSuffix="Out" id="4">
+        <Parameter type_ref="5" identifier="msg" id="78" />
+      </CommMethod>
+      <CommMethod name="revFromServer" inOutSuffix="In" id="5">
+        <Parameter type_ref="5" identifier="msg" id="79" />
+      </CommMethod>
+      <CommMethod name="send2Server" inOutSuffix="Out" id="6">
+        <Parameter type_ref="5" identifier="msg" id="102" />
+      </CommMethod>
+    </Process_VM>
+    <Process_VM x="576.0000000000001" y="354.4000000000001" name="Server" id="3">
+      <Attribute type_ref="1" identifier="hostID" id="81" />
+      <Attribute type_ref="1" identifier="gateway" id="82" />
+      <Attribute type_ref="1" identifier="serverIP" id="83" />
+      <Attribute type_ref="1" identifier="nonce" id="84" />
+      <Attribute type_ref="9" identifier="auth_req_msg" id="85" />
+      <Attribute type_ref="10" identifier="auth_que_msg" id="86" />
+      <Attribute type_ref="11" identifier="que_resp_msg" id="87" />
+      <Attribute type_ref="12" identifier="quth_resp_msg" id="88" />
+      <Attribute type_ref="1" identifier="serverSk" id="89" />
+      <Attribute type_ref="1" identifier="serverPk" id="90" />
+      <Attribute type_ref="1" identifier="HostIP" id="91" />
+      <Attribute type_ref="13" identifier="HostIpSk" id="92" />
+      <Attribute type_ref="1" identifier="HostIdPk" id="93" />
+      <Attribute type_ref="5" identifier="sec_hostIpSk" id="94" />
+      <Method returnType_ref="5" name="Sign" cryptoSuffix="RSA" id="5">
+        <Parameter type_ref="5" identifier="msg" id="95" />
+        <Parameter type_ref="1" identifier="skey" id="96" />
+      </Method>
+      <Method returnType_ref="2" name="Verify" cryptoSuffix="RSA" id="6">
+        <Parameter type_ref="5" identifier="msg" id="97" />
+        <Parameter type_ref="1" identifier="pkey" id="98" />
+      </Method>
+      <Method returnType_ref="5" name="SymEnc" cryptoSuffix="AES" id="9">
+        <Parameter type_ref="5" identifier="msg" id="133" />
+        <Parameter type_ref="1" identifier="key" id="134" />
+      </Method>
+      <CommMethod name="recieve" inOutSuffix="In" id="7">
+        <Parameter type_ref="5" identifier="msg" id="99" />
+      </CommMethod>
+      <CommMethod name="send" inOutSuffix="Out" id="8">
+        <Parameter type_ref="5" identifier="msg" id="100" />
+      </CommMethod>
+    </Process_VM>
+    <CommChannel_VM x="32.00000000000003" y="812.8000000000001" name="HostAndGW" id="1">
+      <CommMethodPair processA_ref="1" commMethodA_ref="2" processB_ref="2" commMethodB_ref="3" />
+      <CommMethodPair processA_ref="2" commMethodA_ref="4" processB_ref="1" commMethodB_ref="1" />
+    </CommChannel_VM>
+    <CommChannel_VM x="265.6" y="812.0000000000001" name="GWAndServer" id="2">
+      <CommMethodPair processA_ref="3" commMethodA_ref="8" processB_ref="2" commMethodB_ref="5" />
+      <CommMethodPair processA_ref="2" commMethodA_ref="6" processB_ref="3" commMethodB_ref="7" />
+    </CommChannel_VM>
+    <InitialKnowledge_VM x="868" y="622.4000000000001" process_ref="-1" id="1">
+      <KnowledgePair process_ref="1" attribute_ref="49" />
+      <KnowledgePair process_ref="2" attribute_ref="69" />
+      <KnowledgePair process_ref="3" attribute_ref="81" />
+    </InitialKnowledge_VM>
+    <InitialKnowledge_VM x="952.8" y="622" process_ref="-1" id="2">
+      <KnowledgePair process_ref="1" attribute_ref="50" />
+      <KnowledgePair process_ref="2" attribute_ref="70" />
+      <KnowledgePair process_ref="3" attribute_ref="82" />
+    </InitialKnowledge_VM>
+    <InitialKnowledge_VM x="1021.7999999999995" y="622.0000000000001" process_ref="-1" id="3">
+      <KnowledgePair process_ref="2" attribute_ref="71" />
+      <KnowledgePair process_ref="3" attribute_ref="83" />
+    </InitialKnowledge_VM>
+    <InitialKnowledge_VM x="1216.0000000000002" y="397.5999999999998" process_ref="1" id="4">
+      <KnowledgePair process_ref="1" attribute_ref="58" />
+      <KnowledgePair process_ref="1" attribute_ref="59" />
+    </InitialKnowledge_VM>
+    <InitialKnowledge_VM x="1385.5999999999997" y="397.5999999999999" process_ref="3" id="5">
+      <KnowledgePair process_ref="3" attribute_ref="89" />
+      <KnowledgePair process_ref="3" attribute_ref="90" />
+    </InitialKnowledge_VM>
+    <InitialKnowledge_VM x="870.3999999999999" y="399.99999999999983" process_ref="-1" id="6">
+      <KnowledgePair process_ref="1" attribute_ref="59" />
+      <KnowledgePair process_ref="3" attribute_ref="93" />
+      <KnowledgePair process_ref="2" attribute_ref="129" />
+    </InitialKnowledge_VM>
+    <SafetyProperty_VM x="868.0000000000001" y="753.5999999999999" name="Sft1" id="1" />
+    <InitialKnowledge_VM x="1038.3999999999999" y="398.4" process_ref="-1" id="7">
+      <KnowledgePair process_ref="1" attribute_ref="52" />
+      <KnowledgePair process_ref="3" attribute_ref="90" />
+      <KnowledgePair process_ref="2" attribute_ref="130" />
+    </InitialKnowledge_VM>
+    <SecurityProperty_VM x="1038.4" y="756" name="Scr1" id="1">
+      <Confidential process_ref="3" attribute_ref="84" />
+      <Confidential process_ref="3" attribute_ref="92" />
+      <Authenticity processA_ref="1" stateA_ref="7" attributeA_ref="51" processB_ref="3" stateB_ref="26" attributeB_ref="84" />
+    </SecurityProperty_VM>
+  </ClassDiagram_P_VM>
+  <StateMachine_P_VMs>
+    <StateMachine_P_VM process_ref="1">
+      <InitState_VM x="70" y="20">
+        <Connector_VM id="1" />
+      </InitState_VM>
+      <State_VM x="36.599999999999994" y="261.59999999999997" name="reqMsgCreated" id="1">
+        <Connector_VM id="2" />
+        <Connector_VM id="3" />
+        <Connector_VM id="4" />
+        <Connector_VM id="5" />
+        <Connector_VM id="6" />
+        <Connector_VM id="7" />
+        <Connector_VM id="8" />
+        <Connector_VM id="9" />
+        <Connector_VM id="10" />
+        <Connector_VM id="11" />
+        <Connector_VM id="12" />
+        <Connector_VM id="13" />
+        <Connector_VM id="14" />
+        <Connector_VM id="15" />
+      </State_VM>
+      <Transition_VM source_ref="1" dest_ref="4" guard="True">
+        <Action content="auth_req_msg.head.msgType = 2" />
+        <Action content="auth_req_msg.head.timeStamp = 1" />
+        <Action content="auth_req_msg.host = hostID" />
+        <Action content="auth_req_msg.gateway = gateway" />
+        <Action content="auth_req_msg.signature = sign(auth_req_msg,sk)" />
+      </Transition_VM>
+      <State_VM x="441.6000000000001" y="264.0000000000001" name="reqSent" id="4">
+        <Connector_VM id="46" />
+        <Connector_VM id="47" />
+        <Connector_VM id="48" />
+        <Connector_VM id="49" />
+        <Connector_VM id="50" />
+        <Connector_VM id="51" />
+        <Connector_VM id="52" />
+        <Connector_VM id="53" />
+        <Connector_VM id="54" />
+        <Connector_VM id="55" />
+        <Connector_VM id="56" />
+        <Connector_VM id="57" />
+        <Connector_VM id="58" />
+        <Connector_VM id="59" />
+      </State_VM>
+      <Transition_VM source_ref="8" dest_ref="51" guard="True">
+        <Action content="send(auth_req_msg" />
+      </Transition_VM>
+      <State_VM x="444.00000000000006" y="417.6000000000001" name="queRecieved" id="5">
+        <Connector_VM id="60" />
+        <Connector_VM id="61" />
+        <Connector_VM id="62" />
+        <Connector_VM id="63" />
+        <Connector_VM id="64" />
+        <Connector_VM id="65" />
+        <Connector_VM id="66" />
+        <Connector_VM id="67" />
+        <Connector_VM id="68" />
+        <Connector_VM id="69" />
+        <Connector_VM id="70" />
+        <Connector_VM id="71" />
+        <Connector_VM id="72" />
+        <Connector_VM id="73" />
+      </State_VM>
+      <Transition_VM source_ref="57" dest_ref="62" guard="True">
+        <Action content="recieve(auth_que_msg)" />
+      </Transition_VM>
+      <State_VM x="852" y="419.99999999999994" name="verifiedFail" id="6">
+        <Connector_VM id="74" />
+        <Connector_VM id="75" />
+        <Connector_VM id="76" />
+        <Connector_VM id="77" />
+        <Connector_VM id="78" />
+        <Connector_VM id="79" />
+        <Connector_VM id="80" />
+        <Connector_VM id="81" />
+        <Connector_VM id="82" />
+        <Connector_VM id="83" />
+        <Connector_VM id="84" />
+        <Connector_VM id="85" />
+        <Connector_VM id="86" />
+        <Connector_VM id="87" />
+      </State_VM>
+      <Transition_VM source_ref="66" dest_ref="79" guard="not Verify(auth_que_msg, serverPk)" />
+      <State_VM x="39.20000000000002" y="542.4000000000001" name="queRespCreated" id="7">
+        <Connector_VM id="88" />
+        <Connector_VM id="89" />
+        <Connector_VM id="90" />
+        <Connector_VM id="91" />
+        <Connector_VM id="92" />
+        <Connector_VM id="93" />
+        <Connector_VM id="94" />
+        <Connector_VM id="95" />
+        <Connector_VM id="96" />
+        <Connector_VM id="97" />
+        <Connector_VM id="98" />
+        <Connector_VM id="99" />
+        <Connector_VM id="100" />
+        <Connector_VM id="101" />
+      </State_VM>
+      <Transition_VM source_ref="69" dest_ref="92" guard="verify(auth_que_msg, serverPk)">
+        <Action content="nonce = auth_que_msg.nonce" />
+        <Action content="que_resp_msg.head.msgType = 5" />
+        <Action content="que_resp_msg.head.timeStamp = auth_req_msg.head.timeStamp + 1" />
+        <Action content="que_resp_msg.nonce= nonce" />
+        <Action content="que_resp_msg.host = hostID" />
+        <Action content="que_resp_msg.signature= sign(que_resp_msg, sk)" />
+      </Transition_VM>
+      <State_VM x="39.999999999999986" y="730.4000000000001" name="queRespSent" id="8">
+        <Connector_VM id="102" />
+        <Connector_VM id="103" />
+        <Connector_VM id="104" />
+        <Connector_VM id="105" />
+        <Connector_VM id="106" />
+        <Connector_VM id="107" />
+        <Connector_VM id="108" />
+        <Connector_VM id="109" />
+        <Connector_VM id="110" />
+        <Connector_VM id="111" />
+        <Connector_VM id="112" />
+        <Connector_VM id="113" />
+        <Connector_VM id="114" />
+        <Connector_VM id="115" />
+      </State_VM>
+      <Transition_VM source_ref="99" dest_ref="104" guard="True">
+        <Action content="send(que_resp_msg)" />
+      </Transition_VM>
+      <State_VM x="471.2" y="726.3999999999999" name="respRecieved" id="9">
+        <Connector_VM id="116" />
+        <Connector_VM id="117" />
+        <Connector_VM id="118" />
+        <Connector_VM id="119" />
+        <Connector_VM id="120" />
+        <Connector_VM id="121" />
+        <Connector_VM id="122" />
+        <Connector_VM id="123" />
+        <Connector_VM id="124" />
+        <Connector_VM id="125" />
+        <Connector_VM id="126" />
+        <Connector_VM id="127" />
+        <Connector_VM id="128" />
+        <Connector_VM id="129" />
+      </State_VM>
+      <Transition_VM source_ref="108" dest_ref="121" guard="True">
+        <Action content="recieve(auth_resp_msg)" />
+      </Transition_VM>
+      <Transition_VM source_ref="120" dest_ref="83" guard="not verify(auth_resp_msg, serverPk)" />
+      <State_VM x="1255.2" y="727.1999999999999" name="configure" id="10">
+        <Connector_VM id="130" />
+        <Connector_VM id="131" />
+        <Connector_VM id="132" />
+        <Connector_VM id="133" />
+        <Connector_VM id="134" />
+        <Connector_VM id="135" />
+        <Connector_VM id="136" />
+        <Connector_VM id="137" />
+        <Connector_VM id="138" />
+        <Connector_VM id="139" />
+        <Connector_VM id="140" />
+        <Connector_VM id="141" />
+        <Connector_VM id="142" />
+        <Connector_VM id="143" />
+      </State_VM>
+      <Transition_VM source_ref="122" dest_ref="135" guard="verify(auth_resp_msg, serverPk)">
+        <Action content="hostIpKey = SymDec(auth_resp_msg.sec_hostIpKey, hostIdSk)" />
+      </Transition_VM>
+      <State_VM x="1408.8000000000002" y="1051.2" name="S11" id="11">
+        <Connector_VM id="144" />
+        <Connector_VM id="145" />
+        <Connector_VM id="146" />
+        <Connector_VM id="147" />
+        <Connector_VM id="148" />
+        <Connector_VM id="149" />
+        <Connector_VM id="150" />
+        <Connector_VM id="151" />
+        <Connector_VM id="152" />
+        <Connector_VM id="153" />
+        <Connector_VM id="154" />
+        <Connector_VM id="155" />
+        <Connector_VM id="156" />
+        <Connector_VM id="157" />
+      </State_VM>
+      <FinalState_VM x="1168.8" y="864.8">
+        <Connector_VM id="158" />
+      </FinalState_VM>
+      <Transition_VM source_ref="141" dest_ref="158" guard="True" />
+    </StateMachine_P_VM>
+    <StateMachine_P_VM process_ref="2">
+      <InitState_VM x="70" y="20">
+        <Connector_VM id="16" />
+      </InitState_VM>
+      <State_VM x="34.99999999999997" y="124.80000000000001" name="reqMsgRecieved" id="2">
+        <Connector_VM id="17" />
+        <Connector_VM id="18" />
+        <Connector_VM id="19" />
+        <Connector_VM id="20" />
+        <Connector_VM id="21" />
+        <Connector_VM id="22" />
+        <Connector_VM id="23" />
+        <Connector_VM id="24" />
+        <Connector_VM id="25" />
+        <Connector_VM id="26" />
+        <Connector_VM id="27" />
+        <Connector_VM id="28" />
+        <Connector_VM id="29" />
+        <Connector_VM id="30" />
+      </State_VM>
+      <Transition_VM source_ref="16" dest_ref="19" guard="True">
+        <Action content="revFromHost(msg)" />
+      </Transition_VM>
+      <State_VM x="379.2" y="128" name="reqSent2Server" id="14">
+        <Connector_VM id="189" />
+        <Connector_VM id="190" />
+        <Connector_VM id="191" />
+        <Connector_VM id="192" />
+        <Connector_VM id="193" />
+        <Connector_VM id="194" />
+        <Connector_VM id="195" />
+        <Connector_VM id="196" />
+        <Connector_VM id="197" />
+        <Connector_VM id="198" />
+        <Connector_VM id="199" />
+        <Connector_VM id="200" />
+        <Connector_VM id="201" />
+        <Connector_VM id="202" />
+      </State_VM>
+      <Transition_VM source_ref="23" dest_ref="194" guard="True">
+        <Action content="send2Server(msg)" />
+      </Transition_VM>
+      <State_VM x="382.4000000000001" y="264.00000000000006" name="queRecieved" id="15">
+        <Connector_VM id="203" />
+        <Connector_VM id="204" />
+        <Connector_VM id="205" />
+        <Connector_VM id="206" />
+        <Connector_VM id="207" />
+        <Connector_VM id="208" />
+        <Connector_VM id="209" />
+        <Connector_VM id="210" />
+        <Connector_VM id="211" />
+        <Connector_VM id="212" />
+        <Connector_VM id="213" />
+        <Connector_VM id="214" />
+        <Connector_VM id="215" />
+        <Connector_VM id="216" />
+      </State_VM>
+      <Transition_VM source_ref="200" dest_ref="205" guard="True">
+        <Action content="revFromServer(msg)" />
+      </Transition_VM>
+      <State_VM x="41.599999999999994" y="265.6" name="queSent2Host" id="16">
+        <Connector_VM id="217" />
+        <Connector_VM id="218" />
+        <Connector_VM id="219" />
+        <Connector_VM id="220" />
+        <Connector_VM id="221" />
+        <Connector_VM id="222" />
+        <Connector_VM id="223" />
+        <Connector_VM id="224" />
+        <Connector_VM id="225" />
+        <Connector_VM id="226" />
+        <Connector_VM id="227" />
+        <Connector_VM id="228" />
+        <Connector_VM id="229" />
+        <Connector_VM id="230" />
+      </State_VM>
+      <Transition_VM source_ref="208" dest_ref="223" guard="True">
+        <Action content="send2Host(msg)" />
+      </Transition_VM>
+      <State_VM x="39.20000000000002" y="410.4000000000001" name="queRespRecived" id="18">
+        <Connector_VM id="246" />
+        <Connector_VM id="247" />
+        <Connector_VM id="248" />
+        <Connector_VM id="249" />
+        <Connector_VM id="250" />
+        <Connector_VM id="251" />
+        <Connector_VM id="252" />
+        <Connector_VM id="253" />
+        <Connector_VM id="254" />
+        <Connector_VM id="255" />
+        <Connector_VM id="256" />
+        <Connector_VM id="257" />
+        <Connector_VM id="258" />
+        <Connector_VM id="259" />
+      </State_VM>
+      <Transition_VM source_ref="228" dest_ref="248" guard="True">
+        <Action content="revFromHost(msg)" />
+      </Transition_VM>
+      <State_VM x="374.4" y="412.00000000000006" name="queRespSent2Server" id="19">
+        <Connector_VM id="260" />
+        <Connector_VM id="261" />
+        <Connector_VM id="262" />
+        <Connector_VM id="263" />
+        <Connector_VM id="264" />
+        <Connector_VM id="265" />
+        <Connector_VM id="266" />
+        <Connector_VM id="267" />
+        <Connector_VM id="268" />
+        <Connector_VM id="269" />
+        <Connector_VM id="270" />
+        <Connector_VM id="271" />
+        <Connector_VM id="272" />
+        <Connector_VM id="273" />
+      </State_VM>
+      <Transition_VM source_ref="252" dest_ref="265" guard="True">
+        <Action content="send2Server(msg)" />
+      </Transition_VM>
+      <State_VM x="376" y="555.1999999999999" name="respRecieved" id="20">
+        <Connector_VM id="274" />
+        <Connector_VM id="275" />
+        <Connector_VM id="276" />
+        <Connector_VM id="277" />
+        <Connector_VM id="278" />
+        <Connector_VM id="279" />
+        <Connector_VM id="280" />
+        <Connector_VM id="281" />
+        <Connector_VM id="282" />
+        <Connector_VM id="283" />
+        <Connector_VM id="284" />
+        <Connector_VM id="285" />
+        <Connector_VM id="286" />
+        <Connector_VM id="287" />
+      </State_VM>
+      <Transition_VM source_ref="271" dest_ref="276" guard="True">
+        <Action content="revFromServer(msg)" />
+      </Transition_VM>
+      <State_VM x="43.19999999999999" y="553.6" name="GW_configure" id="21">
+        <Connector_VM id="288" />
+        <Connector_VM id="289" />
+        <Connector_VM id="290" />
+        <Connector_VM id="291" />
+        <Connector_VM id="292" />
+        <Connector_VM id="293" />
+        <Connector_VM id="294" />
+        <Connector_VM id="295" />
+        <Connector_VM id="296" />
+        <Connector_VM id="297" />
+        <Connector_VM id="298" />
+        <Connector_VM id="299" />
+        <Connector_VM id="300" />
+        <Connector_VM id="301" />
+      </State_VM>
+      <Transition_VM source_ref="279" dest_ref="294" guard="True" />
+      <State_VM x="40.79999999999998" y="680.8" name="respSend2Host" id="22">
+        <Connector_VM id="302" />
+        <Connector_VM id="303" />
+        <Connector_VM id="304" />
+        <Connector_VM id="305" />
+        <Connector_VM id="306" />
+        <Connector_VM id="307" />
+        <Connector_VM id="308" />
+        <Connector_VM id="309" />
+        <Connector_VM id="310" />
+        <Connector_VM id="311" />
+        <Connector_VM id="312" />
+        <Connector_VM id="313" />
+        <Connector_VM id="314" />
+        <Connector_VM id="315" />
+      </State_VM>
+      <Transition_VM source_ref="299" dest_ref="304" guard="True">
+        <Action content="send2Host(msg)" />
+      </Transition_VM>
+      <State_VM x="-19.200000000000017" y="913.6000000000001" name="S23" id="23">
+        <Connector_VM id="316" />
+        <Connector_VM id="317" />
+        <Connector_VM id="318" />
+        <Connector_VM id="319" />
+        <Connector_VM id="320" />
+        <Connector_VM id="321" />
+        <Connector_VM id="322" />
+        <Connector_VM id="323" />
+        <Connector_VM id="324" />
+        <Connector_VM id="325" />
+        <Connector_VM id="326" />
+        <Connector_VM id="327" />
+        <Connector_VM id="328" />
+        <Connector_VM id="329" />
+      </State_VM>
+      <FinalState_VM x="78.4" y="810.4000000000002">
+        <Connector_VM id="330" />
+      </FinalState_VM>
+      <Transition_VM source_ref="313" dest_ref="330" guard="True" />
+    </StateMachine_P_VM>
+    <StateMachine_P_VM process_ref="3">
+      <InitState_VM x="73.19999999999999" y="19.19999999999999">
+        <Connector_VM id="31" />
+      </InitState_VM>
+      <State_VM x="38.19999999999999" y="151.2" name="reqMsgRecieved" id="3">
+        <Connector_VM id="32" />
+        <Connector_VM id="33" />
+        <Connector_VM id="34" />
+        <Connector_VM id="35" />
+        <Connector_VM id="36" />
+        <Connector_VM id="37" />
+        <Connector_VM id="38" />
+        <Connector_VM id="39" />
+        <Connector_VM id="40" />
+        <Connector_VM id="41" />
+        <Connector_VM id="42" />
+        <Connector_VM id="43" />
+        <Connector_VM id="44" />
+        <Connector_VM id="45" />
+      </State_VM>
+      <Transition_VM source_ref="31" dest_ref="34" guard="True">
+        <Action content="recieve(auth_req_msg)" />
+      </Transition_VM>
+      <State_VM x="768.8000000000002" y="148.00000000000006" name="verifiedFail" id="24">
+        <Connector_VM id="331" />
+        <Connector_VM id="332" />
+        <Connector_VM id="333" />
+        <Connector_VM id="334" />
+        <Connector_VM id="335" />
+        <Connector_VM id="336" />
+        <Connector_VM id="337" />
+        <Connector_VM id="338" />
+        <Connector_VM id="339" />
+        <Connector_VM id="340" />
+        <Connector_VM id="341" />
+        <Connector_VM id="342" />
+        <Connector_VM id="343" />
+        <Connector_VM id="344" />
+      </State_VM>
+      <Transition_VM source_ref="38" dest_ref="336" guard="not verify(auth_req_msg, hostIdPk)" />
+      <State_VM x="40" y="435.2" name="queMsgCreated" id="25">
+        <Connector_VM id="345" />
+        <Connector_VM id="346" />
+        <Connector_VM id="347" />
+        <Connector_VM id="348" />
+        <Connector_VM id="349" />
+        <Connector_VM id="350" />
+        <Connector_VM id="351" />
+        <Connector_VM id="352" />
+        <Connector_VM id="353" />
+        <Connector_VM id="354" />
+        <Connector_VM id="355" />
+        <Connector_VM id="356" />
+        <Connector_VM id="357" />
+        <Connector_VM id="358" />
+      </State_VM>
+      <Transition_VM source_ref="43" dest_ref="347" guard="verify(auth_req_msg, hostIDPk)">
+        <Action content="auth_que_msg.head.msgType = 4" />
+        <Action content="auth_que_msg.head.timeStamp = auth_req_msg.head.timeStamp + 1" />
+        <Action content="auth_que_msg.host = auth_req_msg.host" />
+        <Action content="auth_que_msg.nonce = nonce" />
+        <Action content="auth_que_msg.server = serverIP" />
+        <Action content="auth_que_msg.signature = sign(auth_que_msg, sk)" />
+      </Transition_VM>
+      <State_VM x="400.8000000000002" y="435.99999999999994" name="queSent" id="26">
+        <Connector_VM id="359" />
+        <Connector_VM id="360" />
+        <Connector_VM id="361" />
+        <Connector_VM id="362" />
+        <Connector_VM id="363" />
+        <Connector_VM id="364" />
+        <Connector_VM id="365" />
+        <Connector_VM id="366" />
+        <Connector_VM id="367" />
+        <Connector_VM id="368" />
+        <Connector_VM id="369" />
+        <Connector_VM id="370" />
+        <Connector_VM id="371" />
+        <Connector_VM id="372" />
+      </State_VM>
+      <Transition_VM source_ref="351" dest_ref="364" guard="True">
+        <Action content="send(auth_que_msg)" />
+      </Transition_VM>
+      <State_VM x="770.4000000000001" y="436.79999999999984" name="queRespRecieved" id="27">
+        <Connector_VM id="373" />
+        <Connector_VM id="374" />
+        <Connector_VM id="375" />
+        <Connector_VM id="376" />
+        <Connector_VM id="377" />
+        <Connector_VM id="378" />
+        <Connector_VM id="379" />
+        <Connector_VM id="380" />
+        <Connector_VM id="381" />
+        <Connector_VM id="382" />
+        <Connector_VM id="383" />
+        <Connector_VM id="384" />
+        <Connector_VM id="385" />
+        <Connector_VM id="386" />
+      </State_VM>
+      <Transition_VM source_ref="375" dest_ref="342" guard="not verify(que_resp_msg, hostIdPk) or nonce != que_resp_msg.nonce" />
+      <Transition_VM source_ref="365" dest_ref="378" guard="True">
+        <Action content="recieve(que_resp_msg)" />
+      </Transition_VM>
+      <State_VM x="43.99999999999997" y="579.1999999999999" name="respMsgCreated" id="28">
+        <Connector_VM id="387" />
+        <Connector_VM id="388" />
+        <Connector_VM id="389" />
+        <Connector_VM id="390" />
+        <Connector_VM id="391" />
+        <Connector_VM id="392" />
+        <Connector_VM id="393" />
+        <Connector_VM id="394" />
+        <Connector_VM id="395" />
+        <Connector_VM id="396" />
+        <Connector_VM id="397" />
+        <Connector_VM id="398" />
+        <Connector_VM id="399" />
+        <Connector_VM id="400" />
+      </State_VM>
+      <Transition_VM source_ref="382" dest_ref="391" guard="verify(que_resp_msg, hostIdPk) and nonce == que_resp_msg.nonce">
+        <Action content="auth_resp_msg.head.msgType = 3" />
+        <Action content="auth_resp_msg.head.timeStamp = que_resp_msg.head.timeStamp + 1" />
+        <Action content="auth_resp_msg.host = que_resp_msg.host" />
+        <Action content="auth_resp_msg.gateway= gateway" />
+        <Action content="auth_resp_msg.hostIP = hostIP" />
+        <Action content="sec_hostIpKey = SymEnc(hostIpKey, hostIdPk)" />
+        <Action content="auth_resp_msg.server = serverIP" />
+        <Action content="auth_resp_msg.signature = sign(auth_resp_msg, sk)" />
+      </Transition_VM>
+      <State_VM x="43.99999999999997" y="721.6000000000003" name="respSent" id="29">
+        <Connector_VM id="401" />
+        <Connector_VM id="402" />
+        <Connector_VM id="403" />
+        <Connector_VM id="404" />
+        <Connector_VM id="405" />
+        <Connector_VM id="406" />
+        <Connector_VM id="407" />
+        <Connector_VM id="408" />
+        <Connector_VM id="409" />
+        <Connector_VM id="410" />
+        <Connector_VM id="411" />
+        <Connector_VM id="412" />
+        <Connector_VM id="413" />
+        <Connector_VM id="414" />
+      </State_VM>
+      <Transition_VM source_ref="398" dest_ref="403" guard="True">
+        <Action content="send(auth_resp_msg)" />
+      </Transition_VM>
+      <FinalState_VM x="79.19999999999999" y="844.8000000000001">
+        <Connector_VM id="415" />
+      </FinalState_VM>
+      <Transition_VM source_ref="412" dest_ref="415" guard="True" />
+      <State_VM x="-6.2000000000000455" y="929.6000000000001" name="compareNonce" id="31">
+        <Connector_VM id="511" />
+        <Connector_VM id="512" />
+        <Connector_VM id="513" />
+        <Connector_VM id="514" />
+        <Connector_VM id="515" />
+        <Connector_VM id="516" />
+        <Connector_VM id="517" />
+        <Connector_VM id="518" />
+        <Connector_VM id="519" />
+        <Connector_VM id="520" />
+        <Connector_VM id="521" />
+        <Connector_VM id="522" />
+        <Connector_VM id="523" />
+        <Connector_VM id="524" />
+      </State_VM>
+    </StateMachine_P_VM>
+  </StateMachine_P_VMs>
+  <AttackTree_P_VMs />
+  <SequenceDiagram_P_VMs>
+    <SequenceDiagram_P_VM name="序列图1">
+      <ObjLifeLine_VM x="4.400000000000006" y="54" process_ref="1">
+        <Connector_VM id="431" />
+        <Connector_VM id="432" />
+        <Connector_VM id="433" />
+        <Connector_VM id="434" />
+        <Connector_VM id="435" />
+        <Connector_VM id="436" />
+        <Connector_VM id="437" />
+        <Connector_VM id="438" />
+        <Connector_VM id="439" />
+        <Connector_VM id="440" />
+        <Connector_VM id="441" />
+        <Connector_VM id="442" />
+        <Connector_VM id="443" />
+        <Connector_VM id="444" />
+        <Connector_VM id="445" />
+        <Connector_VM id="446" />
+        <Connector_VM id="447" />
+        <Connector_VM id="448" />
+        <Connector_VM id="449" />
+        <Connector_VM id="450" />
+      </ObjLifeLine_VM>
+      <ObjLifeLine_VM x="330.80000000000007" y="53.20000000000002" process_ref="2">
+        <Connector_VM id="451" />
+        <Connector_VM id="452" />
+        <Connector_VM id="453" />
+        <Connector_VM id="454" />
+        <Connector_VM id="455" />
+        <Connector_VM id="456" />
+        <Connector_VM id="457" />
+        <Connector_VM id="458" />
+        <Connector_VM id="459" />
+        <Connector_VM id="460" />
+        <Connector_VM id="461" />
+        <Connector_VM id="462" />
+        <Connector_VM id="463" />
+        <Connector_VM id="464" />
+        <Connector_VM id="465" />
+        <Connector_VM id="466" />
+        <Connector_VM id="467" />
+        <Connector_VM id="468" />
+        <Connector_VM id="469" />
+        <Connector_VM id="470" />
+      </ObjLifeLine_VM>
+      <ObjLifeLine_VM x="735.9999999999999" y="53.60000000000002" process_ref="3">
+        <Connector_VM id="471" />
+        <Connector_VM id="472" />
+        <Connector_VM id="473" />
+        <Connector_VM id="474" />
+        <Connector_VM id="475" />
+        <Connector_VM id="476" />
+        <Connector_VM id="477" />
+        <Connector_VM id="478" />
+        <Connector_VM id="479" />
+        <Connector_VM id="480" />
+        <Connector_VM id="481" />
+        <Connector_VM id="482" />
+        <Connector_VM id="483" />
+        <Connector_VM id="484" />
+        <Connector_VM id="485" />
+        <Connector_VM id="486" />
+        <Connector_VM id="487" />
+        <Connector_VM id="488" />
+        <Connector_VM id="489" />
+        <Connector_VM id="490" />
+      </ObjLifeLine_VM>
+      <SyncMessage_VM commMethod_ref="2" source_ref="431" dest_ref="451" />
+      <SyncMessage_VM commMethod_ref="6" source_ref="452" dest_ref="472" />
+      <SyncMessage_VM commMethod_ref="8" source_ref="473" dest_ref="453" />
+      <SyncMessage_VM commMethod_ref="4" source_ref="454" dest_ref="434" />
+      <ObjLifeLine_VM x="1437.6000000000004" y="268.8" process_ref="-1">
+        <Connector_VM id="491" />
+        <Connector_VM id="492" />
+        <Connector_VM id="493" />
+        <Connector_VM id="494" />
+        <Connector_VM id="495" />
+        <Connector_VM id="496" />
+        <Connector_VM id="497" />
+        <Connector_VM id="498" />
+        <Connector_VM id="499" />
+        <Connector_VM id="500" />
+        <Connector_VM id="501" />
+        <Connector_VM id="502" />
+        <Connector_VM id="503" />
+        <Connector_VM id="504" />
+        <Connector_VM id="505" />
+        <Connector_VM id="506" />
+        <Connector_VM id="507" />
+        <Connector_VM id="508" />
+        <Connector_VM id="509" />
+        <Connector_VM id="510" />
+      </ObjLifeLine_VM>
+      <SyncMessage_VM commMethod_ref="2" source_ref="435" dest_ref="455" />
+      <SyncMessage_VM commMethod_ref="6" source_ref="456" dest_ref="476" />
+      <SyncMessage_VM commMethod_ref="8" source_ref="477" dest_ref="457" />
+      <SyncMessage_VM commMethod_ref="4" source_ref="458" dest_ref="438" />
+    </SequenceDiagram_P_VM>
+  </SequenceDiagram_P_VMs>
+</Protocol_VM>
