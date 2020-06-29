@@ -1,3 +1,4 @@
 *.o
 isadt
+Makefile
 build/
