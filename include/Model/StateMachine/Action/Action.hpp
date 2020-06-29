@@ -15,6 +15,7 @@ namespace isadt {
 	public:
 		Action();
         Action(const string& toParse);
+
         virtual string to_string() const;
 	};
 }
