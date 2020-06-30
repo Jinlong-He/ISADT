@@ -6,7 +6,8 @@ MESSAGE(STATUS "root This is SOURCE dir " ${PROJECT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/include/Parser/XmlParser/
-  ${PROJECT_SOURCE_DIR}/src/Parser/CParser/third_party/antlr4-cpp-runtime/src
+  ${PROJECT_SOURCE_DIR}/src/Parser/LParser/generated/
+  ${PROJECT_SOURCE_DIR}/src/Parser/LParser/third_party/antlr4-cpp-runtime/src
   /usr/local/include
   /usr/include
 )

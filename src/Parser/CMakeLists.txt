@@ -1,2 +1,3 @@
 message(STATUS "Parser This is SOURCE dir " ${PROJECT_SOURCE_DIR})
+ADD_SUBDIRECTORY(LParser)
 ADD_SUBDIRECTORY(XmlParser)

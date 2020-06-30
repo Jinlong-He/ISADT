@@ -2,6 +2,5 @@ MESSAGE(STATUS "src This is SOURCE dir " ${PROJECT_SOURCE_DIR})
 
 ADD_SUBDIRECTORY(Model)
 ADD_SUBDIRECTORY(Parser)
-SET(SRC_LIST main.cpp)
-ADD_EXECUTABLE(isadt ${SRC_LIST})
-TARGET_LINK_LIBRARIES(isadt Model XmlParser)
+ADD_EXECUTABLE(isadt main.cpp)
+TARGET_LINK_LIBRARIES(isadt Model LParser XmlParser)
