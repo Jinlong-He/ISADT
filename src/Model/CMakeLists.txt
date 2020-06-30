@@ -1,9 +1,0 @@
-MESSAGE(STATUS "Model This is SOURCE dir " ${PROJECT_SOURCE_DIR})
-
-ADD_SUBDIRECTORY(Channel)
-ADD_SUBDIRECTORY(Pragma)
-ADD_SUBDIRECTORY(Process)
-ADD_SUBDIRECTORY(StateMachine)
-ADD_SUBDIRECTORY(Type)
-ADD_LIBRARY(Model Model.cpp)
-TARGET_LINK_LIBRARIES(Model Channel Pragma Process StateMachine Type)

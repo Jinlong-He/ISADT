@@ -1,2 +1,0 @@
-MESSAGE(STATUS "Guard This is SOURCE dir " ${PROJECT_SOURCE_DIR})
-ADD_LIBRARY (Guard Guard.cpp)

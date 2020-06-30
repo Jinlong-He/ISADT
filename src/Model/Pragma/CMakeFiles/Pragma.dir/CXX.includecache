@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/clexma/Desktop/Disk_D/gitRepos/ISADT-common/ISADT/src/Model/Pragma/InitialKnowledge.cpp
+Model/Pragma/InitialKnowledge.hpp
+/home/clexma/Desktop/Disk_D/gitRepos/ISADT-common/ISADT/src/Model/Pragma/Model/Pragma/InitialKnowledge.hpp
+
+include/Model/Pragma/InitialKnowledge.hpp
+../Process/Attribute.hpp
+include/Model/Process/Attribute.hpp
+
+include/Model/Process/Attribute.hpp
+../Type/Type.hpp
+include/Model/Type/Type.hpp
+
+include/Model/Type/Type.hpp
+string
+-
+
