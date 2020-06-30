@@ -14,12 +14,13 @@ using std::list;
 
 namespace isadt {
 	class Edge;
-
+    class StateMachine;
 	/// \brief State in FSM.
 	class Vertex {
 	private:
 		string name_;           //< the name of this state. 
 		list<Edge*> nexts_;     //< the next states of this state.
+        StateMachine* refine_;
 	public:
 		Vertex();
 
@@ -36,6 +37,10 @@ namespace isadt {
 		const string& getName() {
 			return name_;
 		}
+
+        StateMachine* getRefine() {
+            return refine_;
+        }
 	};
 }
 

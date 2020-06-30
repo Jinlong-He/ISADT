@@ -28,7 +28,7 @@
   </ClassDiagram>
   <ProcessToSMs>
     <ProcessToSM process="P1">
-      <StateMachine refine_state="顶层">
+      <StateMachine refine_state="">
         <Transition source="_init" dest="S2" />
         <State name="S2" />
         <Transition source="S2" dest="S4">

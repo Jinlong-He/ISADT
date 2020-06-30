@@ -18,8 +18,17 @@ namespace isadt {
 	class Edge {
     public:
     	/// \brief Edge constructor 
-    	Edge(Vertex* from, 
-             Vertex* to, 
+        Edge() 
+            : from_(nullptr),
+              to_(nullptr),
+              guard_(nullptr) {}
+
+    	Edge(Vertex* from, Vertex* to)
+            : from_(from),
+              to_(to),
+              guard_(nullptr) {}
+
+    	Edge(Vertex* from, Vertex* to, 
              Guard* guard, 
              const std::initializer_list<Action*>& actions)
             : from_(from),
@@ -27,49 +36,38 @@ namespace isadt {
               guard_(guard),
               actions_(actions) {}
 
-    	Edge(Vertex* from, 
-             Vertex* to, 
+    	Edge(Vertex* from, Vertex* to, 
              const string& guardStr, 
              const std::initializer_list<string>& actionStrs);
 
-    	Guard* getGuard() {
-    		return guard_;
-    	}
-    	void setGuard(Guard* guard);
-    	void setGuard(string guard);
-
-    	Vertex* getFromVertex() {
-            return from_;
-        }
+    	Vertex* getFromVertex();
     	void SetFromVertex(Vertex* from);
 
-    	Vertex* getToVertex() {
-            return to_;
-        }
+    	Vertex* getToVertex();
     	void SetToVertex(Vertex* to);
 
-    	const list<Action*>& getActions() {
-            return actions_;
-        }
+    	Guard* getGuard();
+    	void setGuard(Guard* guard);
+    	Guard* mkGuard(const string& guardStr);
+
+    	const list<Action*>& getActions();
     	Action* getActionByIndex(int index);
 
-    	void addAction(string _action);
-    	void addAction(Action* _action);
+    	Action* mkAction(const string& actionStr);
+    	void addAction(Action* action);
 
     	bool hasNonDeterministicGuard();
-
     	bool isEmpty();
-
     	bool hasActions();
-
     	void removeAllActions();
-
     	void removeFirstAction();
 	private:
     	Vertex* from_;               //< from Vertex
     	Vertex* to_;                 //< to Vertex
     	Guard* guard_;               //< transtion guard
+        string guardStr_;
     	list<Action*> actions_;      //< actions on the transition
+        list<string> actionStrs_;
 	};
 }
 

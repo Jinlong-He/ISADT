@@ -15,13 +15,6 @@ using std::unordered_set;
 
 namespace isadt {
     class Model;
-    class VertexSmPair{
-        public: 
-            VertexSmPair(Vertex* v, StateMachine* m);
-        private:
-            Vertex *v;
-            StateMachine* sm;
-    };
     /// \brief the process of model.
     class Process : public Class{
     public:
@@ -50,7 +43,7 @@ namespace isadt {
         Model* getModel() const;
         void setModel(Model* model);
         
-        StateMachine* mkStateMachine();
+        StateMachine* mkStateMachine(Vertex* parent = nullptr);
 
         const list<CommMethod*>& getCommMethods() const;
         const StateMachine* getStateMachine();
@@ -59,12 +52,16 @@ namespace isadt {
                                  bool inout, const string& commId);
         CommMethod* mkCommMethod(const string& name);
         CommMethod* getCommMethodByName(const string& name);
+
+        void addVertex(Vertex* vertex);
+        Vertex* getVertexByName(const string& name);
     private:
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm
-        unordered_map<VertexSmPair*, StateMachine*> stateSmMap;
+        unordered_map<string, StateMachine*> stateMachineMap;
         unordered_map<string, CommMethod*> commMethodMap;
+        unordered_map<string, Vertex*> vertexMap;
         StateMachine* stateMachine_;
         Model* model_;                       ///< the model this process from.
     };

@@ -19,12 +19,20 @@ namespace isadt {
 	class StateMachine {
 	public:
 		StateMachine()
-            : proc_(nullptr),
-              startVertex_(nullptr) {}
+            : startVertex_(nullptr),
+              parent_(nullptr),
+              proc_(nullptr) {}
+
+		StateMachine(Vertex* parent,
+                     Process* proc)
+            : startVertex_(nullptr),
+              parent_(parent),
+              proc_(proc) {}
 
 		StateMachine(Process* proc)
-            : proc_(proc),
-              startVertex_(nullptr) {}
+            : startVertex_(nullptr),
+              parent_(nullptr),
+              proc_(proc) {}
 
 		~StateMachine() {
             for (auto vertex : vertices_) {
@@ -38,7 +46,7 @@ namespace isadt {
         }
 
 
-		void mkStartVertex(const string& name);
+		Vertex* mkStartVertex(const string& name);
 		Vertex* getStartVertex();
 
 		void mkEndVertex(const string& name);
@@ -47,15 +55,17 @@ namespace isadt {
 		const std::list<Vertex*>& getVertices() const;
 		Vertex* mkVertex(const string& name);
 		Vertex* getVertexByName(const string& name);
+		Vertex* getParent();
 
 		const std::list<Edge*>& getEdges() const;
-		Edge* mkEdge(Edge* edge);
+		Edge* mkEdge(Vertex* source, Vertex* target);
 	private:
     	std::list<Vertex*> vertices_;    //< the set of the states of this fsm.
     	std::list<Edge*> edges_;         //< the set of the transitions of this fsm.
         std::unordered_map<string, Vertex*> vertexMap;
     	Vertex* startVertex_;            //< record the start state of this fsm.
 		list<Vertex*> endVertices_;
+        Vertex* parent_;
     	Process* proc_;               //< the StateMachine belongs to the process.
 	};
 }

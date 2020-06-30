@@ -1,20 +1,23 @@
 #include "Model/StateMachine/StateMachine.hpp"
 #include <iostream>
 namespace isadt{
-	void StateMachine::mkStartVertex(const string& name) {
+	Vertex* StateMachine::mkStartVertex(const string& name) {
 		Vertex* vertex = mkVertex(name);
 		startVertex_ = vertex;
+        return vertex;
 	}
 
 	Vertex* StateMachine::getStartVertex() {
 		return startVertex_;
 	}
 
+	Vertex* StateMachine::getParent() {
+		return parent_;
+	}
+
 	Vertex* StateMachine::getVertexByName(const string& name) {
-        if (vertexMap.count(name) > 0) return vertexMap[name];
-        auto v = mkVertex(name);
-        vertexMap[name] = v;
-        return v;
+        if (vertexMap.count(name) == 0) return mkVertex(name);
+        return vertexMap[name];
 	}
 
 	const std::list<Vertex*>& StateMachine::getVertices() const {
@@ -31,8 +34,10 @@ namespace isadt{
         return vertex;
 	}
 
-	Edge* StateMachine::mkEdge(Edge* edge) {
+	Edge* StateMachine::mkEdge(Vertex* source, Vertex* target) {
+        Edge* edge = new Edge(source, target);
 		edges_.push_front(edge);
+        return edge;
 	}
 
 }

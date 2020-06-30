@@ -15,12 +15,14 @@ namespace isadt {
     public:
         static void parse(const char* fileName, Model* model);
         static void parseClassDiagram(XMLElement* root, Model* model);
+        static void parseProcessToSMs(XMLElement* root, Model* model);
         static void parseUserType(XMLElement* root, Model* model);
         static void parseProcess(XMLElement* root, Model* model);
         static Attribute* parseAttribute(XMLElement* root, Struct* s, Model* model);
         static Method* parseMethod(XMLElement* root, Class* c, Model* model);
         static CommMethod* parseCommMethod(XMLElement* root, Process* p, Model* model);
         static StateMachine* parseStateMachine(XMLElement* root, Process* proc);
+        static Edge* parseEdge(XMLElement* root, StateMachine* sm);
     };
 }
 

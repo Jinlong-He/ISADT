@@ -8,10 +8,10 @@ namespace isadt{
         model_ = model;
     }
 
-    StateMachine* Process::mkStateMachine(){
-        //StateMachine* sm = new StateMachine(this);
-        //this->statemachine_ = sm;
-        //return sm;
+    StateMachine* Process::mkStateMachine(Vertex* parent) {
+        StateMachine* sm = new StateMachine(parent, this);
+        stateMachines_.push_back(sm);
+        return sm;
     }
 
     CommMethod* Process::mkCommMethod(const string& name, 
@@ -38,6 +38,13 @@ namespace isadt{
     }
     const StateMachine* Process::getStateMachine(){
         return stateMachine_;
+    }
+    void Process::addVertex(Vertex* vertex) {
+        vertexMap[vertex -> getName()] = vertex;
+    }
+    Vertex* Process::getVertexByName(const string& name) {
+        if (vertexMap.count(name) == 0) return nullptr;
+        return vertexMap[name];
     }
 }
         
