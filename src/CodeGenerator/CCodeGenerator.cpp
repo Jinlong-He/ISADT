@@ -227,7 +227,7 @@ namespace isadt{
 		{
 			//TODO: add path latter
 			std::string headerPath;
-			std::string srcIncludeStr = "#include \"" + headerPath + ".\\generatedHeader\\" + proc->getProcName() + ".h\"\n";
+			std::string srcIncludeStr = "#include \"" + headerPath + "../generatedHeader/" + proc->getProcName() + ".h\"\n";
 			return srcIncludeStr;
 		}
 
@@ -265,6 +265,10 @@ namespace isadt{
 				std::string ret = "return result;\n";
 				std::string methodBody = "{\n" + returnVal + ret + "；\n}\n";
 				outStr += (methodDef + methodBody);
+				
+			}
+
+			for (CommMethod* m : proc->getCommMethods()){
 				
 			}
 			return outStr;

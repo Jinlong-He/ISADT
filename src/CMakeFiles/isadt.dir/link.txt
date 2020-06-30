@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/isadt.dir/main.o  -o ../build/bin/isadt  Model/libModel.a Parser/XmlParser/libXmlParser.a Model/Channel/libChannel.a Model/Pragma/libPragma.a Model/Process/libProcess.a Model/StateMachine/libStateMachine.a Model/StateMachine/Action/libAction.a Model/StateMachine/Guard/libGuard.a Model/StateMachine/Term/libTerm.a Model/Type/libType.a 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libStateMachine.a  CMakeFiles/StateMachine.dir/StateMachine.o CMakeFiles/StateMachine.dir/Expression.o
+/usr/bin/ranlib libStateMachine.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libPragma.a  CMakeFiles/Pragma.dir/Axiom.o CMakeFiles/Pragma.dir/InitialKnowledge.o
+/usr/bin/ranlib libPragma.a
