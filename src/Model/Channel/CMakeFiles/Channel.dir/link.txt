@@ -1,2 +1,0 @@
-/usr/bin/ar qc libChannel.a  CMakeFiles/Channel.dir/Channel.o
-/usr/bin/ranlib libChannel.a

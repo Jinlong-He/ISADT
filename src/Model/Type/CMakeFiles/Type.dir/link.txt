@@ -1,2 +1,0 @@
-/usr/bin/ar qc libType.a  CMakeFiles/Type.dir/Type.o CMakeFiles/Type.dir/UserType.o
-/usr/bin/ranlib libType.a

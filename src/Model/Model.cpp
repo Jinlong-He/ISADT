@@ -19,23 +19,42 @@ namespace isadt{
     }
 
     UserType* Model::getUserTypeByName(const string& name) {
-        if (userTypeMap.count(name) == 0) return nullptr;
+        if (userTypeMap.count(name) == 0) {
+            auto userType = mkUserType(name);
+            userTypeMap[name] = userType;
+            return userType;
+        }
         return userTypeMap[name];
     }
 
-    UserType* Model::getUserTypeById(const string& id) {
-        return getUserTypeById(stoi(id));
+    //UserType* Model::getUserTypeById(const string& id) {
+    //    return getUserTypeById(stoi(id));
+    //}
+
+    //UserType* Model::getUserTypeById(int id) {
+    //    if (id == -1 || userTypes_.size() < id) return nullptr;
+    //    return userTypes_[id - 1];
+    //}
+
+    Process* Model::mkProcess() {
+        Process* proc = new Process(this);
+        procs_.push_back(proc);
+        return proc;
     }
 
-    UserType* Model::getUserTypeById(int id) {
-        if (id == -1 || userTypes_.size() < id) return nullptr;
-        return userTypes_[id - 1];
+    Process* Model::mkProcess(const string& name) {
+        auto proc = mkProcess();
+        proc -> setProcName(name);
+        return proc;
     }
 
-    Process* Model::mkProcess(){
-        Process* p = new Process(this);
-        procs_.push_back(p);
-        return p;
+    Process* Model::getProcByName(const string& name) {
+        if (procMap.count(name) == 0) {
+            auto proc = mkProcess(name);
+            procMap[name] = proc;
+            return proc;
+        }
+        return procMap[name];
     }
 
     Attribute* Model::mkAttribute(Type* type, const string& name){
@@ -62,8 +81,8 @@ namespace isadt{
     }
 
     Method* Model::mkMethod(const string& name, Type* returnType, 
-                              const string& algorithmId,
-                              const string& userCode) {
+                            const string& algorithmId,
+                            const string& userCode) {
         if (methodMap.count(name) > 0) {
             std::cout << "err: method already exists" << std::endl;
             return nullptr;
@@ -74,9 +93,9 @@ namespace isadt{
     }
 
     CommMethod* Model::mkCommMethod(const string& name, 
-                                      const std::initializer_list<Attribute*>& parameters,
-                                      bool inout,
-                                      const string& commId){
+                                    const std::initializer_list<Attribute*>& parameters,
+                                    bool inout,
+                                    const string& commId){
         if (methodMap.count(name) > 0) {
             std::cout << "err: method already exists" << std::endl;
             return nullptr;
@@ -115,7 +134,7 @@ namespace isadt{
         return procs_;
     }
 
-    const vector<UserType*>& Model::getUserTypes() const {
+    const list<UserType*>& Model::getUserTypes() const {
         return userTypes_;
     }
 }

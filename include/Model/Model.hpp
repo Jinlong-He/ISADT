@@ -57,7 +57,7 @@ namespace isadt {
                              UserType* base = nullptr);
 
         Process* mkProcess();
-        Process* mkProcess(std::string procName);
+        Process* mkProcess(const string& procName);
 
         Attribute* mkAttribute(Type* type, const string& name);
         Method* mkMethod(const string& name, Type* returnType, 
@@ -88,21 +88,21 @@ namespace isadt {
         mkInitialKnowledge(Process* process, Attribute* attribute);
         
         const list<Process*>& getProcesses() const;
-        const vector<UserType*>& getUserTypes() const;
+        const list<UserType*>& getUserTypes() const;
 
         UserType* getUserTypeByName(const string& name);
-        UserType* getUserTypeById(const string& id);
-        UserType* getUserTypeById(int id);
+        Process* getProcByName(const string& name);
     private:
         list<Process*> procs_;
         list<Property*> props_;
         list<InitialKnowledge*> initialKnowledges_;
-        vector<UserType*> userTypes_;
+        list<UserType*> userTypes_;
         list<Axiom*> axioms_;
         list<Channel*> channels_;
         std::unordered_map<string, UserType*> userTypeMap;
         std::unordered_map<string, Attribute*> attributeMap;
         std::unordered_map<string, MethodBase*> methodMap;
+        std::unordered_map<string, Process*> procMap;
         //list<SequenceDiagram*> sd_;
         // ProcMethodPair * 2, bool privacy
 

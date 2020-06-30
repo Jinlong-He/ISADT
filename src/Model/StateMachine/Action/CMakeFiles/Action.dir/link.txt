@@ -1,2 +1,0 @@
-/usr/bin/ar qc libAction.a  CMakeFiles/Action.dir/Action.o
-/usr/bin/ranlib libAction.a

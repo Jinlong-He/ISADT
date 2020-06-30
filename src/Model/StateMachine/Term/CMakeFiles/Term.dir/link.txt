@@ -1,2 +1,0 @@
-/usr/bin/ar qc libTerm.a  CMakeFiles/Term.dir/MethodTerm.o
-/usr/bin/ranlib libTerm.a

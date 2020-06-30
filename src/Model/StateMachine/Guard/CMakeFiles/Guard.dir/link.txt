@@ -1,2 +1,0 @@
-/usr/bin/ar qc libGuard.a  CMakeFiles/Guard.dir/Guard.o
-/usr/bin/ranlib libGuard.a
