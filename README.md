@@ -1,3 +1,3 @@
 # ISADT
 ## './build.sh' for build
-## './build/bin/isadt 1 test.xml'
+## './build/bin/isadt test.xml'
