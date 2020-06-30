@@ -1,6 +1,5 @@
 #include <iostream>
 #include <list>
-#include "../include/Model/Type/Type.hpp"
 #include "../include/Model/Model.hpp"
 #include "../include/Parser/XmlParser/XmlParser.hpp"
 #include "../include/Parser/LParser/LParser.hpp"

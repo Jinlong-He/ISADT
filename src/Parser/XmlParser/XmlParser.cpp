@@ -25,40 +25,36 @@ namespace isadt {
         }
     }
 
-    Attribute* XmlParser::parseAttribute(XMLElement* root, const string& preName, Model* model) {
-        cout << "attr " + preName + "_" + root -> Attribute("identifier") << endl;
-        return model -> mkAttribute(model -> getUserTypeByName(root -> Attribute("type")),
-                                    preName + "_" + root -> Attribute("identifier"));
+    Attribute* XmlParser::parseAttribute(XMLElement* root, Struct* s, Model* model) {
+        cout << root -> Attribute("identifier") << endl;
+        return s -> mkAttribute(model -> getUserTypeByName(root -> Attribute("type")),
+                                root -> Attribute("identifier"));
     }
 
-    Method* XmlParser::parseMethod(XMLElement* root, const string& preName, Model* model) {
-        auto method = model -> mkMethod(preName + "_" + root -> Attribute("name"),
-                                        model -> getUserTypeByName(root -> Attribute("returnType")), 
-                                        root -> Attribute("cryptoSuffix"), "");
+    Method* XmlParser::parseMethod(XMLElement* root, Class* s, Model* model) {
+        auto method = s -> mkMethod(root -> Attribute("name"),
+                                    model -> getUserTypeByName(root -> Attribute("returnType")), 
+                                    root -> Attribute("cryptoSuffix"), "");
         cout << "method: " + method -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
-            const string& name = method -> getName();
             while (element) {
-                auto attr = parseAttribute(element, name, model);
-                method -> addParameter(attr);
+                auto attr = parseAttribute(element, method, model);
                 element = element -> NextSiblingElement();
             }
         }
         return method;
     }
 
-    CommMethod* XmlParser::parseCommMethod(XMLElement* root, const string& preName, Model* model) {
-        auto method = model -> mkCommMethod(preName + "_" + root -> Attribute("name"),
-                                            strcmp(root -> Attribute("inOutSuffix"), "In"),
-                                            root -> Attribute("commWay"));
+    CommMethod* XmlParser::parseCommMethod(XMLElement* root, Process* s, Model* model) {
+        auto method = s -> mkCommMethod(root -> Attribute("name"), nullptr,
+                                        strcmp(root -> Attribute("inOutSuffix"), "In"),
+                                        root -> Attribute("commWay"));
         cout << "commMethod: " + method -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
-            const string& name = method -> getName();
             while (element) {
-                auto attr = parseAttribute(element, name, model);
-                method -> addParameter(attr);
+                auto attr = parseAttribute(element, method, model);
                 element = element -> NextSiblingElement();
             }
         }
@@ -67,8 +63,7 @@ namespace isadt {
 
     void XmlParser::parseUserType(XMLElement* root, Model* model) {
         auto userType = model -> getUserTypeByName(root -> Attribute("name"));
-        const string& preName = userType -> getName();
-        cout << "userType: " + preName << endl;
+        cout << "userType: " + userType -> getName() << endl;
         auto base = root -> Attribute("parent");
         if (base) {
             userType -> setBase(model -> getUserTypeByName(base));
@@ -77,11 +72,9 @@ namespace isadt {
             auto element = root -> FirstChildElement();
             while (element) {
                 if (strcmp(element -> Value(), "Attribute") == 0) {
-                    auto attr = parseAttribute(element, preName, model);
-                    userType -> addAttribute(attr);
+                    auto attr = parseAttribute(element, userType, model);
                 } else {
-                    auto method = parseMethod(element, preName, model);
-                    userType -> addMethod(method);
+                    auto method = parseMethod(element, userType, model);
                 }
                 element = element -> NextSiblingElement();
             }
@@ -90,27 +83,38 @@ namespace isadt {
 
     void XmlParser::parseProcess(XMLElement* root, Model* model) {
         auto proc = model -> getProcByName(root -> Attribute("name"));
-        const string& preName = proc -> getProcName();
-        cout << "proc: " + preName << endl;
+        cout << "proc: " + proc -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
                 if (strcmp(element -> Value(), "Attribute") == 0) {
-                    auto attr = parseAttribute(element, preName, model);
-                    proc -> addAttribute(attr);
+                    auto attr = parseAttribute(element, proc, model);
                 } else if (strcmp(element -> Value(), "Method") == 0) {
-                    auto method = parseMethod(element, preName, model);
-                    proc -> addMethod(method);
+                    auto method = parseMethod(element, proc, model);
                 } else if (strcmp(element -> Value(), "CommMethod") == 0) {
-                    auto method = parseCommMethod(element, preName, model);
-                    proc -> addCommMethod(method);
+                    auto method = parseCommMethod(element, proc, model);
                 }
                 element = element -> NextSiblingElement();
             }
         }
     }
 
-    StateMachine* XmlParser::parseStateMachine(XMLElement* root, Process* proc) {
-        auto sm = proc -> mkStateMachine();
-    }
+    //Edge* XmlParser::parseEdge() {
+    //}
+
+    //StateMachine* XmlParser::parseStateMachine(XMLElement* root, Process* proc) {
+    //    auto sm = proc -> mkStateMachine();
+    //    sm -> mkStartVertex("_init");
+    //    if (!(root -> NoChildren())) {
+    //        auto element = root -> FirstChildElement();
+    //        while (element) {
+    //            if (strcmp(element -> Value(), "Transition") == 0) {
+    //                auto s = sm -> getVertexByName(element -> Attribute("source"));
+    //                auto t = sm -> getVertexByName(element -> Attribute("dest"));
+    //                sm -> mkEdge();
+    //            } else if (strcmp(element -> Value(), "State") == 0) {
+    //            }
+    //        }
+    //    }
+    //}
 }

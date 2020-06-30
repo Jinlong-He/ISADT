@@ -56,27 +56,8 @@ namespace isadt {
                              const std::initializer_list<Attribute*>& parameters, 
                              UserType* base = nullptr);
 
-        Process* mkProcess();
         Process* mkProcess(const string& procName);
 
-        Attribute* mkAttribute(Type* type, const string& name);
-        Method* mkMethod(const string& name, Type* returnType, 
-                         const std::initializer_list<Attribute*>& parameters,
-                         const string& algorithmId,
-                         const string& userCode = "");
-
-        Method* mkMethod(const string& name, Type* returnType, 
-                         const string& algorithmId,
-                         const string& userCode = "");
-
-        CommMethod* mkCommMethod(const string& name, 
-                                 const std::initializer_list<Attribute*>& parameters,
-                                 bool inout,
-                                 const string& commId);
-
-        CommMethod* mkCommMethod(const string& name, 
-                                 bool inout,
-                                 const string& commId);
         ConfidentialProperty*
         mkConfidentialProperty(Process* process, Attribute* attribute);
 
@@ -100,8 +81,6 @@ namespace isadt {
         list<Axiom*> axioms_;
         list<Channel*> channels_;
         std::unordered_map<string, UserType*> userTypeMap;
-        std::unordered_map<string, Attribute*> attributeMap;
-        std::unordered_map<string, MethodBase*> methodMap;
         std::unordered_map<string, Process*> procMap;
         //list<SequenceDiagram*> sd_;
         // ProcMethodPair * 2, bool privacy

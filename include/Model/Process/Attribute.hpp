@@ -7,28 +7,29 @@
 
 #ifndef Model_Attribute_hpp
 #define Model_Attribute_hpp 
-#include "../Type/Type.hpp"
+#include <string>
+using std::string;
 namespace isadt {
+    class UserType;
     /// \brief the attribute of process.
     class Attribute {
     public:
         Attribute()
             : type_(nullptr) {}
 
-        Attribute(Type* type, const string& identifier) 
+        Attribute(UserType* type, const string& identifier) 
             : type_(type),
               identifier_(identifier) {}
 
         ~Attribute() {}
 
-        Type* getType() const;
-        void setType(Type* type);
+        UserType* getType() const;
+        void setType(UserType* type);
         const string& getIdentifier() const;
         void setIdentifier(const string& identifier);
-        const string toString() const;
 
     private:
-        Type* type_;
+        UserType* type_;
         string identifier_;
     };
 }

@@ -7,12 +7,11 @@
 
 #ifndef Model_Process_hpp
 #define Model_Process_hpp
-#include <unordered_map>
 #include <unordered_set>
-#include "Method.hpp"
+#include "../Struct/Class.hpp"
 #include "CommMethod.hpp"
-#include "Attribute.hpp"
 #include "../StateMachine/StateMachine.hpp"
+using std::unordered_set;
 
 namespace isadt {
     class Model;
@@ -24,23 +23,16 @@ namespace isadt {
             StateMachine* sm;
     };
     /// \brief the process of model.
-    class Process {
+    class Process : public Class{
     public:
         Process()
             : model_(nullptr) {}
 
-        Process(Model* model) 
-            : model_(model) {}
+        Process(const string& name, Model* model = nullptr) 
+            : Class(name),
+              model_(model) {}
 
         ~Process() {
-            for (auto attr : attributes_) {
-                delete attr;
-                attr = nullptr;
-            }
-            for (auto method : methods_) {
-                delete method;
-                method = nullptr;
-            }
             for (auto commMethod : commMethods_) {
                 delete commMethod;
                 commMethod = nullptr;
@@ -49,8 +41,10 @@ namespace isadt {
                 delete stateMachine;
                 stateMachine = nullptr;
             }
-            delete stateMachine_;
-            stateMachine_ = nullptr;
+            if (stateMachine_) {
+                delete stateMachine_;
+                stateMachine_ = nullptr;
+            }
         }
 
         Model* getModel() const;
@@ -58,29 +52,21 @@ namespace isadt {
         
         StateMachine* mkStateMachine();
 
-        const list<Attribute*>& getAttributes();
-        void addAttribute(Attribute* attr);
-        void addMethod(Method* m);
-        void addCommMethod(CommMethod* m);
-
-        const std::string& getProcName();
-        void setProcName(std::string procName);
-
-        const list<Method*>& getMethods() const;
         const list<CommMethod*>& getCommMethods() const;
         const StateMachine* getStateMachine();
         
+        CommMethod* mkCommMethod(const string& name, UserType* returnType,
+                                 bool inout, const string& commId);
+        CommMethod* mkCommMethod(const string& name);
+        CommMethod* getCommMethodByName(const string& name);
     private:
-        Model* model_;                       ///< the model this process from.
-        std::string procName_;
-        list<Attribute*> attributes_;        ///< the attributes for this process.
-        list<Method*> methods_;              ///< the methods for this process.
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm
-        std::unordered_map<VertexSmPair*, StateMachine*> stateSmMap;
+        unordered_map<VertexSmPair*, StateMachine*> stateSmMap;
+        unordered_map<string, CommMethod*> commMethodMap;
         StateMachine* stateMachine_;
-        std::unordered_set<std::string> nameSet_;
+        Model* model_;                       ///< the model this process from.
     };
 }
 

@@ -10,9 +10,11 @@ namespace isadt{
 		return startVertex_;
 	}
 
-	Vertex* StateMachine::getVertex(const string& name) {
+	Vertex* StateMachine::getVertexByName(const string& name) {
         if (vertexMap.count(name) > 0) return vertexMap[name];
-        return nullptr;
+        auto v = mkVertex(name);
+        vertexMap[name] = v;
+        return v;
 	}
 
 	const std::list<Vertex*>& StateMachine::getVertices() const {

@@ -7,8 +7,6 @@
 
 #ifndef Model_Method_hpp
 #define Model_Method_hpp 
-#include <list>
-#include "Attribute.hpp"
 #include "MethodBase.hpp"
 using std::list;
 
@@ -19,17 +17,15 @@ namespace isadt {
         Method()
             : MethodBase() {}
 
-        Method(const string& name, 
-               Type* returnType,
-               const std::initializer_list<Attribute*>& parameters,
-               const string& algorithmId,
-               const string& userCode = "")
-            : MethodBase(name, returnType, parameters),
-              algorithmId_(algorithmId),
-              userCode_(userCode) {}
+        Method(const string& name)
+            : MethodBase(name) {}
+
+        Method(const string& name,
+               UserType* returnType)
+            : MethodBase(name, returnType) {}
 
         Method(const string& name, 
-               Type* returnType,
+               UserType* returnType,
                const string& algorithmId,
                const string& userCode = "")
             : MethodBase(name, returnType),

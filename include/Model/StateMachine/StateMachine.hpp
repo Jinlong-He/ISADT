@@ -45,8 +45,8 @@ namespace isadt {
 		const std::list<Vertex*>& getEndVertices() const;
 
 		const std::list<Vertex*>& getVertices() const;
-		Vertex* getVertex(const string& name);
 		Vertex* mkVertex(const string& name);
+		Vertex* getVertexByName(const string& name);
 
 		const std::list<Edge*>& getEdges() const;
 		Edge* mkEdge(Edge* edge);

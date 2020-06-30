@@ -7,52 +7,25 @@
 
 #ifndef Model_UserType_hpp
 #define Model_UserType_hpp 
-#include <list>
-#include "Type.hpp"
-#include "../Process/Attribute.hpp"
-#include "../Process/Method.hpp"
-
-using std::list;
+#include "../Struct/Class.hpp"
 
 namespace isadt {
     /// \brief the user defined data type of process.
-    class UserType : public Type {
+    class UserType : public Class {
     public:
         UserType()
-            : Type() {}
+            : Class() {}
 
         UserType(const string& name, 
                  UserType* base = nullptr)
-            : Type(name),
+            : Class(name),
               base_(base) {}
 
-        UserType(const string& name, 
-                 const std::initializer_list<Attribute*>& parameters, 
-                 UserType* base = nullptr)
-            : Type(name),
-              parameters_(parameters),
-              base_(base) {}
+        ~UserType() {}
 
-        ~UserType() {
-            for (auto attr : parameters_) {
-                delete attr;
-                attr = nullptr;
-            }
-            for (auto m : methods_) {
-                delete m;
-                m = nullptr;
-            }
-        }
-
-        const list<Attribute*>& getParameters() const;
-        void setParameters(const list<Attribute*>& _parameters);
-        void addAttribute(Attribute* attr);
-        void addMethod(Method* m);
+        UserType* getBase();
         void setBase(UserType* base);
-
     private:
-        list<Attribute*> parameters_;     //< the parameter list of this type.
-        list<Method*> methods_;
         UserType* base_;                  //< the base type of this type.
     };
 }

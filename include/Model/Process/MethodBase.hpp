@@ -7,48 +7,31 @@
 
 #ifndef Model_MethodBase_hpp
 #define Model_MethodBase_hpp 
-#include <list>
-#include "./Attribute.hpp"
-using std::list;
+#include "../Struct/Struct.hpp"
 namespace isadt {
+    class UserType;
     /// \brief the method of process.
-    class MethodBase {
-        public:
-            MethodBase()
-                : name_(""),
-                  returnType_(nullptr) {}
-    
-            MethodBase(const string& name, 
-                       Type* returnType,
-                       const std::initializer_list<Attribute*>& parameters)
-                : name_(name),
-                  returnType_(returnType),
-                  parameters_(parameters) {}
-    
-            MethodBase(const string& name, 
-                       Type* returnType)
-                : name_(name),
-                  returnType_(returnType) {}
-    
-            ~MethodBase() {
-                for (auto p : parameters_) {
-                    delete p;
-                    p = nullptr;
-                }
-            }
-    
-            const string& getName() const;
-            void setName(const string& name) ;
-    
-            Type* getReturnType() const;
-            void setReturnType(Type* returnType);
-    
-            const list<Attribute*>& getParameters() const;
-            void addParameter(Attribute* attr);
-        private:
-           string name_;
-           Type* returnType_;
-           list<Attribute*> parameters_;  
+    class MethodBase : public Struct {
+    public:
+        MethodBase()
+            : Struct(),
+              returnType_(nullptr) {}
+
+        MethodBase(const string& name)
+            : Struct(name),
+              returnType_(nullptr) {}
+
+        MethodBase(const string& name, 
+                   UserType* returnType)
+            : Struct(name),
+              returnType_(returnType) {}
+
+        ~MethodBase() {}
+
+        UserType* getReturnType() const;
+        void setReturnType(UserType* returnType);
+    private:
+        UserType* returnType_;
     };
 }
 

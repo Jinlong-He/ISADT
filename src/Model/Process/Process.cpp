@@ -14,30 +14,25 @@ namespace isadt{
         //return sm;
     }
 
-    const list<Attribute*>& Process::getAttributes(){
-        return attributes_;
+    CommMethod* Process::mkCommMethod(const string& name, 
+                               UserType* returnType,
+                               bool inout, 
+                               const string& commId) {
+        CommMethod* method = new CommMethod(name, returnType, inout, commId);
+        commMethods_.push_back(method);
+        commMethodMap[name] = method;
+        return method;
     }
 
-    void Process::addAttribute(Attribute* attr) {
-        attributes_.push_back(attr);
-    }
-    void Process::addMethod(Method* m) {
-        methods_.push_back(m);
+    CommMethod* Process::mkCommMethod(const string& name) {
+        return mkCommMethod(name, nullptr, 0, "");
     }
 
-    void Process::addCommMethod(CommMethod* m) {
-        commMethods_.push_back(m);
+    CommMethod* Process::getCommMethodByName(const string& name) {
+        if (commMethodMap.count(name) == 0) return mkCommMethod(name);
+        return commMethodMap[name];
     }
-
-    const std::string& Process::getProcName(){
-        return procName_;
-    }
-    void Process::setProcName(std::string procName){
-        procName_ = procName;
-    }
-    const list<Method*>& Process::getMethods() const{
-        return methods_;
-    }
+    
     const list<CommMethod*>& Process::getCommMethods() const{
         return commMethods_;
     }
