@@ -29,10 +29,11 @@ namespace isadt {
                          const string& algorithmId, const string& userCode);
         Method* mkMethod(const string& name);
         Method* getMethodByName(const string& name);
+        bool hasMethod(const string& name) const;
         const list<Method*>& getMethods() const;
     private:
         list<Method*> methods_;
-        unordered_map<string, Method*> methodMap;
+        unordered_map<string, Method*> methodMap_;
     };
 }
 

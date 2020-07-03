@@ -12,8 +12,19 @@ namespace isadt {
   /// \brief the AssignmentTerm contains AttributeTerm and MethodTerm.
   class AssignmentAction : public Action {
   public:
-    AssignmentAction();
-    AssignmentAction(const string& xml);
+    AssignmentAction()
+        : lhs_(nullptr),
+          rhs_(nullptr) {}
+
+    AssignmentAction(Attribute* attr)
+        : lhs_(mkAttributeTerm(attr)),
+          rhs_(nullptr) {}
+
+    AssignmentAction(AttributeTerm* lhs, Term* rhs)
+        : lhs_(lhs),
+          rhs_(rhs) {}
+
+    void setRhs(Term* term);
 
     string to_stirng() const;
   private:

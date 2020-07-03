@@ -9,7 +9,9 @@ using namespace isadt;
 
 int main(int argc, char *argv[]) {
     Model model;
-    //vector<string> text;
-    //LParser::parse(text, &model);
-    XmlParser::parse(argv[1], &model);
+    Process proc;
+    Edge edge;
+    vector<string> text;
+    LParser::parse(text, &model, &proc, &edge);
+    //XmlParser::parse(argv[1], &model);
 }

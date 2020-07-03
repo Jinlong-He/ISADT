@@ -10,7 +10,9 @@
 #include <list>
 #include "Vertex.hpp"
 #include "Guard/Guard.hpp"
-#include "Action/Action.hpp"
+#include "Action/AssignmentAction.hpp"
+#include "Action/DeclarationAction.hpp"
+#include "Action/MethodAction.hpp"
 using std::list;
 
 namespace isadt {
@@ -53,7 +55,10 @@ namespace isadt {
     	const list<Action*>& getActions();
     	Action* getActionByIndex(int index);
 
-    	Action* mkAction(const string& actionStr);
+    	DeclarationAction* mkDeclarationAction(Attribute* attr, const string& value);
+    	AssignmentAction* mkAssignmentAction(AttributeTerm* lhs, Term* rhs);
+    	MethodAction* mkMethodAction(MethodTerm* methodTerm);
+
     	void addAction(Action* action);
 
     	bool hasNonDeterministicGuard();

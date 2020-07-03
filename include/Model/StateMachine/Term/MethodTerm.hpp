@@ -8,6 +8,8 @@
 #ifndef Model_MethodTerm_hpp
 #define Model_MethodTerm_hpp
 #include "Term.hpp"
+#include "AttributeTerm.hpp"
+#include "ConstTerm.hpp"
 #include "../../Process/MethodBase.hpp"
 
 namespace isadt {
@@ -15,9 +17,20 @@ namespace isadt {
   /// \breif the method term can be a method with a series of args.
   class MethodTerm : public Term {
   public:
-    MethodTerm();
-    MethodTerm(MethodBase* method, list<Term*> args);
+    MethodTerm()
+        : Term(),
+          method_(nullptr) {}
+
+    MethodTerm(MethodBase* method)
+        : Term(),
+          method_(method) {}
+
+    ~MethodTerm() {
+    }
+
     MethodTerm(const string& toParse); // create a method term from string.
+
+    void addArg(Term* term);
 
     MethodBase* getMethod();
     const list<Term*>& getArgs() const;

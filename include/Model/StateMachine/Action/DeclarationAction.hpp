@@ -6,7 +6,13 @@ namespace isadt {
   /// \brief the DeclarationAction.
   class DeclarationAction : public Action {
   public:
-    DeclarationAction();
+    DeclarationAction()
+        : attribute_(nullptr) {}
+
+    DeclarationAction(Attribute* attr, const string& value = "")
+        : attribute_(attr),
+          value_(value) {}
+    
     DeclarationAction(const string& xml);
     string to_stirng() const;
   private:

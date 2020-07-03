@@ -137,7 +137,7 @@ namespace isadt {
                 if (strcmp(element -> Value(), "Guard") == 0) {
                     e -> mkGuard(element -> Attribute("content"));
                 } else if (strcmp(element -> Value(), "Action") == 0) {
-                    e -> mkAction(element -> Attribute("content"));
+                    //e -> mkAction(element -> Attribute("content"));
                 }
                 element = element -> NextSiblingElement();
             }

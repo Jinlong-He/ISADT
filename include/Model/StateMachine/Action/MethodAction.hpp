@@ -7,8 +7,14 @@ namespace isadt {
   /// \brief the AssignmentTerm contains AttributeTerm and MethodTerm.
   class MethodAction : public Action {
   public:
-    MethodAction();
-    MethodAction(const string& xml);
+    MethodAction()
+        : methodTerm_(nullptr) {}
+
+    MethodAction(MethodTerm* methodTerm)
+        : methodTerm_(methodTerm) {}
+
+    MethodAction(MethodBase* method)
+        : methodTerm_(mkMethodTerm(method)) {}
 
     string to_stirng() const;
   private:

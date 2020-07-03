@@ -11,7 +11,7 @@ namespace isadt {
     Attribute* Struct::mkAttribute(UserType* type, const string& name) {
         Attribute* attr = new Attribute(type, name);
         attributes_.push_back(attr);
-        attributeMap[name] = attr;
+        attributeMap_[name] = attr;
         return attr;
     }
 
@@ -20,8 +20,12 @@ namespace isadt {
     }
 
     Attribute* Struct::getAttributeByName(const string& name) {
-        if (attributeMap.count(name) == 0) return mkAttribute(name);
-        return attributeMap[name];
+        if (attributeMap_.count(name) == 0) return mkAttribute(name);
+        return attributeMap_[name];
+    }
+
+    bool Struct::hasAttribute(const string& name) const {
+        return attributeMap_.count(name);
     }
 
     const list<Attribute*>& Struct::getAttributes() const {

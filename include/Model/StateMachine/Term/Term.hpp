@@ -14,14 +14,16 @@ using std::string;
 namespace isadt {
 	/// \breif the term in the action has two inheritance class AttributeTerm and MethodTerm.
 	class Term {
-	private:
 
 	public:
+        Term() {}
 		Term(const string& toParse);
+        ~Term() {}
 
 		bool isValidName(string _name);
 		bool containAMethodCall(); //< check if the term has a MethodTerm subclass.
 
+	private:
 	};
 }
 

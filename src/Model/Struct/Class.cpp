@@ -4,7 +4,7 @@ namespace isadt {
                             const string& algorithmId, const string& userCode) {
         Method* m = new Method(name, returnType, algorithmId, userCode);
         methods_.push_back(m);
-        methodMap[name] = m;
+        methodMap_[name] = m;
         return m;
     }
 
@@ -13,8 +13,12 @@ namespace isadt {
     }
 
     Method* Class::getMethodByName(const string& name) {
-        if (methodMap.count(name) == 0) return mkMethod(name);
-        return methodMap[name];
+        if (methodMap_.count(name) == 0) return mkMethod(name);
+        return methodMap_[name];
+    }
+
+    bool Class::hasMethod(const string& name) const {
+        return methodMap_.count(name);
     }
 
     const list<Method*>& Class::getMethods() const {

@@ -15,7 +15,7 @@ using std::vector;
 namespace isadt {
     class LParser {
     public:
-        static void parse(const vector<string>& text, Model* model);
+        static void parse(const vector<string>& text, Model* model, Process* proc, Edge* edge);
     };
 }
 #endif /* Parser_C_hpp */
