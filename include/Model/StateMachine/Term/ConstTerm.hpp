@@ -12,19 +12,30 @@
 
 namespace isadt {
   /// \breif the attribute term in the action
-  class ConstTerm : public Term {
-  public:
-    ConstTerm();
-    ConstTerm(Attribute* attribute);
-    ConstTerm(const string& toParse);
+    class ConstTerm : public Term {
+    public:
+        ConstTerm()
+            : typeStr_(""),
+              valueStr_("") {}
 
-    bool isAMethodCall();
-    bool isAVariableSetting();
-    bool containAMethodCall();
-    string to_stirng() const;
-  private:
-    Attribute* attribute_;       //< attribute of the term
-  };
+        ConstTerm(const string& tyepStr, const string& valueStr)
+            : typeStr_(tyepStr),
+              valueStr_(valueStr) {}
+
+        const string& getTypeStr() const;
+        bool getBoolValue() const;
+        int getIntValue() const;
+        virtual string to_string() const {
+            return valueStr_;
+        }
+
+        UserType* getType() const {
+            return nullptr;
+        }
+    private:
+        string typeStr_;
+        string valueStr_;
+    };
 }
 
 #endif /* Model_AttributeTerm_hpp */

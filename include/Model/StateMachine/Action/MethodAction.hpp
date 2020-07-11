@@ -13,10 +13,7 @@ namespace isadt {
     MethodAction(MethodTerm* methodTerm)
         : methodTerm_(methodTerm) {}
 
-    MethodAction(MethodBase* method)
-        : methodTerm_(mkMethodTerm(method)) {}
-
-    string to_stirng() const;
+    string to_string() const;
   private:
         MethodTerm* methodTerm_;
         string xml_;

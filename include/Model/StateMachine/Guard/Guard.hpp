@@ -15,12 +15,14 @@ namespace isadt {
 	/// \brief Guard condition on the transition.
 	class Guard {
       public:
-        Guard();
-        Guard(const string& toParse);
-        Guard(Expression* expression);
+        Guard()
+            : expression_(nullptr) {}
 
-        Expression* getGuardExpression();
-        void setGuardExpression(Expression* expression);
+        Guard(Expression* expression)
+            : expression_(expression) {}
+
+        Expression* getExpression();
+        void setExpression(Expression* expression);
         string to_string() const;
     private:
         Expression* expression_;

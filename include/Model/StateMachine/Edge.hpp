@@ -8,11 +8,13 @@
 #ifndef Model_Edge_hpp
 #define Model_Edge_hpp
 #include <list>
+#include <iostream>
 #include "Vertex.hpp"
 #include "Guard/Guard.hpp"
 #include "Action/AssignmentAction.hpp"
 #include "Action/DeclarationAction.hpp"
 #include "Action/MethodAction.hpp"
+#include "Term/ListTerm.hpp"
 using std::list;
 
 namespace isadt {
@@ -42,6 +44,31 @@ namespace isadt {
              const string& guardStr, 
              const std::initializer_list<string>& actionStrs);
 
+        ~Edge() {
+            if (guard_) {
+                delete guard_;
+                guard_ = nullptr;
+            }
+            for (auto action : actions_) {
+                if (action) {
+                    delete action;
+                    action = nullptr;
+                }
+            }
+            for (auto exp : exps_) {
+                if (exp) {
+                    delete exp;
+                    exp = nullptr;
+                }
+            }
+            for (auto term : terms_) {
+                if (term) {
+                    delete term;
+                    term = nullptr;
+                }
+            }
+        }
+
     	Vertex* getFromVertex();
     	void SetFromVertex(Vertex* from);
 
@@ -50,16 +77,25 @@ namespace isadt {
 
     	Guard* getGuard();
     	void setGuard(Guard* guard);
-    	Guard* mkGuard(const string& guardStr);
+
+    	Guard* mkGuard(Expression* exp);
 
     	const list<Action*>& getActions();
     	Action* getActionByIndex(int index);
 
-    	DeclarationAction* mkDeclarationAction(Attribute* attr, const string& value);
-    	AssignmentAction* mkAssignmentAction(AttributeTerm* lhs, Term* rhs);
-    	MethodAction* mkMethodAction(MethodTerm* methodTerm);
+    	DeclarationAction* mkDeclarationAction(Attribute* attr);
+    	AssignmentAction* mkAssignmentAction(Term* lhs, Term* rhs = nullptr);
+    	//MethodAction* mkMethodAction(MethodTerm* methodTerm);
+
+        AttributeTerm* mkAttributeTerm(Attribute* attr);
+        MethodTerm* mkMethodTerm(MethodBase* method);
+        ConstTerm* mkConstTerm(const string& type, const string& value);
+        ListTerm* mkListTerm();
+
+        Expression* mkExpression(const string& op, Term* exp1, Term* exp2 = nullptr);
 
     	void addAction(Action* action);
+        string to_string() const;
 
     	bool hasNonDeterministicGuard();
     	bool isEmpty();
@@ -73,6 +109,8 @@ namespace isadt {
         string guardStr_;
     	list<Action*> actions_;      //< actions on the transition
         list<string> actionStrs_;
+        list<Expression*> exps_;
+        list<Term*> terms_;
 	};
 }
 

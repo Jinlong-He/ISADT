@@ -15,22 +15,26 @@ namespace isadt {
     class Attribute {
     public:
         Attribute()
-            : type_(nullptr) {}
+            : type_(nullptr),
+              identifier_(""),
+              array_(0) {}
 
-        Attribute(UserType* type, const string& identifier) 
+        Attribute(UserType* type, const string& identifier, int array = 0)
             : type_(type),
-              identifier_(identifier) {}
+              identifier_(identifier),
+              array_(array) {}
 
         ~Attribute() {}
 
         UserType* getType() const;
         void setType(UserType* type);
         const string& getIdentifier() const;
+        int getArray() const;
         void setIdentifier(const string& identifier);
-
     private:
         UserType* type_;
         string identifier_;
+        int array_;
     };
 }
 

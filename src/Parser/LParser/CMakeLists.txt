@@ -1,9 +1,9 @@
 MESSAGE(STATUS "LParser This is SOURCE dir " ${PROJECT_SOURCE_DIR})
 SET(src_dir
-    generated/CLexer.cpp
-    generated/CParser.cpp
-    generated/CVisitor.cpp
-    generated/CBaseVisitor.cpp
+    generated/tinycLexer.cpp
+    generated/tinycParser.cpp
+    generated/tinycVisitor.cpp
+    generated/tinycBaseVisitor.cpp
  )
 FILE(GLOB antlr4-cpp-src
     third_party/antlr4-cpp-runtime/src/*.cpp

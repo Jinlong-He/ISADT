@@ -17,21 +17,11 @@ namespace isadt {
 	public:
 		Action() {}
 
-        ~Action() {
-            for (auto term : terms_) {
-                delete term;
-                term = nullptr;
-            }
-        }
-
-        MethodTerm* mkMethodTerm(MethodBase* method);
-        AttributeTerm* mkAttributeTerm(Attribute* attr);
-        ConstTerm* mkConstTerm(Attribute* attr);
+        virtual ~Action() {}
 
         Action(const string& toParse);
         virtual string to_string() const;
     private:
-        list<Term*> terms_;
 	};
 }
 #endif /* Model_Action_hpp */

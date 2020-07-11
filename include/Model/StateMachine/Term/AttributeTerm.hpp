@@ -11,25 +11,21 @@
 #include "../../Process/Attribute.hpp"
 
 namespace isadt {
-  /// \breif the attribute term in the action
-  class AttributeTerm : public Term {
-  public:
-    AttributeTerm()
-        : Term(),
-          attribute_(nullptr) {}
+    /// \breif the attribute term in the action
+    class AttributeTerm : public Term {
+    public:
+        AttributeTerm()
+            : Term(),
+              attribute_(nullptr) {}
 
-    AttributeTerm(Attribute* attribute)
-        : attribute_(attribute) {}
+        AttributeTerm(Attribute* attribute)
+            : attribute_(attribute) {}
 
-    AttributeTerm(const string& toParse);
-
-    bool isAMethodCall();
-    bool isAVariableSetting();
-    bool containAMethodCall();
-    string to_stirng() const;
-  private:
-    Attribute* attribute_;       //< attribute of the term
-  };
+        virtual string to_string() const;
+        virtual UserType* getType() const;
+    private:
+        Attribute* attribute_;       //< attribute of the term
+    };
 }
 
 #endif /* Model_AttributeTerm_hpp */

@@ -12,6 +12,10 @@ namespace isadt {
         return identifier_;
     }
 
+    int Attribute::getArray() const {
+        return array_;
+    }
+
     void Attribute::setIdentifier(const string& identifier) {
         identifier_ = identifier;
     }

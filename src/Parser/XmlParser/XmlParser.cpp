@@ -1,4 +1,5 @@
 #include "Parser/XmlParser/XmlParser.hpp"
+#include "Parser/LParser/LParser.hpp"
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -43,7 +44,7 @@ namespace isadt {
                     if (! (element -> NoChildren())) {
                         auto node = element -> FirstChildElement();
                         while (node) {
-                            parseStateMachine(node, proc);
+                            parseStateMachine(node, model, proc);
                             node = node -> NextSiblingElement();
                         }
                     }
@@ -127,7 +128,7 @@ namespace isadt {
         }
     }
 
-    Edge* XmlParser::parseEdge(XMLElement* root, StateMachine* sm) {
+    Edge* XmlParser::parseEdge(XMLElement* root, Model* model, Process* proc, StateMachine* sm) {
         auto s = sm -> getVertexByName(root -> Attribute("source"));
         auto t = sm -> getVertexByName(root -> Attribute("dest"));
         auto e = sm -> mkEdge(s, t);
@@ -135,24 +136,25 @@ namespace isadt {
             auto element = root -> FirstChildElement();
             while (element) {
                 if (strcmp(element -> Value(), "Guard") == 0) {
-                    e -> mkGuard(element -> Attribute("content"));
+                    LParser::parseGuard(element -> Attribute("content"), model, proc, e);
                 } else if (strcmp(element -> Value(), "Action") == 0) {
-                    //e -> mkAction(element -> Attribute("content"));
+                    LParser::parseAction(element -> Attribute("content"), model, proc, e);
                 }
                 element = element -> NextSiblingElement();
             }
         }
+        cout << e -> to_string() << endl;
         return e;
     }
 
-    StateMachine* XmlParser::parseStateMachine(XMLElement* root, Process* proc) {
+    StateMachine* XmlParser::parseStateMachine(XMLElement* root, Model* model, Process* proc) {
         auto sm = proc -> mkStateMachine(proc -> getVertexByName(root -> Attribute("refine_state")));
         sm -> mkStartVertex("_init");
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
                 if (strcmp(element -> Value(), "Transition") == 0) {
-                    auto e = parseEdge(element, sm);
+                    auto e = parseEdge(element, model, proc, sm);
                 } else if (strcmp(element -> Value(), "State") == 0) {
                     auto s = sm -> getVertexByName(element -> Attribute("name"));
                     proc -> addVertex(s);

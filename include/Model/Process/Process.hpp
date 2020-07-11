@@ -8,6 +8,7 @@
 #ifndef Model_Process_hpp
 #define Model_Process_hpp
 #include <unordered_set>
+#include <iostream>
 #include "../Struct/Class.hpp"
 #include "CommMethod.hpp"
 #include "../StateMachine/StateMachine.hpp"
@@ -19,10 +20,12 @@ namespace isadt {
     class Process : public Class{
     public:
         Process()
-            : model_(nullptr) {}
+            : stateMachine_(nullptr),
+              model_(nullptr) {}
 
         Process(const string& name, Model* model = nullptr) 
             : Class(name),
+              stateMachine_(nullptr),
               model_(model) {}
 
         ~Process() {
@@ -52,6 +55,7 @@ namespace isadt {
                                  bool inout, const string& commId);
         CommMethod* mkCommMethod(const string& name);
         CommMethod* getCommMethodByName(const string& name);
+        bool hasCommMethod(const string& name);
 
         void addVertex(Vertex* vertex);
         Vertex* getVertexByName(const string& name);

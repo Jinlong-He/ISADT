@@ -30,8 +30,8 @@ namespace isadt {
         void setName(const string& name);
         const string& getName() const;
 
-        Attribute* mkAttribute(UserType* type, const string& name);
-        Attribute* mkAttribute(const string& name);
+        Attribute* mkAttribute(UserType* type, const string& name, int array = 0);
+        //Attribute* mkAttribute(const string& name);
         Attribute* getAttributeByName(const string& name);
         bool hasAttribute(const string& name) const;
         const list<Attribute*>& getAttributes() const;

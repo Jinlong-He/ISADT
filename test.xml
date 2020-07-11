@@ -45,8 +45,10 @@
         <Transition source="_init" dest="S5" />
         <State name="S5" />
         <Transition source="S5" dest="_final">
-          <Guard content="a&gt;1" />
           <Guard content="a&lt;2" />
+          <Action content="int b=2" />
+          <Action content="b=1" />
+          <Action content="SymEnc(send(b),a)" />
           <Action content="a=1" />
           <Action content="a=2" />
         </Transition>

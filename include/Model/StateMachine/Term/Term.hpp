@@ -9,6 +9,7 @@
 #define Model_Term_hpp
 
 #include <string>
+#include "../../Type/UserType.hpp"
 using std::string;
 
 namespace isadt {
@@ -17,13 +18,30 @@ namespace isadt {
 
 	public:
         Term() {}
-		Term(const string& toParse);
-        ~Term() {}
+
+        virtual ~Term() {}
 
 		bool isValidName(string _name);
 		bool containAMethodCall(); //< check if the term has a MethodTerm subclass.
 
+        void addChild(Term* term) {
+            children_.push_back(term);
+        }
+
+        virtual string to_string() const {
+            string res = "";
+            for (auto term : children_) {
+                res += term -> to_string();
+            }
+            return res;
+        }
+
+        virtual UserType* getType() const {
+            return nullptr;
+        }
+
 	private:
+        list<Term*> children_;
 	};
 }
 

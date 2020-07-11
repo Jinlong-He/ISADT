@@ -8,6 +8,7 @@
 #ifndef Model_Model_hpp
 #define Model_Model_hpp 
 #include <vector>
+#include <iostream>
 #include "Type/UserType.hpp"
 #include "Process/Process.hpp"
 #include "Pragma/Property.hpp"
@@ -73,6 +74,7 @@ namespace isadt {
 
         UserType* getUserTypeByName(const string& name);
         Process* getProcByName(const string& name);
+        bool hasUserType(const string& name);
     private:
         list<Process*> procs_;
         list<Property*> props_;

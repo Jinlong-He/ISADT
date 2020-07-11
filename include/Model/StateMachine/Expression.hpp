@@ -12,35 +12,37 @@
 using std::string;
 
 namespace isadt {
-  /// \brief Expression in the Guard condition.
-  class Expression {
-  public:
-    Expression();
-    Expression(string value);
+    /// \brief Expression in the Guard condition.
+    class Expression : public Term{
+    public:
+        Expression()
+            : term1_(nullptr),
+              term2_(nullptr) {}
 
-    Expression(Expression* expressionA);
-    Expression(Expression* expressionA, Expression* expressionB, string binaryOp);
-    Expression* getExpressionA();
-    Expression* getExpressionB();
-    string getBinaryOp();
-    bool isSingledExpression();
-  private:
-    Expression* expressionA_;
-    Expression* expressionB_;
-    bool isSingleExpression_;
-    string binaryOp_;
-    string xml_;
+        Expression(const string& op, Term* term1, Term* term2 = nullptr)
+            : op_(op),
+              term1_(term1),
+              term2_(term2),
+              isSingle_(term2 == nullptr) {}
 
-  };
+        virtual ~Expression() {}
 
-  class atomicExpression : public Expression {
+        Term* getTerm1();
+        Term* getTerm2();
+
+        string getOp();
+        bool isSingledExpression();
+        virtual string to_string() const;
+        virtual UserType* getType() const {
+            return nullptr;
+        }
     private:
-      Term* termA_;
-      Term* termB_;
-      bool isSingleTerm_;
-      string binaryOp_;
-      string xml_;
-  };
+        string op_;
+        Term* term1_;
+        Term* term2_;
+        bool isSingle_;
+        string xml_;
+    };
 }
 
 #endif /* Model_Expression_hpp */

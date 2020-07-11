@@ -1,30 +1,16 @@
 #include "Model/StateMachine/Expression.hpp"
-
-
 namespace isadt{
-    Expression::Expression(){
-
-    }
-    Expression::Expression(string value){
-        
-    }
-
-    Expression::Expression(Expression* expressionA){
-
-    }
-    Expression::Expression(Expression* expressionA, Expression* expressionB, string binaryOp){
-
-    }
-    Expression* Expression::getExpressionA(){
-
-    }
-    Expression* Expression::getExpressionB(){
-
-    }
-    string Expression::getBinaryOp(){
-
-    }
-    bool Expression::isSingledExpression(){
-
+    string Expression::to_string() const {
+        if (isSingle_) {
+            if (op_ == "!" || op_ == ".")
+                return op_ + term1_ -> to_string();
+            if (op_ == "()")
+                return "(" + term1_ -> to_string() + ")";
+            if (op_ == "[]")
+                return "[" + term1_ -> to_string() + "]";
+        } else {
+            return term1_ -> to_string() + op_ + term2_ -> to_string();
+        }
+        return "";
     }
 }

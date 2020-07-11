@@ -56,4 +56,7 @@ namespace isadt{
     const list<UserType*>& Model::getUserTypes() const {
         return userTypes_;
     }
+    bool Model::hasUserType(const string& name) {
+        return userTypeMap.count(name);
+    }
 }

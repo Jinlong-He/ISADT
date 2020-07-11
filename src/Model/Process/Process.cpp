@@ -15,9 +15,9 @@ namespace isadt{
     }
 
     CommMethod* Process::mkCommMethod(const string& name, 
-                               UserType* returnType,
-                               bool inout, 
-                               const string& commId) {
+                                      UserType* returnType,
+                                      bool inout, 
+                                      const string& commId) {
         CommMethod* method = new CommMethod(name, returnType, inout, commId);
         commMethods_.push_back(method);
         commMethodMap[name] = method;
@@ -29,8 +29,12 @@ namespace isadt{
     }
 
     CommMethod* Process::getCommMethodByName(const string& name) {
-        if (commMethodMap.count(name) == 0) return mkCommMethod(name);
+        if (commMethodMap.count(name) == 0) return nullptr;
         return commMethodMap[name];
+    }
+
+    bool Process::hasCommMethod(const string& name) {
+        return commMethodMap.count(name);
     }
     
     const list<CommMethod*>& Process::getCommMethods() const{

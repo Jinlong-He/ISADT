@@ -16,19 +16,17 @@ namespace isadt {
         : lhs_(nullptr),
           rhs_(nullptr) {}
 
-    AssignmentAction(Attribute* attr)
-        : lhs_(mkAttributeTerm(attr)),
-          rhs_(nullptr) {}
-
-    AssignmentAction(AttributeTerm* lhs, Term* rhs)
+    AssignmentAction(Term* lhs, Term* rhs = nullptr)
         : lhs_(lhs),
           rhs_(rhs) {}
 
-    void setRhs(Term* term);
-
-    string to_stirng() const;
+    string to_string() const {
+        if (rhs_)
+            return lhs_ -> to_string() + " = " + rhs_ -> to_string();
+        return lhs_ -> to_string();
+    }
   private:
-		AttributeTerm* lhs_;     //< leftHand of the assignment
+		Term* lhs_;     //< leftHand of the assignment
 		Term* rhs_;              //< rightHand can be an attribute or a method call.
         string xml_;
   };

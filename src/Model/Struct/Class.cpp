@@ -13,7 +13,7 @@ namespace isadt {
     }
 
     Method* Class::getMethodByName(const string& name) {
-        if (methodMap_.count(name) == 0) return mkMethod(name);
+        if (methodMap_.count(name) == 0) return nullptr;
         return methodMap_[name];
     }
 

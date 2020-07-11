@@ -13,37 +13,38 @@
 #include "../../Process/MethodBase.hpp"
 
 namespace isadt {
-  /// \breif the method term in the action
-  /// \breif the method term can be a method with a series of args.
-  class MethodTerm : public Term {
-  public:
-    MethodTerm()
-        : Term(),
-          method_(nullptr) {}
+    /// \breif the method term in the action
+    /// \breif the method term can be a method with a series of args.
+    class MethodTerm : public Term {
+    public:
+        MethodTerm()
+            : Term(),
+              method_(nullptr) {}
 
-    MethodTerm(MethodBase* method)
-        : Term(),
-          method_(method) {}
+        MethodTerm(MethodBase* method)
+            : Term(),
+              method_(method) {}
 
-    ~MethodTerm() {
-    }
+        ~MethodTerm() {
+        }
 
-    MethodTerm(const string& toParse); // create a method term from string.
+        MethodTerm(const string& toParse); // create a method term from string.
 
-    void addArg(Term* term);
+        void pushfrontArg(Term* term);
 
-    MethodBase* getMethod();
-    const list<Term*>& getArgs() const;
+        MethodBase* getMethod();
+        const list<Term*>& getArgs() const;
 
-    bool isAMethodCall() {return true;};
-    bool isAVariableSetting() {return false;};
-    bool isLeftHand() {return false;} // method term can be only appear in the rightHand of the action.
-    bool containMethodCall() {return true;}
-    string to_stirng() const;
-  private:
-    list<Term*> args_;  //< the args in the method term
-    MethodBase* method_;    //< the method in the method term
-  };
+        bool isAMethodCall() {return true;};
+        bool isAVariableSetting() {return false;};
+        bool isLeftHand() {return false;} // method term can be only appear in the rightHand of the action.
+        bool containMethodCall() {return true;}
+        virtual string to_string() const;
+        virtual UserType* getType() const;
+    private:
+        MethodBase* method_;    //< the method in the method term
+        list<Term*> args_;  //< the args in the method term
+    };
 }
 
 

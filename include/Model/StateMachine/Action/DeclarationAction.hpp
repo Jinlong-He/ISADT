@@ -14,7 +14,13 @@ namespace isadt {
           value_(value) {}
     
     DeclarationAction(const string& xml);
-    string to_stirng() const;
+    string to_string() const {
+        string res = attribute_ -> getType() -> getName() + " " + attribute_ -> getIdentifier();
+        for (int i = 0; i < attribute_ -> getArray(); i++) {
+            res += "[]";
+        }
+        return res;
+    }
   private:
     Attribute* attribute_;
     string value_;

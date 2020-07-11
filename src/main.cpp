@@ -8,10 +8,11 @@ using namespace std;
 using namespace isadt;
 
 int main(int argc, char *argv[]) {
-    Model model;
-    Process proc;
-    Edge edge;
-    vector<string> text;
-    LParser::parse(text, &model, &proc, &edge);
-    //XmlParser::parse(argv[1], &model);
+    try {
+        Model model;
+        XmlParser::parse(argv[1], &model);
+    } catch (string e) {
+        cout << e << endl;
+        exit(1);
+    }
 }
