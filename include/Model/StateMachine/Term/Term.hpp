@@ -28,6 +28,16 @@ namespace isadt {
             children_.push_back(term);
         }
 
+        UserType* getRealType() const {
+            for (auto it = children_.rend(); it != children_.rbegin();) {
+                it--;
+                if ((*it) -> to_string().find(".") != string::npos) {
+                    return (*it) -> getType();
+                }
+            }
+            return getType();
+        }
+
         virtual string to_string() const {
             string res = "";
             for (auto term : children_) {

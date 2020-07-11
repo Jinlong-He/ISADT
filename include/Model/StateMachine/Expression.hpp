@@ -34,7 +34,7 @@ namespace isadt {
         bool isSingledExpression();
         virtual string to_string() const;
         virtual UserType* getType() const {
-            return nullptr;
+            return term1_ -> getType();
         }
     private:
         string op_;

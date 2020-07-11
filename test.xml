@@ -13,8 +13,12 @@
         <Parameter type="number" identifier="m" isArray="False" />
       </Method>
     </UserType>
+    <UserType name="Key" basic="false" parent="ByteVec">
+      <Attribute type="Msg" identifier="msg" isArray="False" />
+    </UserType>
     <Process name="P1">
       <Attribute type="Msg" identifier="msg" isArray="False" />
+      <Attribute type="Key" identifier="k" isArray="False" />
       <Attribute type="int" identifier="a" isArray="True" />
       <Method returnType="ByteVec" name="SymEnc" cryptoSuffix="AES">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
@@ -38,7 +42,7 @@
         <State name="S4" />
         <Transition source="S4" dest="_final">
           <Guard content="a&gt;5" />
-          <Action content="a=6" />
+          <Action content="k.msg[a*2].n[1]=1" />
         </Transition>
       </StateMachine>
       <StateMachine refine_state="S4">

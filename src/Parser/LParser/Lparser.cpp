@@ -56,7 +56,7 @@ namespace isadt {
             }
             if (ctx -> Identifier()) {
                 auto term = readPostfixExpression(ctx -> postfixExpression());
-                auto type = term -> getType();
+                auto type = term -> getRealType();
                 auto attrStr = ctx -> Identifier() -> getText();
                 if (!(type -> hasAttribute(attrStr))) {
                     throw "error: no member named " + attrStr + " in " + term -> to_string();
