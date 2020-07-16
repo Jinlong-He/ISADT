@@ -1,6 +1,6 @@
 #pragma once
 #include <stdio.h>
-#include <WinSock2.h>
+#include <sys/socket.h>
 
 #define ETH_P_888F 0x888f
 

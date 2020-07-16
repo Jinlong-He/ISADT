@@ -59,7 +59,9 @@ namespace isadt {
 
         void addVertex(Vertex* vertex);
         Vertex* getVertexByName(const string& name);
+        std::string getProcName();
     private:
+        std::string name;
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm

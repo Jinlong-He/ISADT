@@ -45,7 +45,8 @@ namespace isadt
         /*------------UserType------------*/
         std::string generateUserTypes(std::string path, Model* model);
         /*---------Gen---------*/
-        void generateCode(std::string path, Process* proc);
+        void generateCodeProc(std::string path, Process* proc);
+        void generateAll(std::string path, Model* model);
         std::string generateDecrptAlgorithm()
         {
             
