@@ -5,6 +5,7 @@
 					  #include \"../../CommLib/NetComm/include/EtherSender.hpp\"\n\
 					  #include \"../../CommLib/NetComm/include/UDPSender.hpp\"\n\
 					  #include \"../../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
+#define CRYPTO_INCLUDE "#include \"../../CryptoLib/include/Cryptor.hpp\""
 #define CR "\n"
 #define TAB "\t"
 namespace isadt{
@@ -138,6 +139,12 @@ namespace isadt{
 		    return communicationIncludes;
         }
 
+		std::string CCodeGenerator::generateCryptoIncludes()
+		{
+			std::string cryptoIncludes = CRYPTO_INCLUDE;
+			return cryptoIncludes;
+		}
+
         std::string  CCodeGenerator::generateDependIncludes(Process* currentProc)
         {
             //TODO: make sure here
@@ -234,32 +241,35 @@ namespace isadt{
         std::string  CCodeGenerator::generateSrcMethods(Process* proc)
 		{		
 			std::string outStr = "";
+			/*code generation for base methods*/
 			for (Method* m : proc->getMethods())
 			{
-				std::string rttStr =  m->getReturnType()->getName();
-				std::string classNamespace = proc->getProcName() + "::";
-				std::string methodName = m->getName();
-				std::string attrStr = "(";
-				int i = 1;
-				for (Attribute* a : m->getAttributes()) 
+				if(m->getAlgorithmId() == nullptr)
 				{
-					std::string termStr = a->getType()->getName() + " " + a->getIdentifier();
-					attrStr += termStr;
-					if (i < m->getAttributes().size()) 
+					std::string rttStr =  m->getReturnType()->ge					tName();
+					std::string classNamespace = proc->getProcName() + "::";
+					std::string methodName = m->getName();
+					std::string attrStr = "(";
+					int i = 1;
+					for (Attribute* a : m->getAttributes()) 
 					{
-						attrStr += ", ";
+						std::string termStr = a->getType()->getName() + " " + a->getIdentifier();
+						attrStr += termStr;
+						if (i < m->getAttributes().size()) 
+						{
+							attrStr += ", ";
+						}
+						i++;
 					}
-					i++;
+					attrStr += ")";
+					std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
+					std::string returnVal = rttStr + " result;" + CR;
+					std::string ret = "return result;\n";
+					std::string methodBody = "{\n" + returnVal + ret + "；\n}\n";
+					outStr += (methodDef + methodBody);
 				}
-				attrStr += ")";
-				std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
-				std::string returnVal = rttStr + " result;" + CR;
-				std::string ret = "return result;\n";
-				std::string methodBody = "{\n" + returnVal + ret + "；\n}\n";
-				outStr += (methodDef + methodBody);
-				
 			}
-
+			/*code generation for communication methods*/
 			for (CommMethod* m : proc->getCommMethods()){
 				std::string rttStr = m->getReturnType()->getName();
 				std::string classNamespace = proc->getProcName() + "::";
@@ -325,7 +335,87 @@ namespace isadt{
 					std::cout << "Invalid commway num." << std::endl;
 				}
 
-				std::string methodBody = "{\n" + returnVal + ret + "；\n}\n";
+				std::string methodBody = "{\n" + commStr + returnVal + ret + "；\n}\n";
+				outStr += (methodDef + methodBody);
+			}
+			
+			for(Method* m : proc->getMethods())
+			{
+				std::string rttStr =  m->getReturnType()->getName();
+				std::string classNamespace = proc->getProcName() + "::";
+				std::string methodName = m->getName();
+				std::string attrStr = "(";
+				int i = 1;
+				for (Attribute* a : m->getAttributes()) 
+				{
+					std::string termStr = a->getType()->getName() + " " + a->getIdentifier();
+					attrStr += termStr;
+					if (i < m->getAttributes().size()) 
+					{
+						attrStr += ", ";
+					}
+					i++;
+				}
+				attrStr += ")";
+				std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
+				std::string returnVal = rttStr + " result;" + CR;
+				std::string ret = "return result;\n";
+				std::string cryptStr = "";
+				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "；\n}\n";
+				if(!m->getAlgorithmId().compare("RSA"))
+				{
+					//TODO: add whether is encrypt or decrypt
+					int isEncrypt = 0;
+					if(isEncrypt)
+					{
+						cryptStr += "/*Add your input data here*/\n";
+						cryptStr += "int length;\n";
+						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
+						cryptStr += "char* out_;\n";
+						cryptStr += "/*Use Openssl to generate public key*/\n";
+						cryptStr += "char* pubkey_;\n";
+						cryptStr += "Cryptor crypt = new Cryptor();\n";
+						cryptStr += "crypt.rsa_pubkey_encrypt(in_, pubkey_, out_);\n";
+					}
+					else 
+					{
+						cryptStr += "/*Add your input cipher here*/\n";
+						cryptStr += "int length;\n";
+						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
+						cryptStr += "char* out_;\n";
+						cryptStr += "/*Use Openssl to generate public key*/\n";
+						cryptStr += "char* prikey_;\n";
+						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
+						cryptStr += "crypt_.rsa_prikey_decrypt(in_, prikey_, out_);\n";
+					}
+					
+				}
+				else if(!m->getAlgorithmId().compare("AES"))
+				{
+					int isEncrypt = 0;
+					if(isEncrypt)
+					{
+						cryptStr += "/*Add your input data here*/\n";
+						cryptStr += "int length;\n";
+						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
+						cryptStr += "char* out_;\n";
+						cryptStr += "/*add openssl here*/\n";
+						cryptStr += "char* key_;\n";
+						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
+						cryptStr += "crypt_.aes_encrypt(in_, key_, out_);\n";
+					}
+					else 
+					{
+						cryptStr += "/*Add your input data here*/\n";
+						cryptStr += "int length;\n";
+						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
+						cryptStr += "char* out_;\n";
+						cryptStr += "/*add openssl here*/\n";
+						cryptStr += "char* key_;\n";
+						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
+						cryptStr += "crypt_.aes_decrypt(in_, key_, out_);\n";
+					}
+				}
 				outStr += (methodDef + methodBody);
 			}
 			return outStr;
