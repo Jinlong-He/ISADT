@@ -244,9 +244,9 @@ namespace isadt{
 			/*code generation for base methods*/
 			for (Method* m : proc->getMethods())
 			{
-				if(m->getAlgorithmId() == nullptr)
+				if(m->getAlgorithmId().compare(""))
 				{
-					std::string rttStr =  m->getReturnType()->ge					tName();
+					std::string rttStr =  m->getReturnType()->getName();
 					std::string classNamespace = proc->getProcName() + "::";
 					std::string methodName = m->getName();
 					std::string attrStr = "(";
