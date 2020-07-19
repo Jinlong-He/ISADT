@@ -38,10 +38,8 @@ namespace isadt {
 
         const string& getCommId() const;
         void setCommId(const string& commId);
-        int getCommWay();
 
     private:
-        int commWay;                 // 0 for ethernet 1 for 
         bool inout_;                 //< the in_out value.
         string commId_;              //< the communication identifier.
     };

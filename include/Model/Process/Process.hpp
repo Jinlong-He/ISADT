@@ -17,7 +17,7 @@ using std::unordered_set;
 namespace isadt {
     class Model;
     /// \brief the process of model.
-    class Process : public Class{
+    class Process : public Class {
     public:
         Process()
             : stateMachine_(nullptr),
@@ -59,9 +59,7 @@ namespace isadt {
 
         void addVertex(Vertex* vertex);
         Vertex* getVertexByName(const string& name);
-        std::string getProcName();
     private:
-        std::string name;
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm
