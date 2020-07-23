@@ -78,7 +78,7 @@ namespace isadt{
         {
             std::ofstream outHeadFile;
 		    //TODO: make sure here
-		    std::string tempFileName = proc->getProcName() + ".h";
+		    std::string tempFileName = proc->getName() + ".h";
 		    std::string outStr = "";
 		    // if def
 		    outStr += generateHeaderIfDef(proc);
@@ -112,7 +112,7 @@ namespace isadt{
         }
 
 		std::string CCodeGenerator::generateClassPre(Process* proc){
-			std::string result = "class " + proc->getProcName() + " {" + CR;
+			std::string result = "class " + proc->getName() + " {" + CR;
 			result += "\tprivate: \n";
 			return result;
 		}
@@ -154,7 +154,7 @@ namespace isadt{
 		    for (Process* p : currentProc->getDependProcs()) {
 		    	//TODO: add path for process here
 		    	std::string headerPath;
-		    	dependHeaders += "#include \"" + headerPath + "\\" + p->getProcName() + ".h\" \n";
+		    	dependHeaders += "#include \"" + headerPath + "\\" + p->getName() + ".h\" \n";
 		    }
             */
             dependHeaders += "#include \"../include/UserType.h\" \n";
@@ -188,8 +188,8 @@ namespace isadt{
 
         std::string CCodeGenerator::generateHeaderIfDef(Process* proc)
         {
-            std::string result = "#ifndef " + proc->getProcName() + "_" + "h" + CR;
-		    result += "#define " + proc->getProcName() + "_" + "h" + CR;
+            std::string result = "#ifndef " + proc->getName() + "_" + "h" + CR;
+		    result += "#define " + proc->getName() + "_" + "h" + CR;
             return result;
         }
 
@@ -199,7 +199,7 @@ namespace isadt{
             //TODO: imple later
             std::string outStr = "";
 		    std::ofstream outSrcFile;
-		    std::string tempFileName = proc->getProcName() + ".cpp";
+		    std::string tempFileName = proc->getName() + ".cpp";
 			std::cout << "genSrcInclude" << std::endl;
 		    outStr += this->generateSrcIncludes(proc);
 			outStr += this->generateStateDef(proc);
@@ -234,7 +234,7 @@ namespace isadt{
 		{
 			//TODO: add path latter
 			std::string headerPath;
-			std::string srcIncludeStr = "#include \"../generatedHeader/" + proc->getProcName() + ".h\"\n";
+			std::string srcIncludeStr = "#include \"../generatedHeader/" + proc->getName() + ".h\"\n";
 			return srcIncludeStr;
 		}
 
@@ -247,7 +247,7 @@ namespace isadt{
 				if(m->getAlgorithmId().compare(""))
 				{
 					std::string rttStr =  m->getReturnType()->getName();
-					std::string classNamespace = proc->getProcName() + "::";
+					std::string classNamespace = proc->getName() + "::";
 					std::string methodName = m->getName();
 					std::string attrStr = "(";
 					int i = 1;
@@ -272,7 +272,7 @@ namespace isadt{
 			/*code generation for communication methods*/
 			for (CommMethod* m : proc->getCommMethods()){
 				std::string rttStr = m->getReturnType()->getName();
-				std::string classNamespace = proc->getProcName() + "::";
+				std::string classNamespace = proc->getName() + "::";
 				std::string methodName = m->getName();
 				std::string attrStr = "(";
 				int i = 1;
@@ -291,7 +291,7 @@ namespace isadt{
 				std::string returnVal = rttStr + " result;" + CR;
 				std::string ret = "return result;\n";
 				std::string commStr = "";
-				if(m->getCommWay() == 0){
+				if(!m->getCommId().compare("ether")){
 					commStr += "/*Refine your Implementation here*/\n";
 					commStr += "int length_ = 0;\n";
 					commStr += "u_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n";
@@ -315,7 +315,7 @@ namespace isadt{
 						commStr += "int success = snd.sendEtherBroadcast(data_, length);\n";
 					}
 					
-				} else if(m->getCommWay() == 1){
+				} else if(!m->getCommId().compare("UDP")){
 					if(m->getInOut()){
 						commStr += "/*Add IP Str and portNUm here*/\n";
 						commStr += "std::string IPStr_;\n";
@@ -342,7 +342,7 @@ namespace isadt{
 			for(Method* m : proc->getMethods())
 			{
 				std::string rttStr =  m->getReturnType()->getName();
-				std::string classNamespace = proc->getProcName() + "::";
+				std::string classNamespace = proc->getName() + "::";
 				std::string methodName = m->getName();
 				std::string attrStr = "(";
 				int i = 1;
@@ -362,59 +362,18 @@ namespace isadt{
 				std::string ret = "return result;\n";
 				std::string cryptStr = "";
 				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "；\n}\n";
-				if(!m->getAlgorithmId().compare("RSA"))
+				if(m->getAlgorithmId().compare(""))
 				{
-					//TODO: add whether is encrypt or decrypt
-					int isEncrypt = 0;
-					if(isEncrypt)
-					{
-						cryptStr += "/*Add your input data here*/\n";
-						cryptStr += "int length;\n";
-						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
-						cryptStr += "char* out_;\n";
-						cryptStr += "/*Use Openssl to generate public key*/\n";
-						cryptStr += "char* pubkey_;\n";
-						cryptStr += "Cryptor crypt = new Cryptor();\n";
-						cryptStr += "crypt.rsa_pubkey_encrypt(in_, pubkey_, out_);\n";
-					}
-					else 
-					{
-						cryptStr += "/*Add your input cipher here*/\n";
-						cryptStr += "int length;\n";
-						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
-						cryptStr += "char* out_;\n";
-						cryptStr += "/*Use Openssl to generate public key*/\n";
-						cryptStr += "char* prikey_;\n";
-						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
-						cryptStr += "crypt_.rsa_prikey_decrypt(in_, prikey_, out_);\n";
-					}
-					
-				}
-				else if(!m->getAlgorithmId().compare("AES"))
-				{
-					int isEncrypt = 0;
-					if(isEncrypt)
-					{
-						cryptStr += "/*Add your input data here*/\n";
-						cryptStr += "int length;\n";
-						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
-						cryptStr += "char* out_;\n";
-						cryptStr += "/*add openssl here*/\n";
-						cryptStr += "char* key_;\n";
-						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
-						cryptStr += "crypt_.aes_encrypt(in_, key_, out_);\n";
-					}
-					else 
-					{
-						cryptStr += "/*Add your input data here*/\n";
-						cryptStr += "int length;\n";
-						cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
-						cryptStr += "char* out_;\n";
-						cryptStr += "/*add openssl here*/\n";
-						cryptStr += "char* key_;\n";
-						cryptStr += "Cryptor crypt_ = new Cryptor();\n";
-						cryptStr += "crypt_.aes_decrypt(in_, key_, out_);\n";
-					}
+					cryptStr += "/*Add your input data here*/\n";
+					cryptStr += "/*Configure the mod and the length of the cryptLib*/\n";
+					cryptStr += "int length_;\n";
+					cryptStr += "int mod_ = -1;\n";
+					cryptStr += "char* in_ = (char*)malloc(sizeof(char)*length);\n";
+					cryptStr += "char* out_;\n";
+					cryptStr += "/*configure the key*/\n";
+					cryptStr += "char* key_;\n";
+					cryptStr += "Cryptor crypt = new Cryptor();\n";
+					cryptStr += "crypt.crypt(in_, key_, length_, out_, mod_);\n";					
 				}
 				outStr += (methodDef + methodBody);
 			}
