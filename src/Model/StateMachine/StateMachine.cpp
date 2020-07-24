@@ -7,6 +7,16 @@ namespace isadt{
         return vertex;
 	}
 
+	Vertex* StateMachine::mkEndVertex(const string& name){
+		if(this->vertexMap.find(name) != this->vertexMap.end()){
+			std::cout << "Error:  Vertex exists." << std::endl;
+			return nullptr;
+		}
+		Vertex* vertex = this->mkVertex(name);
+		this->endVertices_.push_back(vertex);
+		return vertex;
+	}
+
 	Vertex* StateMachine::getStartVertex() {
 		return startVertex_;
 	}

@@ -27,10 +27,9 @@ namespace isadt
         void generateHeaderFile(std::string path, Process* proc);
         std::string generateCommonIncludes();
         std::string generateCommunicationIncludes();
-        std::string CCodeGenerator::generateCryptoIncludes();
+        std::string generateCryptoIncludes();
         std::string generateDependIncludes(Process* currentProc);
         std::string appendAttrDef(std::string inStr, Attribute* attr);
-        std::string appendGetterAndSetter(std::string inStr, Attribute* attr);
         std::string appendMethodDeclaration(std::string inStr, Method* method);
         std::string generateHeaderIfDef(Process* proc);
         std::string generateClassPre(Process* proc);

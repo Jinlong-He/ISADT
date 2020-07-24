@@ -93,10 +93,6 @@ namespace isadt{
 		    	outStr += TAB + this->appendAttrDef(outStr, attr);
 		    }
 			outStr += "\tpublic: \n";
-		    // getters and setters
-		    for (Attribute* attr : proc->getAttributes()) {
-		    	outStr += TAB + this->appendGetterAndSetter(outStr, attr);
-		    }
 		    // methods
 		    for (Method* m : proc->getMethods()) {
 		    	outStr += TAB + this->appendMethodDeclaration(outStr, m);
@@ -465,7 +461,7 @@ namespace isadt{
 		{
 			this->generateHeaderFile(path, proc);
 			this->generateSrcFile(path, proc);
-			//TODO: this->generateUserTypes(path, proc);
+			//this->generateUserTypes(path, proc->getModel());
 		}
 
 

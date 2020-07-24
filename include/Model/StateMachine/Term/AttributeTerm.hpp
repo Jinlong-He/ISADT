@@ -21,8 +21,10 @@ namespace isadt {
         AttributeTerm(Attribute* attribute)
             : attribute_(attribute) {}
 
-        virtual string to_string() const;
-        virtual UserType* getType() const;
+        //virtual string to_string() const;
+        //virtual UserType* getType() const;
+        string to_string() const;
+        UserType* getType() const;
     private:
         Attribute* attribute_;       //< attribute of the term
     };

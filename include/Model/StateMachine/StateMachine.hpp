@@ -49,7 +49,7 @@ namespace isadt {
 		Vertex* mkStartVertex(const string& name);
 		Vertex* getStartVertex();
 
-		void mkEndVertex(const string& name);
+		Vertex* mkEndVertex(const string& name);
 		const std::list<Vertex*>& getEndVertices() const;
 
 		const std::list<Vertex*>& getVertices() const;

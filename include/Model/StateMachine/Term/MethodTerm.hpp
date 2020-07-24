@@ -39,8 +39,10 @@ namespace isadt {
         bool isAVariableSetting() {return false;};
         bool isLeftHand() {return false;} // method term can be only appear in the rightHand of the action.
         bool containMethodCall() {return true;}
-        virtual string to_string() const;
-        virtual UserType* getType() const;
+        //virtual 
+        string to_string() const;
+        //virtual
+        UserType* getType() const;
     private:
         MethodBase* method_;    //< the method in the method term
         list<Term*> args_;  //< the args in the method term
