@@ -20,8 +20,7 @@ namespace isadt {
         virtual ~Action() {}
 
         Action(const string& toParse);
-        //virtual string to_string() const;
-		string to_string() const;
+        virtual string to_string() const;
 	private:
 	};
 }

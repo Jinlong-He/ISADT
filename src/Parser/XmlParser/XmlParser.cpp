@@ -150,6 +150,7 @@ namespace isadt {
     StateMachine* XmlParser::parseStateMachine(XMLElement* root, Model* model, Process* proc) {
         auto sm = proc -> mkStateMachine(proc -> getVertexByName(root -> Attribute("refine_state")));
         sm -> mkStartVertex("_init");
+        sm -> mkEndVertex("_final");
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {

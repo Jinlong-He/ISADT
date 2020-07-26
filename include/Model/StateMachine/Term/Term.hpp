@@ -38,7 +38,7 @@ namespace isadt {
             return getType();
         }
 
-        //virtual 
+        virtual 
         string to_string() const {
             string res = "";
             for (auto term : children_) {
@@ -47,7 +47,7 @@ namespace isadt {
             return res;
         }
 
-        ///virtual 
+        virtual 
         UserType* getType() const {
             return nullptr;
         }
