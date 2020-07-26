@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         //sm->mkEdge(second, end)->addAction(new Action());
         CCodeGenerator* codegen = new CCodeGenerator();
         //codegen->generateCodeProc("/home/clexma/Desktop/generated", p);
-        codegen->generateCodeProc("/home/clexma/Desktop/generated", model.getProcesses().front());
+        codegen->generateCodeProc("/Users/hejl/Projects/ISADT/generated", model.getProcesses().front());
     } catch (string e) {
         cout << e << endl;
         exit(1);

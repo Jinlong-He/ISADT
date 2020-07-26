@@ -1,8 +1,5 @@
 #include "Parser/XmlParser/XmlParser.hpp"
 #include "Parser/LParser/LParser.hpp"
-#include <iostream>
-using std::cout;
-using std::endl;
 namespace isadt {
     void XmlParser::parse(const char* fileName, Model* model) {
         XMLDocument doc;
@@ -55,7 +52,7 @@ namespace isadt {
     }
 
     Attribute* XmlParser::parseAttribute(XMLElement* root, Struct* s, Model* model) {
-        cout << root -> Attribute("identifier") << endl;
+        //cout << root -> Attribute("identifier") << endl;
         return s -> mkAttribute(model -> getUserTypeByName(root -> Attribute("type")),
                                 root -> Attribute("identifier"));
     }
@@ -64,7 +61,7 @@ namespace isadt {
         auto method = s -> mkMethod(root -> Attribute("name"),
                                     model -> getUserTypeByName(root -> Attribute("returnType")), 
                                     root -> Attribute("cryptoSuffix"), "");
-        cout << "method: " + method -> getName() << endl;
+        //cout << "method: " + method -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
@@ -79,7 +76,7 @@ namespace isadt {
         auto method = s -> mkCommMethod(root -> Attribute("name"), nullptr,
                                         strcmp(root -> Attribute("inOutSuffix"), "In"),
                                         root -> Attribute("commWay"));
-        cout << "commMethod: " + method -> getName() << endl;
+        //cout << "commMethod: " + method -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
@@ -92,7 +89,7 @@ namespace isadt {
 
     void XmlParser::parseUserType(XMLElement* root, Model* model) {
         auto userType = model -> getUserTypeByName(root -> Attribute("name"));
-        cout << "userType: " + userType -> getName() << endl;
+        //cout << "userType: " + userType -> getName() << endl;
         auto base = root -> Attribute("parent");
         if (base) {
             userType -> setBase(model -> getUserTypeByName(base));
@@ -112,7 +109,7 @@ namespace isadt {
 
     void XmlParser::parseProcess(XMLElement* root, Model* model) {
         auto proc = model -> getProcByName(root -> Attribute("name"));
-        cout << "proc: " + proc -> getName() << endl;
+        //cout << "proc: " + proc -> getName() << endl;
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
@@ -143,7 +140,7 @@ namespace isadt {
                 element = element -> NextSiblingElement();
             }
         }
-        cout << e -> to_string() << endl;
+        //cout << e -> to_string() << endl;
         return e;
     }
 
