@@ -118,6 +118,14 @@ namespace isadt{
                 auto edge2 = res -> mkEdge(mid, target);
                 auto exp = (Expression*) cpBeagleTerm(edge -> getGuard() -> getExpression(), edge1, edge2);
                 edge2 -> mkGuard(exp);
+                for (auto action : edge -> getActions()) {
+                    if (action -> isAssignmentAction()) {
+                        edge2 -> mkAssignmentAction(edge2 -> cpTerm(action -> getLhs()),
+                                                    edge2 -> cpTerm(action -> getRhs()));
+                    } else {
+                        edge2 -> mkDeclarationAction(action -> getAttribute(), action -> getValue());
+                    }
+                }
             }
         }
         return res;
