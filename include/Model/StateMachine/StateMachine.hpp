@@ -45,26 +45,31 @@ namespace isadt {
             }
         }
 
-
+		Vertex* mkVertex(const string& name);
 		Vertex* mkStartVertex(const string& name);
-		Vertex* getStartVertex();
-
 		Vertex* mkEndVertex(const string& name);
-		const std::list<Vertex*>& getEndVertices() const;
+		Vertex* mkMidVertex(Vertex* start, Vertex* end);
+		Vertex* cpVertex(Vertex* vertex, unordered_map<Vertex* ,Vertex*>& vertex2Map);
+
+		Vertex* getStartVertex();
+		Vertex* getEndVertex();
+		Vertex* getParent();
 
 		const std::list<Vertex*>& getVertices() const;
-		Vertex* mkVertex(const string& name);
 		Vertex* getVertexByName(const string& name);
-		Vertex* getParent();
+		Vertex* getVertexByName1(const string& name);
 
 		const std::list<Edge*>& getEdges() const;
 		Edge* mkEdge(Vertex* source, Vertex* target);
+		Edge* cpEdge(Edge* edge, unordered_map<Vertex* ,Vertex*>& vertex2Map);
+
+        void print() const;
 	private:
-    	std::list<Vertex*> vertices_;    //< the set of the states of this fsm.
-    	std::list<Edge*> edges_;         //< the set of the transitions of this fsm.
-        std::unordered_map<string, Vertex*> vertexMap;
+    	list<Vertex*> vertices_;    //< the set of the states of this fsm.
+    	list<Edge*> edges_;         //< the set of the transitions of this fsm.
+        unordered_map<string, Vertex*> vertexMap;
     	Vertex* startVertex_;            //< record the start state of this fsm.
-		list<Vertex*> endVertices_;
+		Vertex* endVertex_;
         Vertex* parent_;
     	Process* proc_;               //< the StateMachine belongs to the process.
 	};

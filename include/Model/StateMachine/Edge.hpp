@@ -11,13 +11,12 @@
 #include <iostream>
 #include "Vertex.hpp"
 #include "Guard/Guard.hpp"
-#include "Action/AssignmentAction.hpp"
-#include "Action/DeclarationAction.hpp"
-#include "Action/MethodAction.hpp"
+#include "Action/Action.hpp"
 #include "Term/ListTerm.hpp"
 using std::list;
 
 namespace isadt {
+    class Process;
 	/// \brief transition in the StateMachine 
 	class Edge {
     public:
@@ -76,25 +75,24 @@ namespace isadt {
     	void SetToVertex(Vertex* to);
 
     	Guard* getGuard();
-    	void setGuard(Guard* guard);
 
     	Guard* mkGuard(Expression* exp);
 
-    	const list<Action*>& getActions();
-    	Action* getActionByIndex(int index);
+    	const list<Action*>& getActions() const;
+        void setActions(const list<Action*>& actions);
 
-    	DeclarationAction* mkDeclarationAction(Attribute* attr);
-    	AssignmentAction* mkAssignmentAction(Term* lhs, Term* rhs = nullptr);
-    	//MethodAction* mkMethodAction(MethodTerm* methodTerm);
+    	Action* mkDeclarationAction(Attribute* attr, const string& value = "");
+    	Action* mkAssignmentAction(Term* lhs, Term* rhs = nullptr);
 
         AttributeTerm* mkAttributeTerm(Attribute* attr);
         MethodTerm* mkMethodTerm(MethodBase* method);
-        ConstTerm* mkConstTerm(const string& type, const string& value);
+        ConstTerm* mkConstTerm(UserType* type, const string& value);
         ListTerm* mkListTerm();
 
         Expression* mkExpression(const string& op, Term* exp1, Term* exp2 = nullptr);
+        Term* cpChildren(Term* term, Term* newTerm);
+        Term* cpTerm(Term* term);
 
-    	void addAction(Action* action);
         string to_string() const;
 
     	bool hasNonDeterministicGuard();

@@ -50,12 +50,15 @@ namespace isadt {
                 channel = nullptr;
             }
         }
+
         UserType* mkUserType(const string& name, 
                              UserType* base = nullptr);
 
         UserType* mkUserType(const string& name, 
                              const std::initializer_list<Attribute*>& parameters, 
                              UserType* base = nullptr);
+
+        void addUserType(UserType* type);
 
         Process* mkProcess(const string& procName);
 
@@ -82,8 +85,8 @@ namespace isadt {
         list<UserType*> userTypes_;
         list<Axiom*> axioms_;
         list<Channel*> channels_;
-        std::unordered_map<string, UserType*> userTypeMap;
-        std::unordered_map<string, Process*> procMap;
+        std::unordered_map<string, UserType*> userTypeMap_;
+        std::unordered_map<string, Process*> procMap_;
         //list<SequenceDiagram*> sd_;
         // ProcMethodPair * 2, bool privacy
 

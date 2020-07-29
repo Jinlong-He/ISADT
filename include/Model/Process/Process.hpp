@@ -12,6 +12,7 @@
 #include "../Struct/Class.hpp"
 #include "CommMethod.hpp"
 #include "../StateMachine/StateMachine.hpp"
+#include "../../Manage.hpp"
 using std::unordered_set;
 
 namespace isadt {
@@ -49,7 +50,10 @@ namespace isadt {
         StateMachine* mkStateMachine(Vertex* parent = nullptr);
 
         const list<CommMethod*>& getCommMethods() const;
-        const StateMachine* getStateMachine();
+        StateMachine* getStateMachine() const;
+        const list<StateMachine*> getStateMachines() const;
+
+        Attribute* mkNewAttribute(UserType* type, const string& name);
         
         CommMethod* mkCommMethod(const string& name, UserType* returnType,
                                  bool inout, const string& commId);
@@ -59,6 +63,9 @@ namespace isadt {
 
         void addVertex(Vertex* vertex);
         Vertex* getVertexByName(const string& name);
+
+        Term* cpBeagleTerm(Term* term, Edge* edge1, Edge* edge2);
+        StateMachine* mkBeagleStateMachine(StateMachine* sm);
     private:
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.

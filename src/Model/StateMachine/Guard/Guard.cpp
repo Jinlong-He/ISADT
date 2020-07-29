@@ -10,7 +10,6 @@ namespace isadt {
     }
 
     string Guard::to_string() const{
-        //TODO  for testing remove later
-        return "true";
+        return expression_ -> to_string();
     }
 }

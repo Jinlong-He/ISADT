@@ -5,13 +5,17 @@ namespace isadt{
                                 UserType* base) {
         UserType* type = new UserType(name, base);
         userTypes_.push_back(type);
-        userTypeMap[name] = type;
+        userTypeMap_[name] = type;
         return type;
     }
 
     UserType* Model::getUserTypeByName(const string& name) {
-        if (userTypeMap.count(name) == 0) return mkUserType(name);
-        return userTypeMap[name];
+        if (userTypeMap_.count(name) == 0) return mkUserType(name);
+        return userTypeMap_[name];
+    }
+
+    void Model::addUserType(UserType* type) {
+        userTypeMap_[type -> getName()] = type;
     }
 
     //UserType* Model::getUserTypeById(const string& id) {
@@ -26,13 +30,13 @@ namespace isadt{
     Process* Model::mkProcess(const string& name) {
         Process* proc = new Process(name, this);
         procs_.push_back(proc);
-        procMap[name] = proc;
+        procMap_[name] = proc;
         return proc;
     }
 
     Process* Model::getProcByName(const string& name) {
-        if (procMap.count(name) == 0) return mkProcess(name);
-        return procMap[name];
+        if (procMap_.count(name) == 0) return mkProcess(name);
+        return procMap_[name];
     }
 
     ConfidentialProperty*
@@ -56,7 +60,8 @@ namespace isadt{
     const list<UserType*>& Model::getUserTypes() const {
         return userTypes_;
     }
+
     bool Model::hasUserType(const string& name) {
-        return userTypeMap.count(name);
+        return userTypeMap_.count(name);
     }
 }

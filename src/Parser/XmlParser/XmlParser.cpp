@@ -1,5 +1,6 @@
 #include "Parser/XmlParser/XmlParser.hpp"
 #include "Parser/LParser/LParser.hpp"
+#include "Manage.hpp"
 namespace isadt {
     void XmlParser::parse(const char* fileName, Model* model) {
         XMLDocument doc;
@@ -88,8 +89,13 @@ namespace isadt {
     }
 
     void XmlParser::parseUserType(XMLElement* root, Model* model) {
-        auto userType = model -> getUserTypeByName(root -> Attribute("name"));
-        //cout << "userType: " + userType -> getName() << endl;
+        const string& typeStr = root -> Attribute("name");
+        auto type = Manage::getType(typeStr);
+        if (type) {
+            model -> addUserType(type);
+            return;
+        }
+        auto userType = model -> getUserTypeByName(typeStr);
         auto base = root -> Attribute("parent");
         if (base) {
             userType -> setBase(model -> getUserTypeByName(base));
@@ -126,8 +132,8 @@ namespace isadt {
     }
 
     Edge* XmlParser::parseEdge(XMLElement* root, Model* model, Process* proc, StateMachine* sm) {
-        auto s = sm -> getVertexByName(root -> Attribute("source"));
-        auto t = sm -> getVertexByName(root -> Attribute("dest"));
+        auto s = sm -> getVertexByName1(root -> Attribute("source"));
+        auto t = sm -> getVertexByName1(root -> Attribute("dest"));
         auto e = sm -> mkEdge(s, t);
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
@@ -154,7 +160,7 @@ namespace isadt {
                 if (strcmp(element -> Value(), "Transition") == 0) {
                     auto e = parseEdge(element, model, proc, sm);
                 } else if (strcmp(element -> Value(), "State") == 0) {
-                    auto s = sm -> getVertexByName(element -> Attribute("name"));
+                    auto s = sm -> getVertexByName1(element -> Attribute("name"));
                     proc -> addVertex(s);
                 }
                 element = element -> NextSiblingElement();

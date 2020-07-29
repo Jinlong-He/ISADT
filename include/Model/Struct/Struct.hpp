@@ -35,7 +35,7 @@ namespace isadt {
         Attribute* getAttributeByName(const string& name);
         bool hasAttribute(const string& name) const;
         const list<Attribute*>& getAttributes() const;
-    private:
+    protected: 
         string name_;
         list<Attribute*> attributes_;
         unordered_map<string, Attribute*> attributeMap_;

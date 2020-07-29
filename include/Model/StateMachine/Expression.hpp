@@ -8,12 +8,14 @@
 #ifndef Model_Expression_hpp
 #define Model_Expression_hpp
 #include <string>
+#include <unordered_set>
 #include "Term/Term.hpp"
 using std::string;
 
+class Edge;
 namespace isadt {
     /// \brief Expression in the Guard condition.
-    class Expression : public Term{
+    class Expression : public Term {
     public:
         Expression()
             : term1_(nullptr),
@@ -29,19 +31,20 @@ namespace isadt {
 
         Term* getTerm1();
         Term* getTerm2();
-
         string getOp();
         bool isSingledExpression();
-        virtual string to_string() const;
-        virtual UserType* getType() const {
-            return term1_ -> getType();
-        }
+        string to_string() const;
+        UserType* getType() const;
+        bool isBeagleAvailable() const;
+        bool isAtomic() const;
+        TermType getTermType() const;
     private:
         string op_;
         Term* term1_;
         Term* term2_;
         bool isSingle_;
         string xml_;
+        std::unordered_set<string> eqOps_;
     };
 }
 

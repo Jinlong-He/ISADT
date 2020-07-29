@@ -31,6 +31,7 @@ namespace isadt {
         MethodTerm(const string& toParse); // create a method term from string.
 
         void pushfrontArg(Term* term);
+        void pushbackArg(Term* term);
 
         MethodBase* getMethod();
         const list<Term*>& getArgs() const;
@@ -39,8 +40,11 @@ namespace isadt {
         bool isAVariableSetting() {return false;};
         bool isLeftHand() {return false;} // method term can be only appear in the rightHand of the action.
         bool containMethodCall() {return true;}
-        virtual string to_string() const;
-        virtual UserType* getType() const;
+        string to_string() const;
+        UserType* getType() const;
+        bool isBeagleAvailable() const;
+        bool isAtomic() const;
+        TermType getTermType() const;
     private:
         MethodBase* method_;    //< the method in the method term
         list<Term*> args_;  //< the args in the method term

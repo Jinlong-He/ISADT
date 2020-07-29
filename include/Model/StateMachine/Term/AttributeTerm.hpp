@@ -21,8 +21,12 @@ namespace isadt {
         AttributeTerm(Attribute* attribute)
             : attribute_(attribute) {}
 
-        virtual string to_string() const;
-        virtual UserType* getType() const;
+        string to_string() const;
+        UserType* getType() const;
+        bool isBeagleAvailable() const;
+        bool isAtomic() const;
+        TermType getTermType() const;
+        Attribute* getAttribute() const;
     private:
         Attribute* attribute_;       //< attribute of the term
     };

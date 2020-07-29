@@ -20,7 +20,7 @@ namespace isadt {
                 return edge_ -> mkAttributeTerm(proc_ -> getAttributeByName(id));
             }
             if (ctx -> DecimalConstant()) {
-                return edge_ -> mkConstTerm("int", ctx -> DecimalConstant() -> getText());
+                return edge_ -> mkConstTerm(model_ -> getUserTypeByName("int"), ctx -> DecimalConstant() -> getText());
             }
             if (ctx -> assignmentExpression()) {
                 return edge_ -> mkExpression("()", readAssignmentExpression(ctx -> assignmentExpression()));

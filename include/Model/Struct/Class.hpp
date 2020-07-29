@@ -31,7 +31,7 @@ namespace isadt {
         Method* getMethodByName(const string& name);
         bool hasMethod(const string& name) const;
         const list<Method*>& getMethods() const;
-    private:
+    protected: 
         list<Method*> methods_;
         unordered_map<string, Method*> methodMap_;
     };

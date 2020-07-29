@@ -16,21 +16,15 @@ namespace isadt {
         ListTerm()
             : Term(){}
 
-        void pushfrontTerm(Term* term) {
-            list_.push_front(term);
-        }
-        virtual string to_string() const {
-            string res = "{";
-            for (auto term: list_) {
-                res += term -> to_string() + ",";
-            }
-            res[res.length() - 1] = '}';
-            return res;
-        }
+        void pushfrontTerm(Term* term);
+        void pushbackTerm(Term* term);
+        const list<Term*>& getTermList() const;
 
-        virtual UserType* getType() const {
-            return nullptr;
-        }
+        string to_string() const;
+        UserType* getType() const;
+        bool isBeagleAvailable() const;
+        bool isAtomic() const;
+        TermType getTermType() const;
     private:
         list<Term*> list_;
     };

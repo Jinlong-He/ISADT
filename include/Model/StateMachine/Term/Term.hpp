@@ -13,9 +13,9 @@
 using std::string;
 
 namespace isadt {
+    enum TermType {EXP,AT,CT,LT,MT};
 	/// \breif the term in the action has two inheritance class AttributeTerm and MethodTerm.
 	class Term {
-
 	public:
         Term() {}
 
@@ -26,6 +26,10 @@ namespace isadt {
 
         void addChild(Term* term) {
             children_.push_back(term);
+        }
+
+        const list<Term*>& getChildren() const {
+            return children_;
         }
 
         UserType* getRealType() const {
@@ -51,6 +55,19 @@ namespace isadt {
         UserType* getType() const {
             return nullptr;
         }
+
+        virtual
+        bool isBeagleAvailable() const {
+            if (children_.size() > 0) return false;
+            return true;
+        }
+
+        virtual
+        bool isAtomic() const {
+            return false;
+        }
+
+        virtual TermType getTermType() const = 0;
 
 	private:
         list<Term*> children_;

@@ -33,16 +33,19 @@
   <ProcessToSMs>
     <ProcessToSM process="P1">
       <StateMachine refine_state="">
-        <Transition source="_init" dest="S2" />
+        <Transition source="_init" dest="S2" >
+          <Guard content="(a+2==a+1) || (a+3==1)" />
+          <Action content="a=a" />
+        </Transition>
         <State name="S2" />
         <Transition source="S2" dest="S4">
-          <Guard content="a==0" />
-          <Action content="msg=a" />
+          <Guard content="!(a+2==0)" />
+          <Action content="a=2" />
         </Transition>
         <State name="S4" />
         <Transition source="S4" dest="_final">
-          <Guard content="a&gt;5" />
-          <Action content="k.msg[a*2].n[1]=1" />
+          <Guard content="!(a&gt;5)" />
+          <Action content="a=3" />
         </Transition>
       </StateMachine>
       <StateMachine refine_state="S4">

@@ -15,24 +15,27 @@ namespace isadt {
     class ConstTerm : public Term {
     public:
         ConstTerm()
-            : typeStr_(""),
+            : type_(nullptr),
+              typeStr_(""),
               valueStr_("") {}
 
-        ConstTerm(const string& tyepStr, const string& valueStr)
-            : typeStr_(tyepStr),
+        ConstTerm(UserType* type, const string& valueStr)
+            : type_(type),
+              typeStr_(type -> getName()),
               valueStr_(valueStr) {}
 
         const string& getTypeStr() const;
+        const string& getValueStr() const;
         bool getBoolValue() const;
         int getIntValue() const;
-        virtual string to_string() const {
-            return valueStr_;
-        }
 
-        UserType* getType() const {
-            return nullptr;
-        }
+        string to_string() const;
+        UserType* getType() const;
+        bool isBeagleAvailable() const;
+        bool isAtomic() const;
+        TermType getTermType() const;
     private:
+        UserType* type_;
         string typeStr_;
         string valueStr_;
     };
