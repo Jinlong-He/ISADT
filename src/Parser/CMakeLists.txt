@@ -1,5 +1,5 @@
 message(STATUS "Parser This is SOURCE dir " ${PROJECT_SOURCE_DIR})
-SET(src_dir
+SET(tinyc_dir
     LParser/generated/tinycLexer.cpp
     LParser/generated/tinycParser.cpp
     LParser/generated/tinycVisitor.cpp
@@ -19,4 +19,4 @@ FILE(GLOB antlr4-cpp-src
     LParser/third_party/antlr4-cpp-runtime/src/tree/pattern/*.cpp
     LParser/third_party/antlr4-cpp-runtime/src/tree/xpath/*.cpp
 )
-ADD_LIBRARY (Parser LParser/LParser.cpp ${src_dir} ${antlr4-cpp-src} ${xml_dir})
+ADD_LIBRARY (Parser LParser/LParser.cpp ${tinyc_dir} ${antlr4-cpp-src} ${xml_dir})
