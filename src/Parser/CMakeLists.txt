@@ -20,3 +20,4 @@ FILE(GLOB antlr4-cpp-src
     LParser/third_party/antlr4-cpp-runtime/src/tree/xpath/*.cpp
 )
 ADD_LIBRARY (Parser LParser/LParser.cpp ${tinyc_dir} ${antlr4-cpp-src} ${xml_dir})
+TARGET_LINK_LIBRARIES(Parser Model)
