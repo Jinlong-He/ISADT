@@ -90,7 +90,10 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else {
-                cout << "simulation" << endl;
+                cout << "real" << endl;
+                CCodeGenerator* gen = new CCodeGenerator();
+                std::string path = "/home/clexma/Desktop/generated";
+                gen->generateAll(path, &model);
             }
         }
     } catch (string e) {

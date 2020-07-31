@@ -2,9 +2,9 @@
 #define INCLUDE_HEADER "#include <stdio.h>\n#include <thread>\n#include <uinstd.h>\n#include <stdlib.h>\n"
 #define SIM_INCLUDE ""
 #define REAL_INCLUDE "#include \"../../CommLib/NetComm/include/EtherReceiver.hpp\"\n\
-					  #include \"../../CommLib/NetComm/include/EtherSender.hpp\"\n\
-					  #include \"../../CommLib/NetComm/include/UDPSender.hpp\"\n\
-					  #include \"../../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
+#include \"../../CommLib/NetComm/include/EtherSender.hpp\"\n\
+#include \"../../CommLib/NetComm/include/UDPSender.hpp\"\n\
+#include \"../../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
 #define CRYPTO_INCLUDE "#include \"../../CryptoLib/include/Cryptor.hpp\""
 #define CR "\n"
 #define TAB "\t"
@@ -90,12 +90,12 @@ namespace isadt{
 		    // attrs
 			outStr += this->generateClassPre(proc);
 		    for (Attribute* attr : proc->getAttributes()) {
-		    	outStr += TAB + this->appendAttrDef(outStr, attr);
+		    	outStr += "\t\t" + this->appendAttrDef(outStr, attr);
 		    }
 			outStr += "\tpublic: \n";
 		    // methods
 		    for (Method* m : proc->getMethods()) {
-		    	outStr += TAB + this->appendMethodDeclaration(outStr, m);
+		    	outStr += "\t\t" + this->appendMethodDeclaration(outStr, m);
 		    }
 			outStr += "};\n";
 
@@ -116,12 +116,7 @@ namespace isadt{
         std::string  CCodeGenerator::generateCommonIncludes()
         {
             std::string commonIncludes =
-			"#include <iostream>\n\
-			 #include <string>\n\
-			 #include <vector>\n\
-			 #include <stdlib.h>\n\
-			 #include <uinstd.h>\n\
-			 ";
+			"#include <iostream>\n#include <string>\n#include <vector>\n#include <stdlib.h>\n#include <uinstd.h>\n";
 		    commonIncludes += INCLUDE_HEADER;
 		    return commonIncludes;
         }
@@ -159,14 +154,14 @@ namespace isadt{
 
         std::string  CCodeGenerator::appendAttrDef(std::string inStr, Attribute* attr)
         {
-            std::string result = CR;
-		    result += attr->getType()->getName() + " " + attr->getIdentifier() + ";" + CR;
+            std::string result = "";
+		    result += attr->getType()->getName() + " " + attr->getIdentifier() + ";\n";
 		    return result;
         }
 
         std::string CCodeGenerator::appendMethodDeclaration(std::string inStr, Method* method)
         {
-            std::string result = CR;
+            std::string result = "";
 		    std::string attrStr;
 		    int i = 1;
 		    for (Attribute* a : method->getAttributes()) 
@@ -178,7 +173,7 @@ namespace isadt{
 		    	}
 		    	i++;
 		    }
-		    result += method->getReturnType()->getName() + " " + method->getName() + "(" + attrStr + ");" + CR;
+		    result += method->getReturnType()->getName() + " " + method->getName() + "(" + attrStr + ");\n";
 		    return result;
         }
 
@@ -198,15 +193,20 @@ namespace isadt{
 		    std::string tempFileName = proc->getName() + ".cpp";
 			std::cout << "genSrcInclude" << std::endl;
 		    outStr += this->generateSrcIncludes(proc);
+			std::cout << "genSrcInclude Over" << std::endl;
+			std::cout << "generateStateDef" << std::endl;
 			outStr += this->generateStateDef(proc);
+			std::cout << "generateStateDefOver" << std::endl;
 			std::cout << "genSrcMethod" << std::endl;
 		    outStr += this->generateSrcMethods(proc);
 			
+			std::cout << "genSrcMethodOver" << std::endl;
 			std::cout << "genSrcMain" << std::endl;
 		    outStr += this->generateMain(proc);
-
+			
+			std::cout << "genSrcMainOver" << std::endl;
 			std::cout << outStr << std::endl;
-		    outSrcFile.open(path + "./generatedSrc" + "/" + tempFileName, std::ofstream::out | std::ostream::out);
+		    outSrcFile.open(path + "/generatedSrc" + "/" + tempFileName, std::ofstream::out | std::ostream::out);
 		    outSrcFile << outStr << std::endl;
 		    outSrcFile.close();
         }
@@ -214,15 +214,20 @@ namespace isadt{
         std::string  CCodeGenerator::generateStateDef(Process* proc)
         {
             std::string defs = "";
-		    defs += "#define STATE__START__STATE 0\n";
-		    int i = 1;
-		    for (Vertex* v : proc->getStateMachine()->getVertices()) 
-			{
-		    	//TODO: refine the state definition later
-		    	defs += "#define STATE__" + v->getName() + " " + std::to_string(i) + CR;
-		    	i++;
-		    }
-		    defs += "#define STATE__STOP__STATE " + std::to_string(i) + "\n";
+		    //defs += "#define STATE__START__STATE 0\n";
+		    int i = 0;
+			int loop_count = 0;
+			for(StateMachine* sm : proc->getStateMachines()){
+				for (Vertex* v : sm->getVertices()) 
+				{
+		    		//TODO: refine the state definition later
+		    		defs += "#define STATE__" + v->getName() + " " + std::to_string(i) + "\n";
+		    		i++;
+		   	 	}
+				loop_count++;
+			}
+		    
+		    //defs += "#define STATE__STOP__STATE " + std::to_string(i) + "\n";
 		    return defs;
         }
         
@@ -238,6 +243,7 @@ namespace isadt{
 		{		
 			std::string outStr = "";
 			/*code generation for base methods*/
+			std::cout << "generate Methods" << std::endl;
 			for (Method* m : proc->getMethods())
 			{
 				if(m->getAlgorithmId().compare(""))
@@ -259,15 +265,18 @@ namespace isadt{
 					}
 					attrStr += ")";
 					std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
-					std::string returnVal = rttStr + " result;" + CR;
-					std::string ret = "return result;\n";
-					std::string methodBody = "{\n" + returnVal + ret + "；\n}\n";
+					std::string returnVal = "\t" + rttStr + " result;" + CR;
+					std::string ret = "\treturn result;\n";
+					std::string methodBody = "{\n" + returnVal + ret + "\n}\n";
 					outStr += (methodDef + methodBody);
 				}
 			}
+			std::cout << "generate Methods Over" << std::endl;
 			/*code generation for communication methods*/
+			std::cout << "generate Communication Methods" << std::endl;
 			for (CommMethod* m : proc->getCommMethods()){
-				std::string rttStr = m->getReturnType()->getName();
+				//std::string rttStr = m->getReturnType()->getName();
+				std::string rttStr = "int";
 				std::string classNamespace = proc->getName() + "::";
 				std::string methodName = m->getName();
 				std::string attrStr = "(";
@@ -331,10 +340,12 @@ namespace isadt{
 					std::cout << "Invalid commway num." << std::endl;
 				}
 
-				std::string methodBody = "{\n" + commStr + returnVal + ret + "；\n}\n";
+				std::string methodBody = "{\n" + commStr + returnVal + ret + "\n}\n";
 				outStr += (methodDef + methodBody);
 			}
-			
+			std::cout << "generate Communication Methods Over" << std::endl;
+
+			std::cout << "generate Crypt Methods" << std::endl;
 			for(Method* m : proc->getMethods())
 			{
 				std::string rttStr =  m->getReturnType()->getName();
@@ -357,7 +368,7 @@ namespace isadt{
 				std::string returnVal = rttStr + " result;" + CR;
 				std::string ret = "return result;\n";
 				std::string cryptStr = "";
-				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "；\n}\n";
+				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "\n}\n";
 				if(m->getAlgorithmId().compare(""))
 				{
 					cryptStr += "/*Add your input data here*/\n";
@@ -373,6 +384,8 @@ namespace isadt{
 				}
 				outStr += (methodDef + methodBody);
 			}
+			
+			std::cout << "generate Crypt Methods Over" << std::endl;
 			return outStr;
 		}
 
@@ -380,7 +393,7 @@ namespace isadt{
 		{
 			std::string outStr = "";
 			// current state 
-			outStr += "int __currentState = STATE__START__STATE;\n";
+			outStr += "int __currentState = STATE__" + proc->getStateMachines().front()->getStartVertex()->getName()+ ";\n";
 			
 			outStr += "int main(int argc, char** argv) {\n";
 			outStr += generateSMLoop(proc);
@@ -392,15 +405,40 @@ namespace isadt{
         std::string  CCodeGenerator::generateSMLoop(Process* proc)
 		{
 			std::string outStr = "";
-			outStr += "while(__currentState != STATE__STOP__STATE) {\n";
+			std::cout << "generateSMLoopMain" << std::endl;
+			outStr += "while(__currentState != STATE__" + proc->getStateMachines().front()->getEndVertex()->getName()+ ") {\n";
 			outStr += "\tswitch(__currentState){\n";
 			//make sure that start state is included
 			//TODO
-			outStr += this->generateStateBehavior((StateMachine *)proc->getStateMachine());
+			outStr += this->generateStateBehavior((StateMachine *)proc->getStateMachines().front());
 			outStr += "\t\tdefault: break;\n";
 			outStr += "\t}\n";
 			outStr += "}\n";
+			std::cout << "generateSMLoopMain Over" << std::endl;
+			
+			std::cout << "generateSMLoopOther" << std::endl;
+			std::cout << "SM size: " << proc->getStateMachines().size() << std::endl;
+			if(proc->getStateMachines().size() > 1){
+				int stateMachineId = 1;
+				std::list<StateMachine*> sms = proc->getStateMachines();
+				for(std::list<StateMachine*>::iterator it = (++sms.begin()); it != sms.end(); ++it){
+					std::string stateMachineFunctionStr = "void stateMachine" + std::to_string(stateMachineId) + "Behavior(){\n";
+					stateMachineFunctionStr += "int __sm" + std::to_string(stateMachineId) + "State = " + "STATE__"+(*it)->getStartVertex()->getName() + ";\n";
 
+					stateMachineFunctionStr += "while(__sm" + std::to_string(stateMachineId) + "State != " + (*it)->getEndVertex()->getName() + "){\n";
+					stateMachineFunctionStr += "\tswitch(__sm" + std::to_string(stateMachineId) + "State){\n";
+					std::cout << "HERE"<< stateMachineId << std::endl;
+					stateMachineFunctionStr += this->generateStateBehavior((*it));
+					std::cout << "HERE" << std::endl;
+					stateMachineFunctionStr += "\t}\n";
+					stateMachineFunctionStr += "\t\tdefault: break;\n";
+					stateMachineFunctionStr += "\t}\n";
+					stateMachineFunctionStr += "}\n";
+					outStr += stateMachineFunctionStr + "\n";
+					stateMachineId ++;
+				}
+			}
+			std::cout << "generateSMLoopOther Over" << std::endl;
 			return outStr;
 		}
 
@@ -409,6 +447,8 @@ namespace isadt{
 			std::string casesBody;
 			std::string caseTab = "\t\t";
 			std::string caseBodyTab = "\t\t\t";
+			
+			std::cout << "GenStateBehave" << std::endl;
 			for(Vertex* v : sm->getVertices()){
 				
 				std::cout << "vertex " + v->getName() << std::endl;
@@ -419,8 +459,12 @@ namespace isadt{
 					if(!e->getFromVertex()->getName().compare(v->getName())){
 						// if the edge starts from v
 						// makesure Make sure guard to string method
-						std::cout << "here" << std::endl;
-						casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
+						std::cout << e->getFromVertex()->getName() << v->getName() << std::endl;
+						if(e->getGuard() != nullptr){
+							casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
+						} 
+						
+						std::cout << "caseBody"<< std::endl;
 						elseIf = true;
 						for(Action* a : e->getActions()){
 							casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
@@ -431,7 +475,7 @@ namespace isadt{
 					std::cout << "edge loop end" << std::endl;
 				}
 			}
-			std::cout << "endGenStateBehave" << std::endl;
+			std::cout << "GenStateBehave Over" << std::endl;
 			return casesBody;
 		}
         /*-------------Generate UserTypes-------------*/
