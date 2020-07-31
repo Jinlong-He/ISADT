@@ -32,6 +32,10 @@ int main(int argc, char *argv[]) {
             .required()
             .nargs(1)
             .help("the input file of model");
+        program.add_argument("-o", "--output")
+            .nargs(1)
+            .default_value(vector<string>({"../../generated"}))
+            .help("the output dir for code generator");
         program.add_argument("-v", "--verify")
             .help("verify the properties of a given model")
             .default_value(false)
@@ -90,10 +94,9 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else {
-                cout << "real" << endl;
-                CCodeGenerator* gen = new CCodeGenerator();
-                std::string path = "/home/clexma/Desktop/generated";
-                gen->generateAll(path, &model);
+                auto path = program.get<vector<string>>("-o")[0];
+                CCodeGenerator gen = CCodeGenerator();
+                gen.generateAll(path, &model);
             }
         }
     } catch (string e) {
