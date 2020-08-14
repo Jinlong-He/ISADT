@@ -1,78 +1,14 @@
 #include "CodeGenerator/CCodeGenerator.hpp"
-#define INCLUDE_HEADER "#include <stdio.h>\n#include <thread>\n#include <uinstd.h>\n#include <stdlib.h>\n"
+#define INCLUDE_HEADER "#include <stdio.h>\n#include <thread>\n#include <stdlib.h>\n"
 #define SIM_INCLUDE ""
 #define REAL_INCLUDE "#include \"../../CommLib/NetComm/include/EtherReceiver.hpp\"\n\
-#include \"../../CommLib/NetComm/include/EtherSender.hpp\"\n\
-#include \"../../CommLib/NetComm/include/UDPSender.hpp\"\n\
-#include \"../../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
-#define CRYPTO_INCLUDE "#include \"../../CryptoLib/include/Cryptor.hpp\""
+#include \"../CommLib/NetComm/include/EtherSender.hpp\"\n\
+#include \"../CommLib/NetComm/include/UDPSender.hpp\"\n\
+#include \"../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
+#define CRYPTO_INCLUDE "#include \"../CryptoLib/include/Cryptor.hpp\""
 #define CR "\n"
 #define TAB "\t"
 namespace isadt{
-    void CCodeGenerator::addPlugin(Plugin* plugin){
-        // 1. check the language is the same as the class
-		// 2. avoid redundant addition
-		for (Plugin* p : this->plugins)
-		{
-			if (!(!p->getPluginAlgorithmId().compare(plugin->getPluginAlgorithmId())
-				|| !p->getPluginLanguage().compare(plugin->getPluginLanguage()))
-				|| !p->getPluginName().compare(plugin->getPluginName()))
-			{
-				std::cout << "Error: plugin adding error, plugin already exists." << std::endl;
-			}
-			else
-			{
-				this->plugins.push_front(plugin);
-			}
-		}
-    }
-
-        Plugin*  CCodeGenerator::getFirstPlugin()
-        {
-            // iterate the list and return the first usable plugin
-		    // otherwise return null
-		    if (this->plugins.size() > 0)
-		    {
-		    	return this->getPlugins().front();
-		    }
-		    else
-		    {
-		    	std::cout << "WARNING: no available plugin.";
-		    	return nullptr;
-		    }
-        }
-        Plugin*  CCodeGenerator::getPlugin(std::string algorithmId, std::string pluginLanguage)
-        {
-            // get the correspoding plugin in the list
-		    // otherwise return null
-		    for (Plugin* p : this->getPlugins())
-		    {
-		    	if (!p->getPluginLanguage().compare(pluginLanguage) &&
-		    		!p->getPluginAlgorithmId().compare(algorithmId))
-		    	{
-		    		return p;
-		    	}
-		    }
-		    std::cout << "WARNING: plugin not found.";
-		    return nullptr;
-        }  
-
-        void  CCodeGenerator::rmPlugin(std::string pluginName)
-        {
-            // remove all algorithms of the same plugin
-		    for (Plugin* p : this->getPlugins())
-		    {
-		    	if (!p->getPluginName().compare(pluginName))
-		    	{
-		    		this->getPlugins().remove(p);
-		    	}
-		    }
-        }
-
-        std::list<Plugin*>  CCodeGenerator::getPlugins()
-        {
-            return this->plugins;
-        }
         // methods for generating header file 
         void  CCodeGenerator::generateHeaderFile(std::string path, Process* proc)
         {
@@ -505,7 +441,7 @@ namespace isadt{
 		{
 			this->generateHeaderFile(path, proc);
 			this->generateSrcFile(path, proc);
-			//this->generateUserTypes(path, proc->getModel());
+			this->generateUserTypes(path, proc->getModel());
 		}
 
 

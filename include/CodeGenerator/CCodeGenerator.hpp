@@ -16,13 +16,7 @@ namespace isadt
     class CCodeGenerator : public ImpleCodeGenerator 
     {
     private:
-        std::list<Plugin*> plugins;
     public: 
-        void addPlugin(Plugin* plugin);
-        Plugin* getFirstPlugin();
-        Plugin* getPlugin(std::string algorithmId, std::string pluginLanguage);   
-        void rmPlugin(std::string pluginName);
-        std::list<Plugin*> getPlugins();
         // methods for generating header file 
         void generateHeaderFile(std::string path, Process* proc);
         std::string generateCommonIncludes();
