@@ -69,6 +69,7 @@ namespace isadt{
 
     bool isBeagleAvailable(StateMachine* sm) {
         for (auto e : sm -> getEdges()) {
+            if (e -> getGuard()&& e -> getGuard() -> getExpression())
             if (!(e -> getGuard() -> getExpression() -> isBeagleAvailable())) return false;
         }
         return true;
@@ -108,7 +109,7 @@ namespace isadt{
         StateMachine* res = mkStateMachine();
         unordered_map<Vertex*, Vertex*> vertex2Map;
         for (const auto edge : sm -> getEdges()) {
-            if (edge -> getGuard() -> getExpression() -> isAtomic()) {
+            if (!edge -> getGuard() || edge -> getGuard() -> getExpression() -> isAtomic()) {
                 res -> cpEdge(edge, vertex2Map);
             } else {
                 auto source = res -> cpVertex(edge -> getFromVertex(), vertex2Map);
