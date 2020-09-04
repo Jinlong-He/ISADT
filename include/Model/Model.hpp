@@ -78,6 +78,7 @@ namespace isadt {
         UserType* getUserTypeByName(const string& name);
         Process* getProcByName(const string& name);
         bool hasUserType(const string& name);
+        StateMachine* mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2);
     private:
         list<Process*> procs_;
         list<Property*> props_;

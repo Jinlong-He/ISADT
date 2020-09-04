@@ -64,4 +64,22 @@ namespace isadt{
     bool Model::hasUserType(const string& name) {
         return userTypeMap_.count(name);
     }
+
+    StateMachine* Model::mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2) {
+        auto proc = getProcesses().front();
+        auto res = proc -> mkStateMachine();
+        unordered_map<std::pair<Vertex*, Vertex*>, Vertex*> vertexMap;
+        for (auto vertex1 : sm1 -> getVertices()) {
+            for (auto vertex2 : sm2 -> getVertices()) {
+                auto vertex = res -> mkVertex(vertex1 -> getName() + "," + vertex2 -> getName());
+                vertexMap[std::pair(vertex1, vertex2)] = vertex;
+            }
+        }
+        for (auto edge1 : sm1 -> getEdges()) {
+            for (auto edge2 : sm2 -> getEdges()) {
+                
+            }
+        }
+        return res;
+    }
 }
