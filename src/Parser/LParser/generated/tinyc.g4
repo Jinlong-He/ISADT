@@ -44,6 +44,7 @@ postfixExpression
     |   primaryExpression '(' argumentExpressionList? ')'
     |   postfixExpression '[' assignmentExpression ']'
     |   postfixExpression '.' Identifier
+    |   postfixExpression '.' Identifier '(' argumentExpressionList? ')'
     ;
 
 argumentExpressionList

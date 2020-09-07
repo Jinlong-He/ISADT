@@ -18,6 +18,13 @@ namespace isadt{
         userTypeMap_[type -> getName()] = type;
     }
 
+    Channel* Model::mkChannel(Process* p1, CommMethod* cm1,
+                              Process* p2, CommMethod* cm2, bool privacy) {
+        auto channel = new Channel(p1, cm1, p2, cm2, privacy);
+        channels_.push_back(channel);
+        return channel;
+    }
+
     //UserType* Model::getUserTypeById(const string& id) {
     //    return getUserTypeById(stoi(id));
     //}
@@ -65,10 +72,17 @@ namespace isadt{
         return userTypeMap_.count(name);
     }
 
+    struct hash_pair {
+        template <class T1, class T2> 
+        size_t operator()(const std::pair<T1, T2>& p) const {
+            return ((size_t)p.first ^ (size_t)p.second);
+        }
+    };
+
     StateMachine* Model::mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2) {
         auto proc = getProcesses().front();
         auto res = proc -> mkStateMachine();
-        unordered_map<std::pair<Vertex*, Vertex*>, Vertex*> vertexMap;
+        unordered_map<std::pair<Vertex*, Vertex*>, Vertex*, hash_pair> vertexMap;
         for (auto vertex1 : sm1 -> getVertices()) {
             for (auto vertex2 : sm2 -> getVertices()) {
                 auto vertex = res -> mkVertex(vertex1 -> getName() + "," + vertex2 -> getName());
@@ -77,7 +91,15 @@ namespace isadt{
         }
         for (auto edge1 : sm1 -> getEdges()) {
             for (auto edge2 : sm2 -> getEdges()) {
-                
+                auto s1 = edge1 -> getFromVertex();
+                auto s2 = edge2 -> getFromVertex();
+                auto t1 = edge1 -> getToVertex();
+                auto t2 = edge2 -> getToVertex();
+                auto s = vertexMap.at(std::pair(s1, s2));
+                auto t = vertexMap.at(std::pair(t1, t2));
+                auto e = res -> mkEdge(s, t);
+                res -> cpEdge(e, edge1);
+                res -> cpEdge(e, edge2);
             }
         }
         return res;

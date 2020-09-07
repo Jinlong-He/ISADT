@@ -129,5 +129,14 @@ namespace isadt {
         }
     }
 
-    
+    void Edge::cpActions(Edge* edge) {
+        for (auto action : edge -> getActions()) {
+            if (action -> isAssignmentAction()) {
+                mkAssignmentAction(cpTerm(action -> getLhs()),
+                                   cpTerm(action -> getRhs()));
+            } else {
+                mkDeclarationAction(action -> getAttribute(), action -> getValue());
+            }
+        }
+    }
 }

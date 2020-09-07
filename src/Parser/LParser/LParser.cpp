@@ -58,12 +58,27 @@ namespace isadt {
                 auto term = readPostfixExpression(ctx -> postfixExpression());
                 auto type = term -> getRealType();
                 auto attrStr = ctx -> Identifier() -> getText();
-                if (!(type -> hasAttribute(attrStr))) {
-                    throw "error: no member named " + attrStr + " in " + term -> to_string();
+                if (ctx -> getText().find("(") != string::npos) {
+                    if (!(type -> hasMethod(attrStr))) {
+                        throw "error: no member method named " + attrStr + " in " + term -> to_string();
+                    }
+                    MethodBase* method_ = type -> getMethodByName(attrStr);
+                    auto child_term = edge_ -> mkMethodTerm(method_);
+                    auto child = edge_ -> mkExpression(".", child_term);
+                    term -> addChild(child);
+                    auto list = ctx -> argumentExpressionList();
+                    while (list) {
+                        child_term -> pushfrontArg(readAssignmentExpression(list -> assignmentExpression()));
+                        list = list -> argumentExpressionList();
+                    }
+                } else {
+                    if (!(type -> hasAttribute(attrStr))) {
+                        throw "error: no member named " + attrStr + " in " + term -> to_string();
+                    }
+                    auto attr = type -> getAttributeByName(attrStr);
+                    auto child = edge_ -> mkExpression(".", edge_ -> mkAttributeTerm(attr));
+                    term -> addChild(child);
                 }
-                auto attr = type -> getAttributeByName(attrStr);
-                auto child = edge_ -> mkExpression(".", edge_ -> mkAttributeTerm(attr));
-                term -> addChild(child);
                 return term;
             }
             if (ctx -> assignmentExpression()) {

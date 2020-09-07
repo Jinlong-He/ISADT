@@ -92,6 +92,7 @@ namespace isadt {
         Expression* mkExpression(const string& op, Term* exp1, Term* exp2 = nullptr);
         Term* cpChildren(Term* term, Term* newTerm);
         Term* cpTerm(Term* term);
+        void cpActions(Edge* edge);
 
         string to_string() const;
 

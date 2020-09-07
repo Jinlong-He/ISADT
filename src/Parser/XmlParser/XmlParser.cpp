@@ -17,6 +17,9 @@ namespace isadt {
                 root = root -> NextSiblingElement();
             }
         }
+        for (auto proc : model -> getProcesses()) {
+            proc -> mkCompositeStateMachine();
+        }
     }
 
     void XmlParser::parseClassDiagram(XMLElement* root, Model* model) {
@@ -27,7 +30,24 @@ namespace isadt {
                     parseUserType(element, model);
                 } else if (strcmp(element -> Value(), "Process") == 0) {
                     parseProcess(element, model);
+                } else if (strcmp(element -> Value(), "CommChannel") == 0) {
+                    parseCommChannel(element, model);
                 }
+                element = element -> NextSiblingElement();
+            }
+        }
+    }
+
+    void XmlParser::parseCommChannel(XMLElement* root, Model* model) {
+        if (! (root -> NoChildren())) {
+            auto element = root -> FirstChildElement();
+            while (element) {
+                auto p1 = model -> getProcByName(element -> Attribute("processA"));
+                auto p2 = model -> getProcByName(element -> Attribute("processB"));
+                auto cm1 = p1 -> getCommMethodByName(element -> Attribute("commMethodA"));
+                auto cm2 = p2 -> getCommMethodByName(element -> Attribute("commMethodB"));
+                string privacy = element -> Attribute("privacy");
+                model -> mkChannel(p1, cm1, p2, cm2, (privacy == "True"));
                 element = element -> NextSiblingElement();
             }
         }

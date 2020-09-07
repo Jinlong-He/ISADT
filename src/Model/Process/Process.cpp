@@ -131,5 +131,49 @@ namespace isadt{
         }
         return res;
     }
+
+    StateMachine* Process::mkCompositeStateMachine() {
+        if (stateMachines_.size() == 1) {
+            stateMachine_ = stateMachines_.front();
+        } else {
+            stateMachine_ = mkStateMachine();
+            unordered_map<Vertex*, StateMachine*> stateMachineMap;
+            for (auto sm : stateMachines_) {
+                if (sm -> getParent()) {
+                    stateMachineMap[sm -> getParent()] = sm;
+                }
+            }
+            unordered_map<Vertex*, Vertex*> vertex2Map;
+            for (auto v : stateMachines_.front() -> getVertices()) {
+                vertex2Map[v] = stateMachine_ -> mkVertex(v -> getName());
+            }
+            for (auto e : stateMachines_.front() -> getEdges()) {
+                auto s = e -> getFromVertex();
+                auto t = e -> getToVertex();
+                if (stateMachineMap.count(s) == 0) {
+                    stateMachine_ -> cpEdge(e, vertex2Map);
+                } else {
+                    unordered_map<Vertex*, Vertex*> newVertex2Map;
+                    auto newSM = stateMachineMap.at(s);
+                    for (auto v : newSM -> getVertices()) {
+                        if (v -> getName() == "_init" || v -> getName() == "_final") continue;
+                        newVertex2Map[v] = stateMachine_ -> mkVertex(v -> getName());
+                    }
+                    for (auto newEdge : newSM -> getEdges()) {
+                        if (newEdge -> getFromVertex() -> getName() == "_init") {
+                            auto e1 = stateMachine_ -> mkEdge(s, newEdge -> getToVertex());
+                            stateMachine_ -> cpEdge(newEdge, e1);
+                        } else if (newEdge -> getToVertex() -> getName() == "_final") {
+                            auto e1 = stateMachine_ -> mkEdge(newEdge -> getFromVertex(), t);
+                            stateMachine_ -> cpEdge(newEdge, e1);
+                        } else {
+                            stateMachine_ -> cpEdge(newEdge, newVertex2Map);
+                        }
+                    }
+                }
+            }
+        }
+        return stateMachine_;
+    }
 }
         

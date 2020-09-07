@@ -80,6 +80,10 @@ namespace isadt{
         auto source = cpVertex(edge -> getFromVertex(), vertex2Map);
         auto target = cpVertex(edge -> getToVertex(), vertex2Map);
         auto newEdge = mkEdge(source, target);
+        return cpEdge(edge, newEdge);
+    }
+
+    Edge* StateMachine::cpEdge(Edge* edge, Edge* newEdge) {
         if (edge -> getGuard()) {
             newEdge -> mkGuard((Expression*) newEdge -> cpTerm(edge -> getGuard() -> getExpression()));
         }

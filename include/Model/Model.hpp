@@ -26,12 +26,10 @@ namespace isadt {
 
         ~Model() {
             for (auto proc : procs_) {
-                delete proc;
-                proc = nullptr;
-            }
-            for (auto prop : props_) {
-                delete prop;
-                prop = nullptr;
+                if (proc) {
+                    delete proc;
+                    proc = nullptr;
+                }
             }
             for (auto ik : initialKnowledges_) {
                 delete ik;
@@ -57,6 +55,9 @@ namespace isadt {
         UserType* mkUserType(const string& name, 
                              const std::initializer_list<Attribute*>& parameters, 
                              UserType* base = nullptr);
+
+        Channel* mkChannel(Process* p1, CommMethod* cm1,
+                           Process* p2, CommMethod* cm2, bool privacy);
 
         void addUserType(UserType* type);
 

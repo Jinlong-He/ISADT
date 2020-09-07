@@ -26,12 +26,13 @@ unordered_map<string, UserType*> Manage::typeMap_({{"int", Manage::intType_},
 int main(int argc, char *argv[]) {
     try {
         Model model;
+        Manage::timerType_ -> mkAttribute(Manage::numberType_, "time");
+        Manage::timerType_ -> mkMethod("reset", Manage::numberType_, "", "");
         XmlParser::parse(argv[1], &model);
-        auto proc = model.getProcesses().front();
-        auto sm = proc -> getStateMachines().front();
-        auto bsm = proc -> mkBeagleStateMachine(sm);
-        bsm -> print();
-        
+        for (auto proc : model.getProcesses()) {
+            if (proc -> getStateMachines().size() > 1)
+                proc -> getStateMachine() -> print();
+        }
     } catch (string e) {
         cout << e << endl;
         exit(1);

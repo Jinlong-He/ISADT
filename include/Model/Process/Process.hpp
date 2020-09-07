@@ -34,13 +34,12 @@ namespace isadt {
                 delete commMethod;
                 commMethod = nullptr;
             }
+
             for (auto stateMachine : stateMachines_) {
-                delete stateMachine;
-                stateMachine = nullptr;
-            }
-            if (stateMachine_) {
-                delete stateMachine_;
-                stateMachine_ = nullptr;
+                if (stateMachine) {
+                    delete stateMachine;
+                    stateMachine = nullptr;
+                }
             }
         }
 
@@ -66,6 +65,7 @@ namespace isadt {
 
         Term* cpBeagleTerm(Term* term, Edge* edge1, Edge* edge2);
         StateMachine* mkBeagleStateMachine(StateMachine* sm);
+        StateMachine* mkCompositeStateMachine();
     private:
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.

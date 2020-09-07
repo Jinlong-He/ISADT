@@ -18,6 +18,7 @@ namespace isadt {
         static void parseProcessToSMs(XMLElement* root, Model* model);
         static void parseUserType(XMLElement* root, Model* model);
         static void parseProcess(XMLElement* root, Model* model);
+        static void parseCommChannel(XMLElement* root, Model* model);
         static Attribute* parseAttribute(XMLElement* root, Struct* s, Model* model);
         static Method* parseMethod(XMLElement* root, Class* c, Model* model);
         static CommMethod* parseCommMethod(XMLElement* root, Process* p, Model* model);

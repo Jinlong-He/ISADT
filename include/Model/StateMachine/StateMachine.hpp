@@ -36,12 +36,16 @@ namespace isadt {
 
 		~StateMachine() {
             for (auto vertex : vertices_) {
-                delete vertex;
-                vertex = nullptr;
+                if (vertex) {
+                    delete vertex;
+                    vertex = nullptr;
+                }
             }
             for (auto edge : edges_) {
-                delete edge;
-                edge = nullptr;
+                if (edge) {
+                    delete edge;
+                    edge = nullptr;
+                }
             }
         }
 
@@ -62,6 +66,7 @@ namespace isadt {
 		const std::list<Edge*>& getEdges() const;
 		Edge* mkEdge(Vertex* source, Vertex* target);
 		Edge* cpEdge(Edge* edge, unordered_map<Vertex* ,Vertex*>& vertex2Map);
+		Edge* cpEdge(Edge* edge, Edge* newEdge);
 
         void print() const;
 	private:

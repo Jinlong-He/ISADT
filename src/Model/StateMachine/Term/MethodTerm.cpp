@@ -21,7 +21,11 @@ namespace isadt {
         for (auto arg : args_) {
             res += arg -> to_string() + ",";
         }
-        res[res.length() - 1] = ')';
+        if (res[res.length() - 1] == '(') {
+            res += ")";
+        } else {
+            res[res.length() - 1] = ')';
+        }
         return res + Term::to_string();
     }
 
