@@ -155,12 +155,15 @@ namespace isadt {
         auto s = sm -> getVertexByName1(root -> Attribute("source"));
         auto t = sm -> getVertexByName1(root -> Attribute("dest"));
         auto e = sm -> mkEdge(s, t);
+        auto guardStr = root -> Attribute("guard");
+        if (guardStr != nullptr && strcmp(guardStr, "") != 0) {
+            std::cout << guardStr << std::endl;
+            LParser::parseGuard(guardStr, model, proc, e);
+        }
         if (!(root -> NoChildren())) {
             auto element = root -> FirstChildElement();
             while (element) {
-                if (strcmp(element -> Value(), "Guard") == 0) {
-                    LParser::parseGuard(element -> Attribute("content"), model, proc, e);
-                } else if (strcmp(element -> Value(), "Action") == 0) {
+                if (strcmp(element -> Value(), "Action") == 0) {
                     LParser::parseAction(element -> Attribute("content"), model, proc, e);
                 }
                 element = element -> NextSiblingElement();

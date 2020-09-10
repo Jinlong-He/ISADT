@@ -70,6 +70,9 @@ int main(int argc, char *argv[]) {
         auto file = program.get<vector<string>>("-i")[0];
         Model model;
         XmlParser::parse(file.c_str(), &model);
+        auto proc = model.getProcesses().front();
+        auto sm = proc -> getStateMachine();
+        sm -> print();
         if (program["-v"] == true) {
             cout << "-v" << endl;
             if (program["-engine=proverif"] == true) {
