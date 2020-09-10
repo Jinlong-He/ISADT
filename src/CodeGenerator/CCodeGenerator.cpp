@@ -201,6 +201,13 @@ namespace isadt{
 		    return defs;
         }
         
+        std::string CCodeGenerator::generateTempStorage(Process* proc){
+			std::string outStr = "";
+			outStr += "static pcap_t* dev" + proc->getName() + ";\n";
+			outStr += "static char* tempData" + proc->getName() + "\n;";
+			return outStr;
+		}
+
 		std::string  CCodeGenerator::generateSrcIncludes(Process* proc)
 		{
 			//TODO: add path latter
@@ -245,7 +252,25 @@ namespace isadt{
 			/*code generation for communication methods*/
 			std::cout << "generate Communication Methods" << std::endl;
 			for (CommMethod* m : proc->getCommMethods()){
+				std::string commStr = "";
 				//std::string rttStr = m->getReturnType()->getName();
+				if(!m->getCommId().compare("NativeEthernetFrame") && !m->getInOut()){
+					//generate the handler
+					commStr += "static void dataHandler" + proc->getName() + m->getName() + "(u_char* param, const struct pcap_pkthdr* header, const u_char* packetData){\n";
+					commStr += "\tether_header* eh;\n";
+					commStr += "\teh = (ether_header*)packetData;\n";
+					commStr += "\t/*Configure your own protocol number of ethernet frame*/\n";
+					commStr += "\tif(ntohs(eh->type) == 0x888f){\n";
+					commStr += "\t\t/*Add your own packet handling logic*/\n";
+					commStr += "\t\ttempData" + proc->getName() + " = NULL;\n";
+					commStr += "\t\tint breakingLoopCondition = 0;\n";
+					commStr += "\t\tif(breakingLoopCondition){\n";
+					commStr += "\t\t\tpcap_breakloop(dev" + proc->getName() + ");\n";
+					commStr += "\t\t}\n";
+					commStr += "\t}\n";
+					commStr += "}\n";
+				}
+				
 				std::string rttStr = "int";
 				std::string classNamespace = proc->getName() + "::";
 				std::string methodName = m->getName();
@@ -265,9 +290,9 @@ namespace isadt{
 				std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
 				std::string returnVal = '\t' + rttStr + " result;" + CR;
 				std::string ret = "\treturn result;\n";
-				std::string commStr = "";
+				
 				if(!m->getCommId().compare("NativeEthernetFrame")){
-					commStr += "\t/*Refine your Implementation here*/\n";
+					commStr += "\t/*Configure your own implementation of length_*/\n";
 					commStr += "\tint length_ = 0;\n";
 					commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
 					commStr += "\tu_char* dst_;";
@@ -277,17 +302,26 @@ namespace isadt{
 						commStr += "\tushort mac[6];\n";
 						commStr += "\tEtherReceiver er;\n";
 						commStr += "\tpcap_if_t* dev = er.getDevice();\n";
+						commStr += "\tchar errbuf[500];\n";
+						commStr += "\tpcap_t* selectedAdp = pcap_open_live(dev->name, 65536, 1, 1000, errbuf);\n";
+						commStr += "\tdev" + proc->getName() + " = selectedAdp;\n";
 						commStr += "\t/*Add self defined dataHandler to handle data received*/\n";
 						commStr += "\t/*parameters: u_char* param, const struct pcap_pkthdr* header, const u_char* packetData*/";
-						commStr += "\ter.listenWithHandler(dev, dataHandler);\n";
+						commStr += "\ter.listenWithHandler(dev" + proc->getName() + ", dataHandler" + proc->getName() +  ", data_);\n";
+						commStr += "\t/*Add your own data processing logic here*/\n";
+						commStr += "\tfree(data_);\n";
+						commStr += "\tint result;\n";
+						commStr += "\treturn result;\n";
+
 					} else {
 						//OUT
 						commStr += "\t/*Add MAC Address here*/\n";
 						commStr += "\tushort mac[6];\n";
 						commStr += "\tEtherSender snd(mac);\n";
-						commStr += "\t/*Add data and length to send*/\n";
-						commStr += "\tint length;\n";
-						commStr += "\tint success = snd.sendEtherBroadcast(data_, length);\n";
+						commStr += "\tsnd.getDevice();\n";
+						commStr += "\t/*add your identifier of the sender*/\n";
+						commStr += "\tint identify;\n";
+						commStr += "\tint success =snd.sendEtherBroadcast(data_, length_, identify);\n";
 					}
 					
 				} else if(!m->getCommId().compare("UDP")){
@@ -441,21 +475,28 @@ namespace isadt{
 						// if the edge starts from v
 						// makesure Make sure guard to string method
 						std::cout << e->getFromVertex()->getName() << v->getName() << std::endl;
-						if(e->getGuard() != nullptr){
-							std::cout << "generate If branch" << std::endl;
-							elseIf = true;
-							casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
-						} 
 						
 						std::cout << "caseBody"<< std::endl;
-						elseIf = true;
-						for(Action* a : e->getActions()){
-							casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
-						}
 						if(e->getGuard() != nullptr){
+							std::cout << "generate If branch: " << e->getGuard()->to_string() << std::endl;
+							casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
+							for(Action* a : e->getActions()){
+								casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
+							}
+							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
+							std::cout << "generate If branch end" << std::endl;
 							casesBody += (caseBodyTab + "}") + CR;
-						} 
-						casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
+							
+							elseIf = true;
+						} else {
+							casesBody += (caseBodyTab + (elseIf ? "else {"  : "") + CR);
+							for(Action* a : e->getActions()){
+								casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
+							}
+							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
+							casesBody += (caseBodyTab + (elseIf ? "}"  : "") + CR);
+						}
+						elseIf = true;
 					}
 					
 					std::cout << "edge loop end" << std::endl;

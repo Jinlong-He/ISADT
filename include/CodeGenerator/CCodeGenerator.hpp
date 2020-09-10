@@ -38,6 +38,7 @@ namespace isadt
         void generateSrcFile(std::string path, Process* proc);
         std::string generateStateDef(Process* proc);
         std::string generateSrcIncludes(Process* proc);
+        std::string generateTempStorage(Process* proc);
         std::string generateSrcMethods(Process* proc);
         std::string generateMain(Process* proc);
         std::string generateInstObject(Process* proc);

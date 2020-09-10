@@ -102,7 +102,8 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else {
-                auto path = program.get<vector<string>>("-o")[0];
+                //auto path = program.get<vector<string>>("-o")[0];
+                std::string path = "/home/clexma/Desktop/generated";
                 CCodeGenerator gen = CCodeGenerator();
                 gen.generateAll(path, &model);
             }

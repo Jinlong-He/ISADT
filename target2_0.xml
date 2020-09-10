@@ -133,7 +133,7 @@
           <Action content="MsgAlice2 msgAlice2=SymDec(ma2,skb)" />
         </Transition>
         <State name="Verify_State2" />
-        <Transition source="Verify_State2" dest="_final" guard="msgAlice2.nonce = nonce " />
+        <Transition source="Verify_State2" dest="_final" guard="msgAlice2.nonce == nonce " />
       </StateMachine>
     </ProcessToSM>
   </ProcessToSMs>
