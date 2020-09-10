@@ -26,7 +26,7 @@ unordered_map<string, UserType*> Manage::typeMap_({{"int", Manage::intType_},
                                                    {"Timer", Manage::timerType_}});
 
 int main(int argc, char *argv[]) {
-    try {/*
+    try {
         ArgumentParser program("isadt");
         program.add_argument("-i", "--input")
             .required()
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
           std::cout << err.what() << std::endl;
           std::cout << program;
           exit(0);
-        }*/
+        }
         auto file = program.get<vector<string>>("-i")[0];
         Model model;
         XmlParser::parse(file.c_str(), &model);
