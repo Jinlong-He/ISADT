@@ -47,6 +47,8 @@ namespace isadt
         std::string generateStateBehavior(StateMachine* sm);
         /*------------UserType------------*/
         void generateUserTypes(std::string path, Model* model);
+        /*------------Compile-------------*/
+        void generateCompileFile(std::string path, Model* model);
         /*---------Gen---------*/
         void generateCodeProc(std::string path, Process* proc);
         void generateAll(std::string path, Model* model);

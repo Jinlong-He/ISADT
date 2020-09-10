@@ -261,7 +261,7 @@ namespace isadt{
 					commStr += "\teh = (ether_header*)packetData;\n";
 					commStr += "\t/*Configure your own protocol number of ethernet frame*/\n";
 					commStr += "\tif(ntohs(eh->type) == 0x888f){\n";
-					commStr += "\t\t/*Add your own packet handling logic*/\n";
+					commStr += "\t\t/*Add your own packet handling logic, tempData is used to store the packet after breaking the listening loop*/\n";
 					commStr += "\t\ttempData" + proc->getName() + " = NULL;\n";
 					commStr += "\t\tint breakingLoopCondition = 0;\n";
 					commStr += "\t\tif(breakingLoopCondition){\n";
@@ -332,13 +332,14 @@ namespace isadt{
 						commStr += "\tUDPReceiver  er;\n";
 						commStr += "\t/*allocation for dst_ here*/\n";
 						commStr += "\tu_char* dst_;\n";
-						commStr += "\ter.receivePacket(dst_, IPStr_, portNum_);\n";
+						commStr += "\ter.receivePacket(IPStr_, portNum_);\n";
+						commStr += "\tdst_ = er.getDstData();\n";
 					} else {
 						commStr += "\t/*Add Ip Str and portNum here*/\n";
 						commStr += "\tstd::string IPStr_;\n";
 						commStr += "\tu_short portNum_;\n";
 						commStr += "\tUDPSender snd;\n";
-						commStr += "\t/*Add length and data content here*/\n";
+						commStr += "\t/*Add length and data content to send here*/\n";
 						commStr += "\tu_char* data_;\n";
 						commStr += "\tint length_;\n";
 						commStr += "\tsnd.sendPacket(data_, length_, IPStr_, portNum_);\n";
@@ -496,7 +497,6 @@ namespace isadt{
 							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
 							casesBody += (caseBodyTab + (elseIf ? "}"  : "") + CR);
 						}
-						elseIf = true;
 					}
 					
 					std::cout << "edge loop end" << std::endl;
@@ -551,6 +551,28 @@ namespace isadt{
 			outUserTypeFile << outStr << std::endl;
 			outUserTypeFile.close();
 		}
+		/*---------Generate Compile Auxiliary--------*/
+		void CCodeGenerator::generateCompileFile(std::string path, Model* model)
+		{
+			std::ofstream outCompileFile;
+			std::cout << "generate compile auxiliary" << std::endl;
+			std::string outStr = "import os\n";
+			outStr += "import sys\n";
+			outStr += "os.system(\"g++ -g -c CommLib/NetComm/src/*.cpp\")\n";
+			outStr += "os.system(\"ar cqs libnetcomm.a ./*.o\")";
+			outStr += "os.system(\"mv *.o CommLib/NetComm/src/\")\n";
+			outStr += "os.system(\"mv *.a CommLib/NetComm/src/\")\n";
+			outStr += "os.system(\"g++ -g -c CryptoLib/src/*.cpp\")\n";
+			outStr += "os.system(\"ar cqs libcryptorlib.a ./*.o\"\n)";
+			outStr += "os.system(\"mv *.o CryptoLib/src/\")\n";
+			outStr += "os.system(\"mv *.a CryptoLib/src/\")\n";
+			for(Process* proc : model->getProcesses())
+			{
+				outStr += "os.system(\"g++ -g -o " + proc->getName() + " ./generatedSrc/" + proc->getName() +  
+				".cpp -L./CommLib/NetComm/src/ -lnetcomm -L./CryptoLib/src/ -lcryptorlib -lssl -lcrypto -lpcap -lboost_serialization\")";
+			}
+			outCompileFile.open(path  + "/compile.py", std::ofstream::out | std::ostream::out);
+		}
 
 		/*---------Gen---------*/
         void  CCodeGenerator::generateCodeProc(std::string path, Process* proc)
@@ -566,6 +588,7 @@ namespace isadt{
 			{
 				this->generateCodeProc(path, proc);
 			}
+			this->generateCompileFile(path, model);
 		}
 
 
