@@ -157,7 +157,6 @@ namespace isadt {
         auto e = sm -> mkEdge(s, t);
         auto guardStr = root -> Attribute("guard");
         if (guardStr != nullptr && strcmp(guardStr, "") != 0) {
-            std::cout << guardStr << std::endl;
             LParser::parseGuard(guardStr, model, proc, e);
         }
         if (!(root -> NoChildren())) {
