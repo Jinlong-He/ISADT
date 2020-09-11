@@ -79,7 +79,6 @@ int main(int argc, char *argv[]) {
         auto sm = proc -> getStateMachine();
         sm -> print();
         if (program["-v"] == true) {
-            cout << "-v" << endl;
             if (program["-engine=proverif"] == true) {
             } else if (program["-engine=beagle"] == true) {
                 //this is an example for make a statemahine for beagle.

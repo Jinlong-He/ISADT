@@ -22,9 +22,13 @@ namespace isadt {
     class Model {
     public:
         Model() {
+            mkSystemProcess();
         }
 
         ~Model() {
+            delete systemProc_;
+            systemProc_ = nullptr;
+
             for (auto proc : procs_) {
                 if (proc) {
                     delete proc;
@@ -62,6 +66,7 @@ namespace isadt {
         void addUserType(UserType* type);
 
         Process* mkProcess(const string& procName);
+        Process* mkSystemProcess();
 
         ConfidentialProperty*
         mkConfidentialProperty(Process* process, Attribute* attribute);
@@ -79,6 +84,7 @@ namespace isadt {
         UserType* getUserTypeByName(const string& name);
         Process* getProcByName(const string& name);
         bool hasUserType(const string& name);
+        bool isChannelPair(Process* proc1, Edge* edge1, Process* proc2, Edge* edge2);
         StateMachine* mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2);
     private:
         list<Process*> procs_;
@@ -89,6 +95,7 @@ namespace isadt {
         list<Channel*> channels_;
         std::unordered_map<string, UserType*> userTypeMap_;
         std::unordered_map<string, Process*> procMap_;
+        Process* systemProc_;
         //list<SequenceDiagram*> sd_;
         // ProcMethodPair * 2, bool privacy
 

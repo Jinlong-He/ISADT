@@ -29,7 +29,9 @@ namespace isadt {
     	Edge(Vertex* from, Vertex* to)
             : from_(from),
               to_(to),
-              guard_(nullptr) {}
+              guard_(nullptr) {
+                  from -> addNext(this);
+              }
 
     	Edge(Vertex* from, Vertex* to, 
              Guard* guard, 
@@ -37,7 +39,9 @@ namespace isadt {
             : from_(from),
               to_(to),
               guard_(guard),
-              actions_(actions) {}
+              actions_(actions) {
+                  from -> addNext(this);
+              }
 
     	Edge(Vertex* from, Vertex* to, 
              const string& guardStr, 

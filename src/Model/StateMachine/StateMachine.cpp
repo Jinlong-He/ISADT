@@ -32,6 +32,10 @@ namespace isadt{
 		return parent_;
 	}
 
+    Process* StateMachine::getProcess() {
+        return proc_;
+    }
+
 	Vertex* StateMachine::getVertexByName(const string& name) {
         if (vertexMap.count(name) == 0) return nullptr;
         return vertexMap[name];

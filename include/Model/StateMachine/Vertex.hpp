@@ -41,6 +41,14 @@ namespace isadt {
         StateMachine* getRefine() {
             return refine_;
         }
+
+        void addNext(Edge* edge) {
+            nexts_.push_back(edge);
+        }
+
+        const list<Edge*> getNexts() const {
+            return nexts_;
+        }
 	};
 }
 

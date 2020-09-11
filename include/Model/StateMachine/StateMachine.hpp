@@ -58,6 +58,7 @@ namespace isadt {
 		Vertex* getStartVertex();
 		Vertex* getEndVertex();
 		Vertex* getParent();
+        Process* getProcess();
 
 		const std::list<Vertex*>& getVertices() const;
 		Vertex* getVertexByName(const string& name);

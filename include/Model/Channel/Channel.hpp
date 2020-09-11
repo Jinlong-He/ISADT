@@ -20,6 +20,13 @@ namespace isadt {
                 delete dstPair_;
                 dstPair_ = nullptr;
             }
+
+            bool equal(Process* proc1, MethodBase* m1,
+                       Process* proc2, MethodBase* m2) const {
+                return (srcPair_ -> proc_ == proc1) && (srcPair_ -> commMethod_ == m1) &&
+                       (dstPair_ -> proc_ == proc2) && (dstPair_ -> commMethod_ == m2);
+            }
+
         private:
             struct ProcMethodPair {
             public:
@@ -29,7 +36,6 @@ namespace isadt {
                 ProcMethodPair(Process* proc, CommMethod* commMethod)
                     : proc_(proc),
                       commMethod_(commMethod) {}
-            private:
                 Process* proc_;
                 CommMethod* commMethod_;
             };

@@ -41,6 +41,11 @@ namespace isadt{
         return proc;
     }
 
+    Process* Model::mkSystemProcess() {
+        systemProc_ = new Process("_sys_", this);
+        return systemProc_;
+    }
+
     Process* Model::getProcByName(const string& name) {
         if (procMap_.count(name) == 0) return mkProcess(name);
         return procMap_[name];
@@ -72,6 +77,24 @@ namespace isadt{
         return userTypeMap_.count(name);
     }
 
+
+    bool Model::isChannelPair(Process* proc1, Edge* edge1, Process* proc2, Edge* edge2) {
+        if (edge1 -> getActions().size() > 1) return false;
+        if (edge2 -> getActions().size() > 1) return false;
+        auto action1 = edge1 -> getActions().front();
+        auto action2 = edge2 -> getActions().front();
+        if (!action1 -> isAssignmentAction() || !action2 -> isAssignmentAction()) return false;
+        if (action1 -> getRhs() || action2 -> getRhs()) return false;
+        if (action1 -> getLhs() -> getTermType() != MT || action2 -> getLhs() -> getTermType() != MT) return false;
+        auto methodTerm1 = (MethodTerm*) action1 -> getLhs();
+        auto methodTerm2 = (MethodTerm*) action2 -> getLhs();
+        for (auto channel : channels_) {
+            if (channel -> equal(proc1, methodTerm1 -> getMethod(),
+                                 proc2, methodTerm2 -> getMethod())) return true;
+        }
+        return false;
+    }
+
     struct hash_pair {
         template <class T1, class T2> 
         size_t operator()(const std::pair<T1, T2>& p) const {
@@ -79,16 +102,53 @@ namespace isadt{
         }
     };
 
-    StateMachine* Model::mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2) {
-        auto proc = getProcesses().front();
-        auto res = proc -> mkStateMachine();
-        unordered_map<std::pair<Vertex*, Vertex*>, Vertex*, hash_pair> vertexMap;
-        for (auto vertex1 : sm1 -> getVertices()) {
-            for (auto vertex2 : sm2 -> getVertices()) {
-                auto vertex = res -> mkVertex(vertex1 -> getName() + "," + vertex2 -> getName());
-                vertexMap[std::pair(vertex1, vertex2)] = vertex;
+    struct hash_vec {
+        template <class T1> 
+        size_t operator()(const std::vector<T1>& v) const {
+            size_t seed = 0; 
+            for (const auto& t : v) {
+                seed ^= (size_t)(t) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+            }
+            return seed;
+        }
+    };
+
+    StateMachine* Model::mkCommProductStateMahine(const list<StateMachine*>& sms) {
+        auto res = systemProc_ -> mkStateMachine();
+        unordered_map<std::vector<Vertex*>, Vertex*, hash_vec> vertexMap;
+        std::vector<std::vector<Vertex*> > verticesVec;
+        std::vector<std::vector<Vertex*> > newVerticesVec;
+        for (auto sm : sms) {
+            if (verticesVec.size() == 0) {
+                for (auto vertex : sm -> getVertices()) {
+                    std::vector<Vertex*> vertices({vertex});
+                    verticesVec.push_back(vertices);
+                }
+            } else {
+                newVerticesVec.clear();
+                for (const auto& vertices : verticesVec) {
+                    for (auto vertex : sm -> getVertices()) {
+                        std::vector<Vertex*> v = vertices;
+                        v.push_back(vertex);
+                        newVerticesVec.push_back(v);
+                    }
+                }
+                verticesVec.clear();
+                verticesVec = newVerticesVec;
             }
         }
+        for (const auto& vertices : verticesVec) {
+            string name = "_sys_";
+            for (auto vertex : vertices) {
+                name += vertex -> getName() + "_";
+            }
+            vertexMap[vertices] = res -> mkVertex(name);
+        }
+        for (const auto& vertices : verticesVec) {
+            for (auto vertex : vertices) {
+            }
+        }
+
         for (auto edge1 : sm1 -> getEdges()) {
             for (auto edge2 : sm2 -> getEdges()) {
                 auto s1 = edge1 -> getFromVertex();
@@ -100,6 +160,9 @@ namespace isadt{
                 auto e = res -> mkEdge(s, t);
                 res -> cpEdge(e, edge1);
                 res -> cpEdge(e, edge2);
+                if (isChannelPair(proc1, edge1, proc2, edge2)) {
+                    std::cout << s -> getName() << std::endl;
+                }
             }
         }
         return res;
