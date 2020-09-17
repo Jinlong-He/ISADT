@@ -78,16 +78,18 @@ namespace isadt {
         InitialKnowledge* 
         mkInitialKnowledge(Process* process, Attribute* attribute);
         
-        const list<Process*>& getProcesses() const;
+        const vector<Process*>& getProcesses() const;
         const list<UserType*>& getUserTypes() const;
 
         UserType* getUserTypeByName(const string& name);
         Process* getProcByName(const string& name);
         bool hasUserType(const string& name);
         bool isChannelPair(Process* proc1, Edge* edge1, Process* proc2, Edge* edge2);
-        StateMachine* mkCommProductStateMahine(const list<StateMachine*>& sms);
+        StateMachine* mkCommProductStateMahine();
+        void mkCommProductEdge(const vector<Vertex*>& source_vertices, const vector<Vertex*>& target_vertices);
+        void mkCommProductEdge(const vector<Edge*>& edge);
     private:
-        list<Process*> procs_;
+        vector<Process*> procs_;
         list<Property*> props_;
         list<InitialKnowledge*> initialKnowledges_;
         list<UserType*> userTypes_;

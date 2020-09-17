@@ -26,6 +26,7 @@ unordered_map<string, UserType*> Manage::typeMap_({{"int", Manage::intType_},
                                                    {"Timer", Manage::timerType_}});
 
 int main(int argc, char *argv[]) {
+    Manage::timerType_ -> mkMethod("reset");
     ArgumentParser program("isadt");
     program.add_argument("-i", "--input")
         .required()
@@ -70,10 +71,6 @@ int main(int argc, char *argv[]) {
     try {
         Model model;
         XmlParser::parse(file.c_str(), &model);
-        std::cout << 111 << std::endl;
-        auto proc = model.getProcesses().front();
-        auto sm = proc -> getStateMachine();
-        sm -> print();
         if (program["-v"] == true) {
             if (program["-engine=proverif"] == true) {
             } else if (program["-engine=beagle"] == true) {
@@ -84,10 +81,10 @@ int main(int argc, char *argv[]) {
                 bsm -> print();
             } else {
                 //this is an example for make a statemahine for beagle.
+                //model.mkCommProductStateMahine();
                 auto proc = model.getProcesses().front();
-                auto sm = proc -> getStateMachines().front();
-                auto bsm = proc -> mkBeagleStateMachine(sm);
-                bsm -> print();
+                std::cout << proc -> getOriginalAttributes().size() << std::endl;
+                std::cout << proc -> getAttributes().size() << std::endl;
             }
         }
         if (program["-g"] == true) {

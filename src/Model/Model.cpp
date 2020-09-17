@@ -65,7 +65,7 @@ namespace isadt{
 
     }
     
-    const list<Process*>& Model::getProcesses() const{
+    const vector<Process*>& Model::getProcesses() const{
         return procs_;
     }
 
@@ -113,29 +113,87 @@ namespace isadt{
         }
     };
 
-    StateMachine* Model::mkCommProductStateMahine(const list<StateMachine*>& sms) {
-        auto res = systemProc_ -> mkStateMachine();
-        unordered_map<std::vector<Vertex*>, Vertex*, hash_vec> vertexMap;
-        std::vector<std::vector<Vertex*> > verticesVec;
-        std::vector<std::vector<Vertex*> > newVerticesVec;
-        for (auto sm : sms) {
-            if (verticesVec.size() == 0) {
-                for (auto vertex : sm -> getVertices()) {
-                    std::vector<Vertex*> vertices({vertex});
-                    verticesVec.push_back(vertices);
+    void Model::mkCommProductEdge(const vector<Edge*>& edges) {
+        vector<MethodBase*> methods;
+        size_t ii = 0, jj = 0, count = 0;
+        for (size_t i = 0; i < edges.size(); i++) {
+            auto edge = edges[i];
+            const auto& actions = edge -> getActions();
+            auto action = actions.front();
+            if (actions.size() == 1 && action -> isAssignmentAction() &&
+               !(action -> getRhs()) && action -> getLhs() -> getTermType() == MT) {
+                auto method = ((MethodTerm*) action -> getLhs()) -> getMethod();
+                if (method -> isCommMethod()) {
+                    count++;
+                    for (auto channel : channels_) {
+                        for (size_t j = 0; j < methods.size(); j++) {
+                            if (channel -> equal(procs_[i], method,
+                                                 procs_[j], methods[j])) {
+                                ii = i;
+                                jj = j;
+                            }
+                        }
+                    }
+                    methods.push_back(method);
+                } else {
+                    methods.push_back(nullptr);
                 }
             } else {
-                newVerticesVec.clear();
-                for (const auto& vertices : verticesVec) {
-                    for (auto vertex : sm -> getVertices()) {
-                        std::vector<Vertex*> v = vertices;
-                        v.push_back(vertex);
-                        newVerticesVec.push_back(v);
+                methods.push_back(nullptr);
+            }
+        }
+        if (count == 2) {
+            if (methods[ii] && methods[jj]) {
+                std::cout << methods[ii] -> getName() << std::endl;
+                std::cout << methods[jj] -> getName() << std::endl;
+            }
+        }
+    }
+
+    void Model::mkCommProductEdge(const vector<Vertex*>& source_vertices, const vector<Vertex*>& target_vertices) {
+        vector<Edge*> edges;
+        vector<vector<Edge*> > edgesVec({vector<Edge*>()}), newEdgesVec;
+        for (size_t i = 0; i < source_vertices.size(); i++) {
+            auto source = source_vertices[i];
+            auto target = target_vertices[i];
+            newEdgesVec.clear();
+            for (const auto& edges: edgesVec) {
+                for (auto edge : source -> getNexts()) {
+                    if (edge -> getToVertex() == target) {
+                        vector<Edge*> newEdges = edges;
+                        newEdges.push_back(edge);
+                        newEdgesVec.push_back(newEdges);
                     }
                 }
-                verticesVec.clear();
-                verticesVec = newVerticesVec;
             }
+            if (newEdgesVec.size() == 0) return;
+            edgesVec.clear();
+            edgesVec = newEdgesVec;
+        }
+        for (const auto& edges : edgesVec) {
+            mkCommProductEdge(edges);
+        }
+    }
+
+    StateMachine* Model::mkCommProductStateMahine() {
+        vector<StateMachine*> sms;
+        for (auto proc : procs_) {
+            sms.push_back(proc -> getStateMachine());
+        }
+        auto res = systemProc_ -> mkStateMachine();
+        unordered_map<std::vector<Vertex*>, Vertex*, hash_vec> vertexMap;
+        vector<vector<Vertex*> > verticesVec({vector<Vertex*>()}), newVerticesVec;
+        for (auto sm : sms) {
+            newVerticesVec.clear();
+            for (const auto& vertices : verticesVec) {
+                for (auto vertex : sm -> getVertices()) {
+                    std::vector<Vertex*> v = vertices;
+                    v.push_back(vertex);
+                    newVerticesVec.push_back(v);
+                }
+            }
+            verticesVec.clear();
+            verticesVec = newVerticesVec;
         }
         for (const auto& vertices : verticesVec) {
             string name = "_sys_";
@@ -145,9 +203,10 @@ namespace isadt{
             vertexMap[vertices] = res -> mkVertex(name);
         }
         for (const auto& source_vertices : verticesVec) {
-            auto souce = vertexMap.at(source_vertices);
+            auto source = vertexMap.at(source_vertices);
             for (const auto& target_vertices : verticesVec) {
                 auto target = vertexMap.at(target_vertices);
+                mkCommProductEdge(source_vertices, target_vertices);
             }
         }
         return res;

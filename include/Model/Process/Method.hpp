@@ -32,6 +32,9 @@ namespace isadt {
               algorithmId_(algorithmId),
               userCode_(userCode) {}
 
+        bool isCommMethod() const {
+            return false;
+        }
 
         ~Method() {}
 

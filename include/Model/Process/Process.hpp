@@ -52,6 +52,9 @@ namespace isadt {
         StateMachine* getStateMachine() const;
         const list<StateMachine*> getStateMachines() const;
 
+        void setOriginalAttributes();
+        const list<Attribute*> getOriginalAttributes() const;
+
         Attribute* mkNewAttribute(UserType* type, const string& name);
         
         CommMethod* mkCommMethod(const string& name, UserType* returnType,
@@ -67,6 +70,7 @@ namespace isadt {
         StateMachine* mkBeagleStateMachine(StateMachine* sm);
         StateMachine* mkCompositeStateMachine();
     private:
+        list<Attribute*> original_attributes_;
         list<CommMethod*> commMethods_;      ///< the communication methods for this process.
         list<StateMachine*> stateMachines_;  ///< the finite state machines for this process.
         //TODO map (state,sm) to sm

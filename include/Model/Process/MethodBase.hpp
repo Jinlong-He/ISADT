@@ -26,6 +26,8 @@ namespace isadt {
             : Struct(name),
               returnType_(returnType) {}
 
+        virtual bool isCommMethod() const = 0;
+
         ~MethodBase() {}
 
         UserType* getReturnType() const;

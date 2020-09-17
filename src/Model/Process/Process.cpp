@@ -58,6 +58,14 @@ namespace isadt{
         return stateMachines_;
     }
 
+    void Process::setOriginalAttributes() {
+        original_attributes_ = this -> getAttributes();
+    }
+
+    const list<Attribute*> Process::getOriginalAttributes() const {
+        return original_attributes_;
+    }
+
     void Process::addVertex(Vertex* vertex) {
         vertexMap[vertex -> getName()] = vertex;
     }

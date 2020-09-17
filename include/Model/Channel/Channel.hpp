@@ -24,7 +24,9 @@ namespace isadt {
             bool equal(Process* proc1, MethodBase* m1,
                        Process* proc2, MethodBase* m2) const {
                 return (srcPair_ -> proc_ == proc1) && (srcPair_ -> commMethod_ == m1) &&
-                       (dstPair_ -> proc_ == proc2) && (dstPair_ -> commMethod_ == m2);
+                       (dstPair_ -> proc_ == proc2) && (dstPair_ -> commMethod_ == m2) ||
+                       (srcPair_ -> proc_ == proc2) && (srcPair_ -> commMethod_ == m2) &&
+                       (dstPair_ -> proc_ == proc1) && (dstPair_ -> commMethod_ == m1);
             }
 
         private:

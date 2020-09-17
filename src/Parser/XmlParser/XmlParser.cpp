@@ -149,6 +149,7 @@ namespace isadt {
                 element = element -> NextSiblingElement();
             }
         }
+        proc -> setOriginalAttributes();
     }
 
     Edge* XmlParser::parseEdge(XMLElement* root, Model* model, Process* proc, StateMachine* sm) {

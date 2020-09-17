@@ -31,6 +31,10 @@ namespace isadt {
               inout_(inout),
               commId_(commId) {}
 
+        bool isCommMethod() const {
+            return true;
+        }
+
         ~CommMethod() {}
 
         bool getInOut() const ;
