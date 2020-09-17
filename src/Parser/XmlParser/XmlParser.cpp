@@ -168,7 +168,6 @@ namespace isadt {
                 element = element -> NextSiblingElement();
             }
         }
-        //cout << e -> to_string() << endl;
         return e;
     }
 

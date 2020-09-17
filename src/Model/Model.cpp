@@ -144,25 +144,10 @@ namespace isadt{
             }
             vertexMap[vertices] = res -> mkVertex(name);
         }
-        for (const auto& vertices : verticesVec) {
-            for (auto vertex : vertices) {
-            }
-        }
-
-        for (auto edge1 : sm1 -> getEdges()) {
-            for (auto edge2 : sm2 -> getEdges()) {
-                auto s1 = edge1 -> getFromVertex();
-                auto s2 = edge2 -> getFromVertex();
-                auto t1 = edge1 -> getToVertex();
-                auto t2 = edge2 -> getToVertex();
-                auto s = vertexMap.at(std::pair(s1, s2));
-                auto t = vertexMap.at(std::pair(t1, t2));
-                auto e = res -> mkEdge(s, t);
-                res -> cpEdge(e, edge1);
-                res -> cpEdge(e, edge2);
-                if (isChannelPair(proc1, edge1, proc2, edge2)) {
-                    std::cout << s -> getName() << std::endl;
-                }
+        for (const auto& source_vertices : verticesVec) {
+            auto souce = vertexMap.at(source_vertices);
+            for (const auto& target_vertices : verticesVec) {
+                auto target = vertexMap.at(target_vertices);
             }
         }
         return res;

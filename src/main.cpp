@@ -26,55 +26,51 @@ unordered_map<string, UserType*> Manage::typeMap_({{"int", Manage::intType_},
                                                    {"Timer", Manage::timerType_}});
 
 int main(int argc, char *argv[]) {
+    ArgumentParser program("isadt");
+    program.add_argument("-i", "--input")
+        .required()
+        .nargs(1)
+        .help("the input file of model");
+    program.add_argument("-o", "--output")
+        .nargs(1)
+        .default_value(vector<string>({"../../generated"}))
+        .help("the output dir for code generator");
+    program.add_argument("-v", "--verify")
+        .help("verify the properties of a given model")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-g", "--generate")
+        .help("generate the codes of a given model")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-engine=beagle")
+        .help("set the engine for verifier")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-engine=proverif")
+        .help("set the proverif engine for verifier")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-engine=simulation")
+        .help("set the simulation engine for generator")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-engine=real")
+        .help("set the real engine for generator")
+        .default_value(false)
+        .implicit_value(true);
     try {
-        ArgumentParser program("isadt");
-        program.add_argument("-i", "--input")
-            .required()
-            .nargs(1)
-            .help("the input file of model");
-        program.add_argument("-o", "--output")
-            .nargs(1)
-            .default_value(vector<string>({"../../generated"}))
-            .help("the output dir for code generator");
-        program.add_argument("-v", "--verify")
-            .help("verify the properties of a given model")
-            .default_value(false)
-            .implicit_value(true);
-        program.add_argument("-g", "--generate")
-            .help("generate the codes of a given model")
-            .default_value(false)
-            .implicit_value(true);
-        program.add_argument("-engine=beagle")
-            .help("set the engine for verifier")
-            .default_value(false)
-            .implicit_value(true);
-        program.add_argument("-engine=proverif")
-            .help("set the proverif engine for verifier")
-            .default_value(false)
-            .implicit_value(true);
-        program.add_argument("-engine=simulation")
-            .help("set the simulation engine for generator")
-            .default_value(false)
-            .implicit_value(true);
-        program.add_argument("-engine=real")
-            .help("set the real engine for generator")
-            .default_value(false)
-            .implicit_value(true);
-        try {
-            program.parse_args(argc, argv);
-        } catch (const std::runtime_error& err) {
-          std::cout << err.what() << std::endl;
-          std::cout << program;
-          exit(0);
-        }
-        auto file = program.get<vector<string>>("-i")[0];
+        program.parse_args(argc, argv);
+    } catch (const std::runtime_error& err) {
+      std::cout << err.what() << std::endl;
+      std::cout << program;
+      exit(0);
+    }
+    auto file = program.get<vector<string>>("-i")[0];
+    try {
         Model model;
-        try {
-            XmlParser::parse(file.c_str(), &model);
-        } catch (const char* e) {
-            cout << e << endl;
-            exit(1);
-        }
+        XmlParser::parse(file.c_str(), &model);
+        std::cout << 111 << std::endl;
         auto proc = model.getProcesses().front();
         auto sm = proc -> getStateMachine();
         sm -> print();
@@ -107,6 +103,9 @@ int main(int argc, char *argv[]) {
                 gen.generateAll(path, &model);
             }
         }
+    } catch (const string& e) {
+        cout << e << endl;
+        exit(1);
     } catch (const char* e) {
         cout << e << endl;
         exit(1);
