@@ -85,7 +85,7 @@ namespace isadt {
         Process* getProcByName(const string& name);
         bool hasUserType(const string& name);
         bool isChannelPair(Process* proc1, Edge* edge1, Process* proc2, Edge* edge2);
-        StateMachine* mkCommProductStateMahine(StateMachine* sm1, StateMachine* sm2);
+        StateMachine* mkCommProductStateMahine(const list<StateMachine*>& sms);
     private:
         list<Process*> procs_;
         list<Property*> props_;
