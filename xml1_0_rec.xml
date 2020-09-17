@@ -1,0 +1,99 @@
+<Protocol name="协议1">
+  <ClassDiagram>
+    <UserType name="int" basic="true" />
+    <UserType name="bool" basic="true" />
+    <UserType name="number" basic="true" />
+    <UserType name="byte" basic="true" />
+    <UserType name="ByteVec" basic="middle" />
+    <UserType name="Timer" basic="middle" />
+    <Process name="Alice">
+      <Attribute type="int" identifier="g" isArray="False" />
+      <Attribute type="int" identifier="p" isArray="False" />
+      <Attribute type="int" identifier="freshA" isArray="False" />
+      <Method returnType="int" name="exp" cryptoSuffix="None" achieve="">
+        <Parameter type="int" identifier="num" isArray="True" />
+      </Method>
+      <Method returnType="int" name="mod" cryptoSuffix="None" achieve="">
+        <Parameter type="int" identifier="num" isArray="True" />
+      </Method>
+      <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
+        <Parameter type="IntMsg" identifier="num" isArray="False" />
+      </CommMethod>
+      <CommMethod name="send" inOutSuffix="Out" commWay="NativeEthernetFrame">
+        <Parameter type="IntMsg" identifier="num" isArray="False" />
+      </CommMethod>
+    </Process>
+    <Process name="Bob">
+      <Attribute type="int" identifier="g" isArray="False" />
+      <Attribute type="int" identifier="p" isArray="False" />
+      <Attribute type="int" identifier="freshB" isArray="False" />
+      <Method returnType="int" name="exp" cryptoSuffix="None" achieve="">
+        <Parameter type="int" identifier="num" isArray="False" />
+      </Method>
+      <Method returnType="int" name="mod" cryptoSuffix="None" achieve="">
+        <Parameter type="int" identifier="num" isArray="False" />
+      </Method>
+      <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
+        <Parameter type="IntMsg" identifier="num" isArray="False" />
+      </CommMethod>
+      <CommMethod name="send" inOutSuffix="Out" commWay="NativeEthernetFrame">
+        <Parameter type="IntMsg" identifier="num" isArray="False" />
+      </CommMethod>
+    </Process>
+    <CommChannel name="CC1">
+      <CommMethodPair id="1" processA="Shared" commMethodA="send" processB="Alice" commMethodB="receive" privacy="False" />
+      <CommMethodPair id="2" processA="Shared" commMethodA="send" processB="Bob" commMethodB="receive" privacy="False" />
+    </CommChannel>
+    <Process name="Shared">
+      <Attribute type="int" identifier="g" isArray="False" />
+      <Attribute type="int" identifier="p" isArray="False" />
+      <CommMethod name="send" inOutSuffix="Out" commWay="NativeEthernetFrame">
+        <Parameter type="int" identifier="num" isArray="False" />
+      </CommMethod>
+    </Process>
+    <InitialKnowledge process="">
+      <Knowledge process="Shared" attribute="g" />
+      <Knowledge process="Shared" attribute="p" />
+    </InitialKnowledge>
+    <UserType name="IntMsg" basic="false" parent="ByteVec">
+      <Attribute type="int" identifier="data" isArray="False" />
+      <Method returnType="int" name="getData" cryptoSuffix="None" achieve="" />
+      <Method returnType="int" name="setData" cryptoSuffix="None" achieve="">
+        <Parameter type="int" identifier="data" isArray="False" />
+      </Method>
+    </UserType>
+  </ClassDiagram>
+  <ProcessToSMs>
+    <ProcessToSM process="Alice">
+      <StateMachine refine_state="">
+        <Transition source="_init" dest="S2" guard="">
+          <Action content="IntMsg p1" />
+          <Action content="IntMsg g1" />
+          <Action content="receive(p1)" />
+          <Action content="p=p1.getData()" />
+          <Action content="receive(g1)" />
+          <Action content="g=g1.getData()" />
+        </Transition>
+        <State name="S2" />
+        <Transition source="S2" dest="S4" guard="2&lt;=freshA&lt;=p-1">
+          <Action content="int para[]" />
+          <Action content="para[0] = g" />
+          <Action content="para[1] = g" />
+          <Action content="int y=exp(para)" />
+          <Action content="int m[]" />
+          <Action content="m[0] = y" />
+          <Action content="m[1] = p" />
+          <Action content="int ya = mod(m)" />
+          <Action content="IntMsg m1" />
+          <Action content="m1.setData(ya)" />
+          <Action content="send(m1)" />
+        </Transition>
+        <State name="S4" />
+        <Transition source="S4" dest="_final" guard="">
+          <Action content="IntMsg mm" />
+          <Action content="receive(mm)" />
+        </Transition>
+      </StateMachine>
+    </ProcessToSM>
+  </ProcessToSMs>
+</Protocol>
