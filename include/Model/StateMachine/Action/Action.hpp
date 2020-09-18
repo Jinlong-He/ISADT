@@ -19,21 +19,32 @@ namespace isadt {
             : lhs_(nullptr),
               rhs_(nullptr),
               attribute_(nullptr),
-              value_("") {}
+              value_(""),
+              hasNext_(false) {}
 
         Action(Term* lhs, Term* rhs = nullptr)
             : lhs_(lhs),
               rhs_(rhs),
               attribute_(nullptr),
-              value_("") {}
+              value_(""),
+              hasNext_(false) {}
 
         Action(Attribute* attr, const string& value = "")
             : lhs_(nullptr),
               rhs_(nullptr),
               attribute_(attr),
-              value_(value) {}
+              value_(value),
+              hasNext_(false) {}
 
         ~Action() {
+        }
+
+        void setNext(bool b = 1) {
+            hasNext_ = b;
+        }
+
+        bool hasNext() const {
+            return hasNext_;
         }
 
         Term* getLhs() const;
@@ -50,6 +61,7 @@ namespace isadt {
 		Term* rhs_;              //< rightHand can be an attribute or a method call.
         Attribute* attribute_;
         string value_;
+        bool hasNext_;
 	};
 }
 #endif /* Model_Action_hpp */

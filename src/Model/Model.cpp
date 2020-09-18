@@ -113,6 +113,18 @@ namespace isadt{
         }
     };
 
+    void compositeEdge(Edge* newEdge, const vector<Edge*>& edges) {
+        Expression* exp = nullptr;
+        for (auto edge : edges) {
+            if (exp == nullptr) {
+                exp = (Expression*) (newEdge -> cpTerm(edge -> getGuard() -> getExpression()));
+            }
+            if (edge -> getGuard()) {
+                newEdge -> cpTerm(edge -> getGuard() -> getExpression());
+            }
+        }
+    }
+
     void Model::mkCommProductEdge(Vertex* source, Vertex* target, const vector<Edge*>& edges) {
         vector<MethodBase*> methods;
         size_t ii = 0, jj = 0, count = 0;

@@ -206,9 +206,10 @@ namespace isadt {
 
         void readInitDeclarator(tinycParser::InitDeclaratorContext* ctx, UserType* type) {
             auto attr = readDeclarator(ctx -> declarator(), type);
-            edge_ -> mkDeclarationAction(attr);
+            auto da = edge_ -> mkDeclarationAction(attr);
             auto term = edge_ -> mkAttributeTerm(attr);
             if (ctx -> initializer()) {
+                da -> setNext();
                 edge_ -> mkAssignmentAction(term, readInitializer(ctx -> initializer()));
             }
         }
