@@ -30,11 +30,15 @@ namespace isadt{
 			std::cout << "generateStateDef" << std::endl;
 			outStr += this->generateStateDef(proc);
 			std::cout << "generateStateDefOver" << std::endl;
+
+			std::cout << "generate temp stores" << std::endl;
+			outStr += this->generateTempStorage(proc);
+			std::cout << "generate temp stores end" << std::endl;
 		    // generate attrs and methods declaration
 		    // attrs
 			outStr += this->generateClassPre(proc);
 			outStr += "\tprivate:\n";
-		    for (Attribute* attr : proc->getAttributes()) {
+		    for (Attribute* attr : proc->getOriginalAttributes()) {
 		    	outStr += "\t\t" + this->appendAttrDef(outStr, attr);
 		    }
 			outStr += "\tpublic: \n";
@@ -45,6 +49,7 @@ namespace isadt{
 			for (CommMethod* m : proc->getCommMethods()){
 				outStr += "\t\t" + this->appendCommMethodDeclaration(outStr, m);   
 			}
+			outStr += "\t\tvoid SMLMain" + proc->getName() + "();\n"; 
 			outStr += "};\n";
 			
 			
@@ -253,22 +258,23 @@ namespace isadt{
 			std::cout << "generate Communication Methods" << std::endl;
 			for (CommMethod* m : proc->getCommMethods()){
 				std::string commStr = "";
+				std::string commHandlerStr = "";
 				//std::string rttStr = m->getReturnType()->getName();
 				if(!m->getCommId().compare("NativeEthernetFrame") && !m->getInOut()){
 					//generate the handler
-					commStr += "static void dataHandler" + proc->getName() + m->getName() + "(u_char* param, const struct pcap_pkthdr* header, const u_char* packetData){\n";
-					commStr += "\tether_header* eh;\n";
-					commStr += "\teh = (ether_header*)packetData;\n";
-					commStr += "\t/*Configure your own protocol number of ethernet frame*/\n";
-					commStr += "\tif(ntohs(eh->type) == 0x888f){\n";
-					commStr += "\t\t/*Add your own packet handling logic, tempData is used to store the packet after breaking the listening loop*/\n";
-					commStr += "\t\ttempData" + proc->getName() + " = NULL;\n";
-					commStr += "\t\tint breakingLoopCondition = 0;\n";
-					commStr += "\t\tif(breakingLoopCondition){\n";
-					commStr += "\t\t\tpcap_breakloop(dev" + proc->getName() + ");\n";
-					commStr += "\t\t}\n";
-					commStr += "\t}\n";
-					commStr += "}\n";
+					commHandlerStr += "static void dataHandler" + proc->getName() + m->getName() + "(u_char* param, const struct pcap_pkthdr* header, const u_char* packetData){\n";
+					commHandlerStr += "\tether_header* eh;\n";
+					commHandlerStr += "\teh = (ether_header*)packetData;\n";
+					commHandlerStr += "\t/*Configure your own protocol number of ethernet frame*/\n";
+					commHandlerStr += "\tif(ntohs(eh->type) == 0x888f){\n";
+					commHandlerStr += "\t\t/*Add your own packet handling logic, tempData is used to store the packet after breaking the listening loop*/\n";
+					commHandlerStr += "\t\ttempData" + proc->getName() + " = NULL;\n";
+					commHandlerStr += "\t\tint breakingLoopCondition = 0;\n";
+					commHandlerStr += "\t\tif(breakingLoopCondition){\n";
+					commHandlerStr += "\t\t\tpcap_breakloop(dev" + proc->getName() + ");\n";
+					commHandlerStr += "\t\t}\n";
+					commHandlerStr += "\t}\n";
+					commHandlerStr += "}\n";
 				}
 				
 				std::string rttStr = "int";
@@ -306,8 +312,8 @@ namespace isadt{
 						commStr += "\tpcap_t* selectedAdp = pcap_open_live(dev->name, 65536, 1, 1000, errbuf);\n";
 						commStr += "\tdev" + proc->getName() + " = selectedAdp;\n";
 						commStr += "\t/*Add self defined dataHandler to handle data received*/\n";
-						commStr += "\t/*parameters: u_char* param, const struct pcap_pkthdr* header, const u_char* packetData*/";
-						commStr += "\ter.listenWithHandler(dev" + proc->getName() + ", dataHandler" + proc->getName() +  ", data_);\n";
+						commStr += "\t/*parameters: u_char* param, const struct pcap_pkthdr* header, const u_char* packetData*/\n";
+						commStr += "\ter.listenWithHandler(dev, dataHandler" + proc->getName() + m->getName() +  ", data_);\n";
 						commStr += "\t/*Add your own data processing logic here*/\n";
 						commStr += "\tfree(data_);\n";
 						commStr += "\tint result;\n";
@@ -320,8 +326,7 @@ namespace isadt{
 						commStr += "\tEtherSender snd(mac);\n";
 						commStr += "\tsnd.getDevice();\n";
 						commStr += "\t/*add your identifier of the sender*/\n";
-						commStr += "\tint identify;\n";
-						commStr += "\tint success =snd.sendEtherBroadcast(data_, length_, identify);\n";
+						commStr += "\tint success =snd.sendEtherBroadcast(data_, length_);\n";
 					}
 					
 				} else if(!m->getCommId().compare("UDP")){
@@ -349,7 +354,7 @@ namespace isadt{
 				}
 
 				std::string methodBody = "{\n" + commStr + returnVal + ret + "\n}\n";
-				outStr += (methodDef + methodBody);
+				outStr += (commHandlerStr + methodDef + methodBody);
 			}
 			std::cout << "generate Communication Methods Over" << std::endl;
 
@@ -394,6 +399,12 @@ namespace isadt{
 			}
 			
 			std::cout << "generate Crypt Methods Over" << std::endl;
+
+			std::cout << "generate SML Main loop method" << std::endl;
+			outStr += ("void " + proc->getName() + "::SMLMain" + proc->getName() + "(){\n");
+			outStr += this->generateSMLoop(proc);
+			outStr += "}\n";
+			std::cout << "generate SML Main loop method end" << std::endl;
 			return outStr;
 		}
 
@@ -404,8 +415,8 @@ namespace isadt{
 			outStr += "static int __currentState = STATE__" + proc->getStateMachines().front()->getStartVertex()->getName()+ ";\n";
 			
 			outStr += "int main(int argc, char** argv) {\n";
-			outStr += this->generateInstObject(proc);
-			outStr += generateSMLoop(proc);
+			outStr += "\t" + this->generateInstObject(proc);
+			outStr += ("\tobj.SMLMain" + proc->getName() + "();\n");
 			outStr += "}\n";
 			return outStr;
 		}
@@ -422,14 +433,14 @@ namespace isadt{
 		{
 			std::string outStr = "";
 			std::cout << "generateSMLoopMain" << std::endl;
-			outStr += "while(__currentState != -100) {\n";
-			outStr += "\tswitch(__currentState){\n";
+			outStr += "\twhile(__currentState != -100) {\n";
+			outStr += "\t\tswitch(__currentState){\n";
 			//make sure that start state is included
 			//TODO
 			outStr += this->generateStateBehavior((StateMachine *)proc->getStateMachines().front());
-			outStr += "\t\tdefault: break;\n";
+			outStr += "\t\t\tdefault: break;\n";
+			outStr += "\t\t}\n";
 			outStr += "\t}\n";
-			outStr += "}\n";
 			std::cout << "generateSMLoopMain Over" << std::endl;
 			
 			std::cout << "generateSMLoopOther" << std::endl;
@@ -460,8 +471,8 @@ namespace isadt{
 		std::string CCodeGenerator::generateStateBehavior(StateMachine* sm)
 		{
 			std::string casesBody;
-			std::string caseTab = "\t\t";
-			std::string caseBodyTab = "\t\t\t";
+			std::string caseTab = "\t\t\t";
+			std::string caseBodyTab = "\t\t\t\t";
 			
 			std::cout << "GenStateBehave" << std::endl;
 			for(Vertex* v : sm->getVertices()){
@@ -533,15 +544,21 @@ namespace isadt{
 				for(Method* m : u->getMethods()){
 					outStr += "\t\t" + (m->getReturnType()->getName() + " " + m->getName() + "(");
 					int i = 1;
-					for(Attribute* a : m->getAttributes()){
-						if(i < m->getAttributes().size()){	
-							outStr += a->getType()->getName() + " " + a->getIdentifier() + ", ";
-						} else {
-							outStr += a->getType()->getName() + " " + a->getIdentifier() + "){";
+					if(m->getAttributes().size() > 0){
+						for(Attribute* a : m->getAttributes()){
+							if(i < m->getAttributes().size()){	
+								outStr += a->getType()->getName() + " " + a->getIdentifier() + ", ";
+							} else {
+								outStr += a->getType()->getName() + " " + a->getIdentifier() + "){\n";
+							}
 						}
+					} else {
+						outStr += "){\n";
 					}
+					
 					outStr += "\t\t\t" + m->getReturnType()->getName() + " " + "result;\n";
 					outStr += "\t\t\treturn result;\n"; 
+					outStr += "\t\t}\n";
 				}
 				outStr += "};\n";
 				std::cout << outStr << std::endl;
@@ -572,6 +589,9 @@ namespace isadt{
 				".cpp -L./CommLib/NetComm/src/ -lnetcomm -L./CryptoLib/src/ -lcryptorlib -lssl -lcrypto -lpcap -lboost_serialization\")";
 			}
 			outCompileFile.open(path  + "/compile.py", std::ofstream::out | std::ostream::out);
+			outCompileFile << outStr << std::endl;
+			std::cout << outStr << std::endl;
+			outCompileFile.close();
 		}
 
 		/*---------Gen---------*/
