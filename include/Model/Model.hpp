@@ -86,8 +86,10 @@ namespace isadt {
         bool hasUserType(const string& name);
         bool isChannelPair(Process* proc1, Edge* edge1, Process* proc2, Edge* edge2);
         StateMachine* mkCommProductStateMahine();
-        void mkCommProductEdge(const vector<Vertex*>& source_vertices, const vector<Vertex*>& target_vertices);
-        void mkCommProductEdge(const vector<Edge*>& edge);
+        void mkCommProductEdge(const vector<Vertex*>& source_vertices, 
+                               const vector<Vertex*>& target_vertices,
+                               Vertex* s, Vertex* t);
+        void mkCommProductEdge(Vertex* source, Vertex* target, const vector<Edge*>& edge);
     private:
         vector<Process*> procs_;
         list<Property*> props_;

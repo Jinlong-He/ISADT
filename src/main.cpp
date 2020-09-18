@@ -81,10 +81,7 @@ int main(int argc, char *argv[]) {
                 bsm -> print();
             } else {
                 //this is an example for make a statemahine for beagle.
-                //model.mkCommProductStateMahine();
-                auto proc = model.getProcesses().front();
-                std::cout << proc -> getOriginalAttributes().size() << std::endl;
-                std::cout << proc -> getAttributes().size() << std::endl;
+                model.mkCommProductStateMahine();
             }
         }
         if (program["-g"] == true) {

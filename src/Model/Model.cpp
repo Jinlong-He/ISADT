@@ -113,9 +113,10 @@ namespace isadt{
         }
     };
 
-    void Model::mkCommProductEdge(const vector<Edge*>& edges) {
+    void Model::mkCommProductEdge(Vertex* source, Vertex* target, const vector<Edge*>& edges) {
         vector<MethodBase*> methods;
         size_t ii = 0, jj = 0, count = 0;
+        bool flag = false;
         for (size_t i = 0; i < edges.size(); i++) {
             auto edge = edges[i];
             const auto& actions = edge -> getActions();
@@ -129,6 +130,7 @@ namespace isadt{
                         for (size_t j = 0; j < methods.size(); j++) {
                             if (channel -> equal(procs_[i], method,
                                                  procs_[j], methods[j])) {
+                                flag = true;
                                 ii = i;
                                 jj = j;
                             }
@@ -142,15 +144,18 @@ namespace isadt{
                 methods.push_back(nullptr);
             }
         }
-        if (count == 2) {
-            if (methods[ii] && methods[jj]) {
-                std::cout << methods[ii] -> getName() << std::endl;
-                std::cout << methods[jj] -> getName() << std::endl;
-            }
+        auto sm = systemProc_ -> getStateMachines().front();
+        if (count == 0) {
+            auto e = sm -> mkEdge(source, target);
+        }
+        if (flag && count == 2 && methods[ii] && methods[jj]) {
+            auto e = sm -> mkEdge(source, target);
         }
     }
 
-    void Model::mkCommProductEdge(const vector<Vertex*>& source_vertices, const vector<Vertex*>& target_vertices) {
+    void Model::mkCommProductEdge(const vector<Vertex*>& source_vertices, 
+                                  const vector<Vertex*>& target_vertices,
+                                  Vertex* s, Vertex* t) {
         vector<Edge*> edges;
         vector<vector<Edge*> > edgesVec({vector<Edge*>()}), newEdgesVec;
         for (size_t i = 0; i < source_vertices.size(); i++) {
@@ -171,7 +176,7 @@ namespace isadt{
             edgesVec = newEdgesVec;
         }
         for (const auto& edges : edgesVec) {
-            mkCommProductEdge(edges);
+            mkCommProductEdge(s, t, edges);
         }
     }
 
@@ -185,8 +190,9 @@ namespace isadt{
         vector<vector<Vertex*> > verticesVec({vector<Vertex*>()}), newVerticesVec;
         for (auto sm : sms) {
             newVerticesVec.clear();
-            for (const auto& vertices : verticesVec) {
-                for (auto vertex : sm -> getVertices()) {
+            for (auto vertex : sm -> getVertices()) {
+                sm -> mkEdge(vertex, vertex);
+                for (const auto& vertices : verticesVec) {
                     std::vector<Vertex*> v = vertices;
                     v.push_back(vertex);
                     newVerticesVec.push_back(v);
@@ -206,7 +212,7 @@ namespace isadt{
             auto source = vertexMap.at(source_vertices);
             for (const auto& target_vertices : verticesVec) {
                 auto target = vertexMap.at(target_vertices);
-                mkCommProductEdge(source_vertices, target_vertices);
+                mkCommProductEdge(source_vertices, target_vertices, source, target);
             }
         }
         return res;

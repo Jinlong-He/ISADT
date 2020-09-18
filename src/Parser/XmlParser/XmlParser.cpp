@@ -75,7 +75,8 @@ namespace isadt {
     Attribute* XmlParser::parseAttribute(XMLElement* root, Struct* s, Model* model) {
         //cout << root -> Attribute("identifier") << endl;
         return s -> mkAttribute(model -> getUserTypeByName(root -> Attribute("type")),
-                                root -> Attribute("identifier"));
+                                root -> Attribute("identifier"),
+                                strcmp(root -> Attribute("isArray"), "False"));
     }
 
     Method* XmlParser::parseMethod(XMLElement* root, Class* s, Model* model) {
