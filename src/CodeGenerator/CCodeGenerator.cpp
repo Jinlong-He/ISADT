@@ -6,6 +6,11 @@
 #include \"../CommLib/NetComm/include/UDPSender.hpp\"\n\
 #include \"../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
 #define CRYPTO_INCLUDE "#include \"../CryptoLib/include/Cryptor.hpp\""
+#define SERIALIZATION_INCLUDE "#include <boost/archive/text_oarchive.hpp>\n\
+#include <boost/archive/text_oarchive.hpp>\n\
+#include <boost/serialization/vector.hpp>\n\
+#include <boost/serialization/map.hpp>\n\\
+#include <boost/serialization/string.hpp>\n"
 #define CR "\n"
 #define TAB "\t"
 namespace isadt{
@@ -76,7 +81,8 @@ namespace isadt{
             std::string commonIncludes =
 			"#include <iostream>\n#include <string>\n#include <vector>\n#include <stdlib.h>\n#include <thread>\n#include <stdlib.h>\n#include <sstream>\n";
 		    commonIncludes += INCLUDE_HEADER;
-		    return commonIncludes;
+		    commonIncludes += SERIALIZATION_INCLUDE;
+			return commonIncludes;
         }
 
         std::string  CCodeGenerator::generateCommunicationIncludes()
@@ -384,16 +390,84 @@ namespace isadt{
 				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "\n}\n";
 				if(m->getAlgorithmId().compare(""))
 				{
-					cryptStr += "\t/*Add your input data here*/\n";
-					cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
-					cryptStr += "\tint length_;\n";
-					cryptStr += "\tint mod_ = -1;\n";
-					cryptStr += "\tchar* in_ = (char*)malloc(sizeof(char)*length);\n";
-					cryptStr += "\tchar* out_;\n";
-					cryptStr += "\t/*configure the key*/\n";
-					cryptStr += "\tchar* key_;\n";
-					cryptStr += "\tCryptor crypt = new Cryptor();\n";
-					cryptStr += "\tcrypt.crypt(in_, key_, length_, out_, mod_);\n";					
+					
+					if(!m->getAlgorithmId().compare("AES")){
+						if(m->getName().find("Enc") != string::npos){
+							Attribute* a = m->getAttributes().front();
+							cryptStr += "\tstd::string key;\n";
+							cryptStr += "\t/*Add your own serialization logic here*/\n";	
+							cryptStr += "\tstd::ostringstream os;\n";
+							cryptStr += "\tboost::archive::text_oarchive oa(os);\n";
+							cryptStr += "\toa << " + a->getIdentifier() + ";\n";
+							cryptStr += "\tstd::string content = os.str();\n";
+							cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
+							cryptStr += "\tint length = 1000;\n";
+							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
+							cryptStr += "\tmemset(out, 0, content.size());\n";
+							cryptStr += "\tCryptor cryptor;\n";
+							cryptStr += "\tcryptor.aes_encrypt((char*)content.c_str(), key, out)\n";
+						} else if(m->getName().find("Dec") != string::npos){
+							Attribute* a = m->getAttributes().front();
+							cryptStr += "\t/*Add your input data here*/\n";
+							cryptStr += "\tstd::string input;\n";
+							cryptStr += "\tstd::string key;\n";
+							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * 1000);\n";
+							cryptStr += "\tint length = 1000;\n";
+							cryptStr += "\tmemset(out, 0, length);\n";
+							cryptStr += "\tCryptor cryptor;\n";
+							cryptStr += "\tcryptor.aes_decrypt(input.c_str(), key.c_str(), out);\n";
+							cryptStr += "\tstd::string content = out;\n";
+							cryptStr += "\tstd::istringstream is(content);\n";
+							cryptStr += "\tboost::archive::text_iarchive ia(is);\n";
+							cryptStr += "\tia >> " + a->getIdentifier() + ";\n";
+							cryptStr += "\tfree(out);\n";
+						}
+
+					} else if(!m->getAlgorithmId().compare("RSA")){
+						if(m->getName().find("Enc") != string::npos){
+							Attribute* a = m->getAttributes().front();
+							cryptStr += "\tstd::string pubkey;\n";
+							cryptStr += "\t/*Add your own serialization logic here*/\n";	
+							cryptStr += "\tstd::ostringstream os;\n";
+							cryptStr += "\tboost::archive::text_oarchive oa(os);\n";
+							cryptStr += "\toa << " + a->getIdentifier() + ";\n";
+							cryptStr += "\tstd::string content = os.str();\n";
+							cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
+							cryptStr += "\tint length = 1000;\n";
+							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
+							cryptStr += "\tmemset(out, 0, content.size());\n";
+							cryptStr += "\tCryptor cryptor;\n";
+							cryptStr += "\tcryptor.rsa_encrypt((char*)content.c_str(), pubkey, out)\n";
+						} else if(m->getName().find("Dec") != string::npos){
+							Attribute* a = m->getAttributes().front();
+							cryptStr += "\t/*Add your input data here*/\n";
+							cryptStr += "\tstd::string input;\n";
+							cryptStr += "\tstd::string prikey;\n";
+							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * 1000);\n";
+							cryptStr += "\tint length = 1000;\n";
+							cryptStr += "\tmemset(out, 0, length);\n";
+							cryptStr += "\tCryptor cryptor;\n";
+							cryptStr += "\tcryptor.rsa_decrypt(input.c_str(), prikey.c_str(), out);\n";
+							cryptStr += "\tstd::string content = out;\n";
+							cryptStr += "\tstd::istringstream is(content);\n";
+							cryptStr += "\tboost::archive::text_iarchive ia(is);\n";
+							cryptStr += "\tia >> " + a->getIdentifier() + ";\n";
+							cryptStr += "\tfree(out);\n";
+						}
+					}
+					else {
+						//TODO later modify here
+						cryptStr += "\t/*Add your input data here*/\n";
+						cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
+						cryptStr += "\tint length_;\n";
+						cryptStr += "\tint mod_ = -1;\n";
+						cryptStr += "\tchar* in_ = (char*)malloc(sizeof(char)*length);\n";
+						cryptStr += "\tchar* out_;\n";
+						cryptStr += "\t/*configure the key*/\n";
+						cryptStr += "\tchar* key_;\n";
+						cryptStr += "\tCryptor crypt = new Cryptor();\n";
+						cryptStr += "\tcrypt.crypt(in_, key_, length_, out_, mod_);\n";		
+					}			
 				}
 				outStr += (methodDef + methodBody);
 			}
@@ -493,7 +567,9 @@ namespace isadt{
 							std::cout << "generate If branch: " << e->getGuard()->to_string() << std::endl;
 							casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
 							for(Action* a : e->getActions()){
-								casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
+								if(!a->hasNext()){
+									casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
+								}
 							}
 							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
 							std::cout << "generate If branch end" << std::endl;
@@ -562,12 +638,31 @@ namespace isadt{
 				}
 				outStr += "};\n";
 				std::cout << outStr << std::endl;
+				outStr += this->generateSerializeBinding(model);
 			}
 			std::cout << "end usertypes" << std::endl;
 			outUserTypeFile.open(path  + "/" + fileName, std::ofstream::out | std::ostream::out);
 			outUserTypeFile << outStr << std::endl;
 			outUserTypeFile.close();
 		}
+
+		std::string CCodeGenerator::generateSerializeBinding(Model* model){
+			std::string outStr = "namespace boost{\n";
+			outStr += "\tnamespace serialization{\n";
+			
+			for(UserType* ut : model->getUserTypes()){
+				outStr += "\t\ttemplate<class Archive>\n";
+				outStr += "\t\tvoid serialize(Archive & ar, " + ut->getName() + " & d, const unsigned int version){\n";
+				for(Attribute* a : ut->getAttributes()){
+					outStr += "\t\t\tar& d." + a->getIdentifier() + ";\n";
+				}
+				outStr += "\t\t}\n";
+			}
+			outStr += "\t}\n";
+			outStr += "}\n";
+			return outStr;
+		}
+
 		/*---------Generate Compile Auxiliary--------*/
 		void CCodeGenerator::generateCompileFile(std::string path, Model* model)
 		{

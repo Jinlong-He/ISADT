@@ -28,10 +28,10 @@
       <Attribute type="int" identifier="p" isArray="False" />
       <Attribute type="int" identifier="freshB" isArray="False" />
       <Method returnType="int" name="exp" cryptoSuffix="None" achieve="">
-        <Parameter type="int" identifier="num" isArray="False" />
+        <Parameter type="int" identifier="num" isArray="True" />
       </Method>
       <Method returnType="int" name="mod" cryptoSuffix="None" achieve="">
-        <Parameter type="int" identifier="num" isArray="False" />
+        <Parameter type="int" identifier="num" isArray="True" />
       </Method>
       <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
         <Parameter type="IntMsg" identifier="num" isArray="False" />
@@ -76,13 +76,9 @@
         </Transition>
         <State name="S2" />
         <Transition source="S2" dest="S4" guard="2&lt;=freshA&lt;=p-1">
-          <Action content="int para[]" />
-          <Action content="para[0] = g"/>
-          <Action content="para[1] = freshA"/>
+          <Action content="int para[] = {g, freshA}" />
           <Action content="int y=exp(para)" />
-          <Action content="int m[]" />
-          <Action content="m[0] = y"/>
-          <Action content="m[1] = p"/>
+          <Action content="int m[] = {y, p}" />
           <Action content="int ya = mod(m)" />
           <Action content="IntMsg m1" />
           <Action content="m1.setData(ya)" />
@@ -92,13 +88,9 @@
         <Transition source="S4" dest="_final" guard="">
           <Action content="IntMsg mm" />
           <Action content="receive(mm)" />
-          <Action content="int ms[]" />
-          <Action content="ms[0] = mm.getData()"/>
-          <Action content="ms[1] = freshA"/>
+          <Action content="int ms[] = {mm.getData(), freshA}" />
           <Action content="int n=exp(ms)" />
-          <Action content="int ns[]" />
-          <Action content="ns[0] = n"/>
-          <Action content="ns[1] = p"/>
+          <Action content="int ns[] = {n, p}" />
           <Action content="int ka=mod(ns)" />
         </Transition>
       </StateMachine>
@@ -116,13 +108,9 @@
         </Transition>
         <State name="S3" />
         <Transition source="S3" dest="S5" guard="1&lt;=freshB&lt;=p-1">
-          <Action content="int y[]" />
-          <Action content="y[0] = g"/>
-          <Action content="y[1] = freshB"/>
+          <Action content="int y[] = {g, freshB}" />
           <Action content="int expy=exp(y)" />
-          <Action content="int m[]" />
-          <Action content="m[0] = expy"/>
-          <Action content="m[1] = g"/>
+          <Action content="int m[] = {expy, g}" />
           <Action content="int yb = mod(m)" />
           <Action content="IntMsg m1" />
           <Action content="m1.setData(yb)" />
@@ -132,13 +120,9 @@
         <Transition source="S5" dest="_final" guard="">
           <Action content="IntMsg n" />
           <Action content="receive(n)" />
-          <Action content="int ns[]" />
-          <Action content="ns[0] = n.getData()"/>
-          <Action content="ns[1] = freshB" />
+          <Action content="int ns[] = {n.getData(), freshB}" />
           <Action content="int kb1=exp(ns)" />
-          <Action content="int ms[]"/>
-          <Action content="ms[0] = kb1"/>
-          <Action content="ms[1] = p" />
+          <Action content="int ms[] = {kb1, p}"/>
           <Action content="int kb=mod(ms)" />
         </Transition>
       </StateMachine>
