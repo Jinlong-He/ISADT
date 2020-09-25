@@ -323,8 +323,6 @@ namespace isadt{
 						commStr += "\ter.listenWithHandler(dev, dataHandler" + proc->getName() + m->getName() +  ", data_);\n";
 						commStr += "\t/*Add your own data processing logic here*/\n";
 						commStr += "\tfree(data_);\n";
-						commStr += "\tint result;\n";
-						commStr += "\treturn result;\n";
 
 					} else {
 						//OUT
@@ -344,8 +342,7 @@ namespace isadt{
 						commStr += "\tUDPReceiver  er;\n";
 						commStr += "\t/*allocation for dst_ here*/\n";
 						commStr += "\tu_char* dst_;\n";
-						commStr += "\ter.receivePacket(IPStr_.c_str(), portNum_);\n";
-						commStr += "\tdst_ = er.getDstData();\n";
+						commStr += "\ter.receivePacket(dst_, IPStr_, portNum_);\n";
 					} else {
 						commStr += "\t/*Add Ip Str and portNum here*/\n";
 						commStr += "\tstd::string IPStr_;\n";
@@ -354,7 +351,7 @@ namespace isadt{
 						commStr += "\t/*Add length and data content to send here*/\n";
 						commStr += "\tu_char* data_;\n";
 						commStr += "\tint length_;\n";
-						commStr += "\tsnd.sendPacket(data_, length_, IPStr_.c_str(), portNum_);\n";
+						commStr += "\tsnd.sendPacket(data_, length_, IPStr_, portNum_);\n";
 					}
 				} else {
 					std::cout << "Invalid commway num." << std::endl;
@@ -604,7 +601,7 @@ namespace isadt{
 		    std::string outStr = "";
 			std::cout << "generate Usertype" << std::endl;
 			outStr += this->generateCommonIncludes();
-			outStr += this->generateTimer();
+			//outStr += this->generateTimer();
 			for(UserType* u : model->getUserTypes())
 			{
 				//make sure 
@@ -616,12 +613,11 @@ namespace isadt{
 				} else {
 					outStr += ("class " + u->getName() + "{") + CR;
 				}
-				outStr += "\tprotected:\n";
+				outStr += "\tpublic:\n";
 				for(Attribute* a : u->getAttributes())
 				{
 					outStr += "\t\t" + (a->getType()->getName() + " " + a->getIdentifier()) + ";\n";
 				}
-				outStr += "\tpublic:\n";
 				for(Method* m : u->getMethods()){
 					outStr += "\t\t" + (m->getReturnType()->getName() + " " + m->getName() + "(");
 					int i = 1;
@@ -661,7 +657,7 @@ namespace isadt{
 				outStr += "\t\ttemplate<class Archive>\n";
 				outStr += "\t\tvoid serialize(Archive & ar, " + ut->getName() + " & d, const unsigned int version){\n";
 				for(Attribute* a : ut->getAttributes()){
-					outStr += "\t\t\tBOOST_SERIALIZATION_NVP(ar& d." + a->getIdentifier() + ");\n";
+					outStr += "\t\t\tar& d." + a->getIdentifier() + ";\n";
 				}
 				outStr += "\t\t}\n";
 			}
@@ -676,7 +672,6 @@ namespace isadt{
 			outStr += "class Timer {\n";
 			outStr += "\tpublic: \n";
 			outStr += "\t\t int reset();\n";
-			outStr += "\tprotected:\n";
 			outStr += "\t\t int time;\n";
 			outStr += "};\n";
 			return outStr;
