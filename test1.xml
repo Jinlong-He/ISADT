@@ -10,7 +10,6 @@
       <Attribute type="int" identifier="n" isArray="False" />
       <Attribute type="number" identifier="m" isArray="False" />
       <Method returnType="int" name="getN" cryptoSuffix="None">
-        <Parameter type="number" identifier="m" isArray="False" />
       </Method>
     </UserType>
     <UserType name="Key" basic="false" parent="ByteVec">
