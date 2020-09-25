@@ -27,6 +27,7 @@ unordered_map<string, UserType*> Manage::typeMap_({{"int", Manage::intType_},
 
 int main(int argc, char *argv[]) {
     Manage::timerType_ -> mkMethod("reset");
+    Manage::timerType_ -> mkMethod("time");
     ArgumentParser program("isadt");
     program.add_argument("-i", "--input")
         .required()

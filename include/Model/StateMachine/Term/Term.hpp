@@ -33,12 +33,15 @@ namespace isadt {
         }
 
         UserType* getRealType() const {
-            for (auto it = children_.rend(); it != children_.rbegin();) {
-                it--;
+            for (auto it = children_.rbegin(); it != children_.rend(); it++) {
                 if ((*it) -> to_string().find(".") != string::npos) {
                     return (*it) -> getType();
                 }
             }
+            //for (auto child : children_) {
+            //    if (child -> to_string().find(".") != string::npos)
+            //        return child -> getType();
+            //}
             return getType();
         }
 
