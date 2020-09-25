@@ -11,11 +11,12 @@
 #include <boost/serialization/vector.hpp>\n\
 #include <boost/serialization/map.hpp>\n\\
 #include <boost/serialization/string.hpp>\n"
+#define TIMER_INCLUDE ""
 #define CR "\n"
 #define TAB "\t"
 namespace isadt{
         std::list<Plugin*>  CCodeGenerator::getPlugins()
-        {
+        { 
             return this->plugins;
         }
         // methods for generating header file 
@@ -343,7 +344,7 @@ namespace isadt{
 						commStr += "\tUDPReceiver  er;\n";
 						commStr += "\t/*allocation for dst_ here*/\n";
 						commStr += "\tu_char* dst_;\n";
-						commStr += "\ter.receivePacket(IPStr_, portNum_);\n";
+						commStr += "\ter.receivePacket(IPStr_.c_str(), portNum_);\n";
 						commStr += "\tdst_ = er.getDstData();\n";
 					} else {
 						commStr += "\t/*Add Ip Str and portNum here*/\n";
@@ -353,7 +354,7 @@ namespace isadt{
 						commStr += "\t/*Add length and data content to send here*/\n";
 						commStr += "\tu_char* data_;\n";
 						commStr += "\tint length_;\n";
-						commStr += "\tsnd.sendPacket(data_, length_, IPStr_, portNum_);\n";
+						commStr += "\tsnd.sendPacket(data_, length_, IPStr_.c_str(), portNum_);\n";
 					}
 				} else {
 					std::cout << "Invalid commway num." << std::endl;
@@ -467,7 +468,7 @@ namespace isadt{
 						cryptStr += "\tchar* key_;\n";
 						cryptStr += "\tCryptor crypt = new Cryptor();\n";
 						cryptStr += "\tcrypt.crypt(in_, key_, length_, out_, mod_);\n";		
-					}			
+					}
 				}
 				outStr += (methodDef + methodBody);
 			}
@@ -603,15 +604,19 @@ namespace isadt{
 		    std::string outStr = "";
 			std::cout << "generate Usertype" << std::endl;
 			outStr += this->generateCommonIncludes();
+			outStr += this->generateTimer();
 			for(UserType* u : model->getUserTypes())
 			{
 				//make sure 
+				if(!u->getName().compare("")){
+					continue;
+				}
 				if(u->getBase()){
-					outStr += ("class " + u->getName() + " : " + u->getBase()->getName() + "{") + CR;
+					outStr += ("class " + u->getName() + " : public " + u->getBase()->getName() + "{") + CR;
 				} else {
 					outStr += ("class " + u->getName() + "{") + CR;
 				}
-				outStr += "\tprivate:\n";
+				outStr += "\tprotected:\n";
 				for(Attribute* a : u->getAttributes())
 				{
 					outStr += "\t\t" + (a->getType()->getName() + " " + a->getIdentifier()) + ";\n";
@@ -633,13 +638,15 @@ namespace isadt{
 					}
 					
 					outStr += "\t\t\t" + m->getReturnType()->getName() + " " + "result;\n";
-					outStr += "\t\t\treturn result;\n"; 
+					outStr += 
+				//outStr += this->generateByteVecAndTimer();"\t\t\treturn result;\n"; 
 					outStr += "\t\t}\n";
 				}
 				outStr += "};\n";
 				std::cout << outStr << std::endl;
-				outStr += this->generateSerializeBinding(model);
 			}
+			
+			outStr += this->generateSerializeBinding(model);
 			std::cout << "end usertypes" << std::endl;
 			outUserTypeFile.open(path  + "/" + fileName, std::ofstream::out | std::ostream::out);
 			outUserTypeFile << outStr << std::endl;
@@ -654,12 +661,24 @@ namespace isadt{
 				outStr += "\t\ttemplate<class Archive>\n";
 				outStr += "\t\tvoid serialize(Archive & ar, " + ut->getName() + " & d, const unsigned int version){\n";
 				for(Attribute* a : ut->getAttributes()){
-					outStr += "\t\t\tar& d." + a->getIdentifier() + ";\n";
+					outStr += "\t\t\tBOOST_SERIALIZATION_NVP(ar& d." + a->getIdentifier() + ");\n";
 				}
 				outStr += "\t\t}\n";
 			}
 			outStr += "\t}\n";
 			outStr += "}\n";
+			return outStr;
+		}
+
+
+		std::string CCodeGenerator::generateTimer(){
+			std::string outStr = "";
+			outStr += "class Timer {\n";
+			outStr += "\tpublic: \n";
+			outStr += "\t\t int reset();\n";
+			outStr += "\tprotected:\n";
+			outStr += "\t\t int time;\n";
+			outStr += "};\n";
 			return outStr;
 		}
 
@@ -671,17 +690,17 @@ namespace isadt{
 			std::string outStr = "import os\n";
 			outStr += "import sys\n";
 			outStr += "os.system(\"g++ -g -c CommLib/NetComm/src/*.cpp\")\n";
-			outStr += "os.system(\"ar cqs libnetcomm.a ./*.o\")";
+			outStr += "os.system(\"ar cqs libnetcomm.a ./*.o\")\n";
 			outStr += "os.system(\"mv *.o CommLib/NetComm/src/\")\n";
 			outStr += "os.system(\"mv *.a CommLib/NetComm/src/\")\n";
 			outStr += "os.system(\"g++ -g -c CryptoLib/src/*.cpp\")\n";
-			outStr += "os.system(\"ar cqs libcryptorlib.a ./*.o\"\n)";
+			outStr += "os.system(\"ar cqs libcryptorlib.a ./*.o\")\n";
 			outStr += "os.system(\"mv *.o CryptoLib/src/\")\n";
 			outStr += "os.system(\"mv *.a CryptoLib/src/\")\n";
 			for(Process* proc : model->getProcesses())
 			{
 				outStr += "os.system(\"g++ -g -o " + proc->getName() + " ./generatedSrc/" + proc->getName() +  
-				".cpp -L./CommLib/NetComm/src/ -lnetcomm -L./CryptoLib/src/ -lcryptorlib -lssl -lcrypto -lpcap -lboost_serialization\")";
+				".cpp -L./CommLib/NetComm/src/ -lnetcomm -L./CryptoLib/src/ -lcryptorlib -lssl -lcrypto -lpcap -lboost_serialization\")\n";
 			}
 			outCompileFile.open(path  + "/compile.py", std::ofstream::out | std::ostream::out);
 			outCompileFile << outStr << std::endl;
