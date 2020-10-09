@@ -7,7 +7,7 @@
 #include \"../CommLib/NetComm/include/UDPReceiver.hpp\"\n"
 #define CRYPTO_INCLUDE "#include \"../CryptoLib/include/Cryptor.hpp\""
 #define SERIALIZATION_INCLUDE "#include <boost/archive/text_oarchive.hpp>\n\
-#include <boost/archive/text_oarchive.hpp>\n\
+#include <boost/archive/text_iarchive.hpp>\n\
 #include <boost/serialization/vector.hpp>\n\
 #include <boost/serialization/map.hpp>\n\\
 #include <boost/serialization/string.hpp>\n"
