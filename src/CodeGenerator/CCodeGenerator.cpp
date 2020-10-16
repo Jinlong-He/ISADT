@@ -217,6 +217,7 @@ namespace isadt{
 			std::string outStr = "";
 			outStr += "static pcap_t* dev" + proc->getName() + ";\n";
 			outStr += "static char* tempData" + proc->getName() + "\n;";
+			outStr += "static std::string tempData" + proc->getName() + "Str;\n";
 			return outStr;
 		}
 
@@ -305,12 +306,11 @@ namespace isadt{
 				std::string ret = "\treturn result;\n";
 				
 				if(!m->getCommId().compare("NativeEthernetFrame")){
-					commStr += "\t/*Configure your own implementation of length_*/\n";
-					commStr += "\tint length_ = 0;\n";
-					commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
-					commStr += "\tu_char* dst_;";
 					if(!m->getInOut()){
 						//IN
+						commStr += "\t/*Configure your own implementation of length_, default set to 1000*/\n";
+						commStr += "\tint length_ = 1000;\n";
+						commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
 						commStr += "\t/*Add MAC Address here*/\n";
 						commStr += "\tushort mac[6];\n";
 						commStr += "\tEtherReceiver er;\n";
@@ -320,12 +320,14 @@ namespace isadt{
 						commStr += "\tdev" + proc->getName() + " = selectedAdp;\n";
 						commStr += "\t/*Add self defined dataHandler to handle data received*/\n";
 						commStr += "\t/*parameters: u_char* param, const struct pcap_pkthdr* header, const u_char* packetData*/\n";
-						commStr += "\ter.listenWithHandler(dev, dataHandler" + proc->getName() + m->getName() +  ", data_);\n";
+						commStr += "\ter.listenWithHandler(dev" + proc->getName() + ", dataHandler" + proc->getName() + m->getName() +  ", data_);\n";
 						commStr += "\t/*Add your own data processing logic here*/\n";
 						commStr += "\tfree(data_);\n";
 
 					} else {
 						//OUT
+						commStr += "\tint length_ = tempData" + proc->getName() + "Str.size();\n";
+						commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
 						commStr += "\t/*Add MAC Address here*/\n";
 						commStr += "\tushort mac[6];\n";
 						commStr += "\tEtherSender snd(mac);\n";
@@ -336,22 +338,30 @@ namespace isadt{
 					
 				} else if(!m->getCommId().compare("UDP")){
 					if(!m->getInOut()){
+						//IN
 						commStr += "\t/*Add IP Str and portNUm here*/\n";
-						commStr += "\tstd::string IPStr_;\n";
-						commStr += "\tu_short portNum_;\n";
+						commStr += "\tstd::string IPStr_ = \"255.255.255.255\";\n";
+						commStr += "\tu_short portNum_ = 6666;\n";
 						commStr += "\tUDPReceiver  er;\n";
-						commStr += "\t/*allocation for dst_ here*/\n";
-						commStr += "\tu_char* dst_;\n";
-						commStr += "\ter.receivePacket(dst_, IPStr_, portNum_);\n";
+						commStr += "\t/*allocation for destination here*/\n";
+						commStr += "\tif(tempData"+ proc->getName() + " != NULL){\n";
+						commStr += "\t\tfree(tempData" + proc->getName() + ");\n";
+						commStr += "\t}\n";
+						commStr += "\t/*Configure your own implementation of length_, default set to 1000/\n";
+						commStr += "\ttempData" + proc->getName() + " = (char*)malloc(1000*sizeof(char));\n";
+						commStr += "\tint result = er.receivePacket((u_char*)tempDataGateway), IPStr_, portNum_);\n";
+						commStr += "\ttempData" + proc->getName() + "Str = tempData" + proc->getName() + ";\n";
+						commStr += "\treturn result;\n";
 					} else {
-						commStr += "\t/*Add Ip Str and portNum here*/\n";
-						commStr += "\tstd::string IPStr_;\n";
-						commStr += "\tu_short portNum_;\n";
+						commStr += "\t/*Define your own Ip Str and portNum here*/\n";
+						commStr += "\tstd::string IPStr_ = \"255.255.255.255\";\n";
+						commStr += "\tu_short portNum_ = 6666;\n";
 						commStr += "\tUDPSender snd;\n";
 						commStr += "\t/*Add length and data content to send here*/\n";
-						commStr += "\tu_char* data_;\n";
-						commStr += "\tint length_;\n";
-						commStr += "\tsnd.sendPacket(data_, length_, IPStr_, portNum_);\n";
+						commStr += "\tu_char* data_ = (u_char*)tempData" + proc->getName() +"Str.c_str();\n";
+						commStr += "\tint length_ = tempData" + proc->getName() + "Str.size();\n";
+						commStr += "\tint result = snd.sendPacket(data_, length_, IPStr_, portNum_);\n";
+						commStr += "\treturn result;\n";
 					}
 				} else {
 					std::cout << "Invalid commway num." << std::endl;
