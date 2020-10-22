@@ -5,15 +5,10 @@
     <UserType name="number" basic="true" />
     <UserType name="byte" basic="true" />
     <UserType name="ByteVec" basic="middle" />
-    <UserType name="Timer" basic="middle" >
-      <Method returnType="int" name="time" achieve="">
-      </Method>
-    </UserType>
     <UserType name="Head" basic="middle">
       <Attribute type="int" identifier="version" isArray="False" />
       <Attribute type="int" identifier="msgType" isArray="False" />
       <Attribute type="int" identifier="seq" isArray="False" />
-      <Attribute type="Timer" identifier="timeStamp" isArray="False" />
       <Attribute type="int" identifier="length" isArray="False" />
     </UserType>
     <UserType name="GwAdvMsg" basic="false" parent="ByteVec">
@@ -57,31 +52,31 @@
       <Attribute type="int" identifier="hostId" isArray="False" />
       <Attribute type="int" identifier="gateway" isArray="False" />
       <Attribute type="int" identifier="nonce" isArray="False" />
-      <Attribute type="int" identifier="serverPk" isArray="False" />
+      <Attribute type="Key" identifier="serverPk" isArray="False" />
       <Attribute type="GwAdvMsg" identifier="gwAdvMsg" isArray="False" />
       <Attribute type="AuthReqMsg" identifier="authReqMsg" isArray="False" />
       <Attribute type="AuthQueMsg" identifier="authQueMsg" isArray="False" />
       <Attribute type="QueRespMsg" identifier="queRespMsg" isArray="False" />
       <Attribute type="AuthRespMsg" identifier="authRespMsg" isArray="False" />
-      <Attribute type="int" identifier="hostIdSk" isArray="False" />
-      <Attribute type="int" identifier="hostIdPk" isArray="False" />
+      <Attribute type="Key" identifier="hostIdSk" isArray="False" />
+      <Attribute type="Key" identifier="hostIdPk" isArray="False" />
       <Attribute type="int" identifier="hostIp" isArray="False" />
       <Attribute type="Key" identifier="hostIpSk" isArray="False" />
       <Method returnType="ByteVec" name="SymEnc" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <Method returnType="ByteVec" name="SymDec" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="Key" identifier="key" isArray="False" />
       </Method>
       <Method returnType="ByteVec" name="Sign" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="skey" isArray="False" />
+        <Parameter type="Key" identifier="skey" isArray="False" />
       </Method>
       <Method returnType="bool" name="Verify" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="pkey" isArray="False" />
+        <Parameter type="Key" identifier="pkey" isArray="False" />
       </Method>
       <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
@@ -99,11 +94,11 @@
       <Attribute type="int" identifier="serverPk" isArray="False" />
       <Method returnType="ByteVec" name="Sign" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="skey" isArray="False" />
+        <Parameter type="Key" identifier="skey" isArray="False" />
       </Method>
       <Method returnType="bool" name="Verify" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="pkey" isArray="False" />
+        <Parameter type="Key" identifier="pkey" isArray="False" />
       </Method>
       <CommMethod name="recvFromHost" inOutSuffix="In" commWay="NativeEthernetFrame">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
@@ -127,23 +122,23 @@
       <Attribute type="AuthQueMsg" identifier="authQueMsg" isArray="False" />
       <Attribute type="QueRespMsg" identifier="queRespMsg" isArray="False" />
       <Attribute type="AuthRespMsg" identifier="authRespMsg" isArray="False" />
-      <Attribute type="int" identifier="serverSk" isArray="False" />
-      <Attribute type="int" identifier="serverPk" isArray="False" />
+      <Attribute type="Key" identifier="serverSk" isArray="False" />
+      <Attribute type="Key" identifier="serverPk" isArray="False" />
       <Attribute type="int" identifier="hostIp" isArray="False" />
-      <Attribute type="int" identifier="hostIdPk" isArray="False" />
+      <Attribute type="Key" identifier="hostIdPk" isArray="False" />
       <Attribute type="Key" identifier="hostIpSk" isArray="False" />
       <Attribute type="ByteVec" identifier="secHostIpSk" isArray="False" />
       <Method returnType="ByteVec" name="SymEnc" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <Method returnType="ByteVec" name="Sign" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="skey" isArray="False" />
+        <Parameter type="Key" identifier="skey" isArray="False" />
       </Method>
       <Method returnType="bool" name="Verify" cryptoSuffix="RSA" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="pkey" isArray="False" />
+        <Parameter type="Key" identifier="pkey" isArray="False" />
       </Method>
       <CommMethod name="receive" inOutSuffix="In" commWay="UDP">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
@@ -184,7 +179,6 @@
       <StateMachine refine_state="">
         <Transition source="_init" dest="reqMsgCreated" guard="">
           <Action content="authReqMsg.head.msgType = 2" />
-          <Action content="authReqMsg.head.timeStamp.time = 1" />
           <Action content="authReqMsg.host = hostId" />
           <Action content="authReqMsg.gateway = gateway" />
           <Action content="authReqMsg.signature = Sign(authReqMsg,hostIdSk)" />
@@ -201,7 +195,6 @@
         <Transition source="queRecieved" dest="queRespCreated" guard="Verify(authQueMsg, serverPk)">
           <Action content="nonce = authQueMsg.nonce" />
           <Action content="queRespMsg.head.msgType = 5" />
-          <Action content="queRespMsg.head.timeStamp.time = authQueMsg.head.timeStamp.time + 1" />
           <Action content="queRespMsg.nonce = nonce" />
           <Action content="queRespMsg.host = hostId" />
           <Action content="queRespMsg.signature = Sign(queRespMsg, hostIdSk)" />
@@ -219,7 +212,7 @@
         <Transition source="respRecved" dest="verifyAuthRespFailed" guard="!Verify(authRespMsg, serverPk)" />
         <Transition source="respRecved" dest="_final" guard="Verify(authRespMsg, serverPk)">
           <Action content="hostIp = authRespMsg.hostIp" />
-          <Action content="hostIpSk = SymDec(authRespMsg.secHostIpSk, hostIdSk)" />
+          <Action content="=SymDec(authRespMsg.secHostIpSk, hostIdSk)" />
         </Transition>
         <State name="verifyAuthQueFailed" />
         <Transition source="verifyAuthQueFailed" dest="_final" />
@@ -271,7 +264,6 @@
         <Transition source="reqRecved" dest="queCreated" guard="Verify(authRespMsg, hostIdPk)">
           <Action content="hostId = authReqMsg.host" />
           <Action content="authQueMsg.head.msgType = 4" />
-          <Action content="authQueMsg.head.timeStamp.time = authReqMsg.head.timeStamp.time +1" />
           <Action content="authQueMsg.host = authReqMsg.host" />
           <Action content="authQueMsg.nonce = nonce" />
           <Action content="authQueMsg.server = server" />
@@ -289,7 +281,6 @@
         <State name="queRespRecved" />
         <Transition source="queRespRecved" dest="authRespCreated" guard="Verify(queRespMsg, hostIdPk) &amp;&amp; queRespMsg.nonce==nonce">
           <Action content="authRespMsg.head.msgType = 3" />
-          <Action content="authRespMsg.head.timeStamp.time = queRespMsg.head.timeStamp.time + 1" />
           <Action content="authRespMsg.host = queRespMsg.host" />
           <Action content="authRespMsg.gateway = gateway" />
           <Action content="authRespMsg.hostIp = hostIp" />
