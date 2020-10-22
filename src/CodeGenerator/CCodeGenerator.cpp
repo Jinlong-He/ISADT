@@ -306,6 +306,7 @@ namespace isadt{
 				std::string returnVal = '\t' + rttStr + " result;" + CR;
 				std::string ret = "\treturn result;\n";
 				
+				std::string methodBody = "";
 				if(!m->getCommId().compare("NativeEthernetFrame")){
 					if(!m->getInOut()){
 						//IN
@@ -337,6 +338,7 @@ namespace isadt{
 						commStr += "\tint success =snd.sendEtherBroadcast(data_, length_);\n";
 					}
 					
+					methodBody = "{\n" + commStr + returnVal + ret + "\n}\n";
 				} else if(!m->getCommId().compare("UDP")){
 					if(!m->getInOut()){
 						//IN
@@ -364,11 +366,10 @@ namespace isadt{
 						commStr += "\tint result = snd.sendPacket(data_, length_, IPStr_, portNum_);\n";
 						commStr += "\treturn result;\n";
 					}
+					methodBody = "{\n" + commStr +"\n}\n";
 				} else {
 					std::cout << "Invalid commway num." << std::endl;
 				}
-
-				std::string methodBody = "{\n" + commStr + returnVal + ret + "\n}\n";
 				outStr += (commHandlerStr + methodDef + methodBody);
 			}
 			std::cout << "generate Communication Methods Over" << std::endl;
@@ -632,7 +633,7 @@ namespace isadt{
 		    std::string outStr = "";
 			std::cout << "generate Usertype" << std::endl;
 			outStr += this->generateCommonIncludes();
-			//outStr += this->generateTimer();
+			outStr += this->generateTimer();
 			for(UserType* u : model->getUserTypes())
 			{
 				//make sure 
