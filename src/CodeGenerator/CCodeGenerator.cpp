@@ -395,10 +395,9 @@ namespace isadt{
 				std::string returnVal = rttStr + " result;" + CR;
 				std::string ret = "\treturn result;\n";
 				std::string cryptStr = "";
-				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "\n}\n";
 				if(m->getAlgorithmId().compare(""))
 				{
-					
+					std::cout << "IDIDIDIDDIDIDIIDID: " << m->getAlgorithmId() << std::endl;
 					if(!m->getAlgorithmId().compare("AES")){
 						if(m->getName().find("Enc") != string::npos){
 							Attribute* a = m->getAttributes().front();
@@ -413,7 +412,7 @@ namespace isadt{
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
 							cryptStr += "\tmemset(out, 0, content.size());\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.aes_encrypt((char*)content.c_str(), key, out)\n";
+							cryptStr += "\tcryptor.aes_encrypt((char*)content.c_str(), key, out);\n";
 						} else if(m->getName().find("Dec") != string::npos){
 							Attribute* a = m->getAttributes().front();
 							cryptStr += "\t/*Add your input data here*/\n";
@@ -445,7 +444,7 @@ namespace isadt{
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
 							cryptStr += "\tmemset(out, 0, content.size());\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.rsa_encrypt((char*)content.c_str(), pubkey, out)\n";
+							cryptStr += "\tcryptor.rsa_encrypt((char*)content.c_str(), pubkey, out);\n";
 						} else if(m->getName().find("Dec") != string::npos){
 							Attribute* a = m->getAttributes().front();
 							cryptStr += "\t/*Add your input data here*/\n";
@@ -477,6 +476,8 @@ namespace isadt{
 						cryptStr += "\tcrypt.crypt(in_, key_, length_, out_, mod_);\n";		
 					}
 				}
+				
+				std::string methodBody = "{\n" + cryptStr + returnVal + ret + "\n}\n";
 				outStr += (methodDef + methodBody);
 			}
 			
