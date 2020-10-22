@@ -32,11 +32,11 @@
       <Attribute type="sk" identifier="ska" isArray="False" />
       <Method returnType="ByteVec" name="SymEnc" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <Method returnType="ByteVec" name="SymDec" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
@@ -56,11 +56,11 @@
       <Attribute type="sk" identifier="skb" isArray="False" />
       <Method returnType="ByteVec" name="SymEnc" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <Method returnType="ByteVec" name="SymDec" cryptoSuffix="AES" achieve="">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />
-        <Parameter type="int" identifier="key" isArray="False" />
+        <Parameter type="ByteVec" identifier="key" isArray="False" />
       </Method>
       <CommMethod name="receive" inOutSuffix="In" commWay="NativeEthernetFrame">
         <Parameter type="ByteVec" identifier="msg" isArray="False" />

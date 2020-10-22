@@ -14,6 +14,7 @@
 #define TIMER_INCLUDE ""
 #define CR "\n"
 #define TAB "\t"
+#define DEMO 1
 namespace isadt{
         std::list<Plugin*>  CCodeGenerator::getPlugins()
         { 
@@ -277,7 +278,7 @@ namespace isadt{
 					commHandlerStr += "\tif(ntohs(eh->type) == 0x888f){\n";
 					commHandlerStr += "\t\t/*Add your own packet handling logic, tempData is used to store the packet after breaking the listening loop*/\n";
 					commHandlerStr += "\t\ttempData" + proc->getName() + " = NULL;\n";
-					commHandlerStr += "\t\tint breakingLoopCondition = 0;\n";
+					commHandlerStr += "\t\tint breakingLoopCondition = 1;\n";
 					commHandlerStr += "\t\tif(breakingLoopCondition){\n";
 					commHandlerStr += "\t\t\tpcap_breakloop(dev" + proc->getName() + ");\n";
 					commHandlerStr += "\t\t}\n";
@@ -347,9 +348,9 @@ namespace isadt{
 						commStr += "\tif(tempData"+ proc->getName() + " != NULL){\n";
 						commStr += "\t\tfree(tempData" + proc->getName() + ");\n";
 						commStr += "\t}\n";
-						commStr += "\t/*Configure your own implementation of length_, default set to 1000/\n";
+						commStr += "\t/*Configure your own implementation of length_, default set to 1000*/\n";
 						commStr += "\ttempData" + proc->getName() + " = (char*)malloc(1000*sizeof(char));\n";
-						commStr += "\tint result = er.receivePacket((u_char*)tempDataGateway), IPStr_, portNum_);\n";
+						commStr += "\tint result = er.receivePacket((u_char*)tempData" + proc->getName() + ", IPStr_, portNum_);\n";
 						commStr += "\ttempData" + proc->getName() + "Str = tempData" + proc->getName() + ";\n";
 						commStr += "\treturn result;\n";
 					} else {
@@ -392,39 +393,39 @@ namespace isadt{
 				}
 				attrStr += ")";
 				std::string methodDef = rttStr + " " + classNamespace + methodName + attrStr;
-				std::string returnVal = rttStr + " result;" + CR;
+				std::string returnVal = "\t" + rttStr + " result;" + CR;
 				std::string ret = "\treturn result;\n";
 				std::string cryptStr = "";
 				if(m->getAlgorithmId().compare(""))
 				{
-					std::cout << "IDIDIDIDDIDIDIIDID: " << m->getAlgorithmId() << std::endl;
+					//std::cout << "IDIDIDIDDIDIDIIDID: " << m->getAlgorithmId() << std::endl;
 					if(!m->getAlgorithmId().compare("AES")){
 						if(m->getName().find("Enc") != string::npos){
 							Attribute* a = m->getAttributes().front();
-							cryptStr += "\tstd::string key;\n";
+							cryptStr += "\tstd::string key_;\n";
 							cryptStr += "\t/*Add your own serialization logic here*/\n";	
 							cryptStr += "\tstd::ostringstream os;\n";
 							cryptStr += "\tboost::archive::text_oarchive oa(os);\n";
 							cryptStr += "\toa << " + a->getIdentifier() + ";\n";
-							cryptStr += "\tstd::string content = os.str();\n";
+							cryptStr += "\tstd::string content_ = os.str();\n";
 							cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
 							cryptStr += "\tint length = 1000;\n";
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
-							cryptStr += "\tmemset(out, 0, content.size());\n";
+							cryptStr += "\tmemset(out, 0, content_.size());\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.aes_encrypt((char*)content.c_str(), key, out);\n";
+							cryptStr += "\tcryptor.aes_encrypt((char*)content_.c_str(), (char*)key_.c_str(), out);\n";
 						} else if(m->getName().find("Dec") != string::npos){
 							Attribute* a = m->getAttributes().front();
 							cryptStr += "\t/*Add your input data here*/\n";
-							cryptStr += "\tstd::string input;\n";
-							cryptStr += "\tstd::string key;\n";
+							cryptStr += "\tstd::string input_;\n";
+							cryptStr += "\tstd::string key_;\n";
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * 1000);\n";
 							cryptStr += "\tint length = 1000;\n";
 							cryptStr += "\tmemset(out, 0, length);\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.aes_decrypt(input.c_str(), key.c_str(), out);\n";
-							cryptStr += "\tstd::string content = out;\n";
-							cryptStr += "\tstd::istringstream is(content);\n";
+							cryptStr += "\tcryptor.aes_decrypt((char*)input_.c_str(), (char*)key_.c_str(), out);\n";
+							cryptStr += "\tstd::string content_ = out;\n";
+							cryptStr += "\tstd::istringstream is(content_);\n";
 							cryptStr += "\tboost::archive::text_iarchive ia(is);\n";
 							cryptStr += "\tia >> " + a->getIdentifier() + ";\n";
 							cryptStr += "\tfree(out);\n";
@@ -433,28 +434,28 @@ namespace isadt{
 					} else if(!m->getAlgorithmId().compare("RSA")){
 						if(m->getName().find("Enc") != string::npos){
 							Attribute* a = m->getAttributes().front();
-							cryptStr += "\tstd::string pubkey;\n";
+							cryptStr += "\tstd::string pubkey_;\n";
 							cryptStr += "\t/*Add your own serialization logic here*/\n";	
 							cryptStr += "\tstd::ostringstream os;\n";
 							cryptStr += "\tboost::archive::text_oarchive oa(os);\n";
 							cryptStr += "\toa << " + a->getIdentifier() + ";\n";
-							cryptStr += "\tstd::string content = os.str();\n";
+							cryptStr += "\tstd::string content_ = os.str();\n";
 							cryptStr += "\t/*Configure the mod and the length of the cryptLib*/\n";
 							cryptStr += "\tint length = 1000;\n";
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * length);\n";
-							cryptStr += "\tmemset(out, 0, content.size());\n";
+							cryptStr += "\tmemset(out, 0, content_.size());\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.rsa_encrypt((char*)content.c_str(), pubkey, out);\n";
+							cryptStr += "\tcryptor.rsa_encrypt((char*)content_.c_str(), (char*)pubkey_.c_str(), out);\n";
 						} else if(m->getName().find("Dec") != string::npos){
 							Attribute* a = m->getAttributes().front();
 							cryptStr += "\t/*Add your input data here*/\n";
-							cryptStr += "\tstd::string input;\n";
-							cryptStr += "\tstd::string prikey;\n";
+							cryptStr += "\tstd::string input_;\n";
+							cryptStr += "\tstd::string prikey_;\n";
 							cryptStr += "\tchar* out = (char*)malloc(sizeof(char) * 1000);\n";
 							cryptStr += "\tint length = 1000;\n";
 							cryptStr += "\tmemset(out, 0, length);\n";
 							cryptStr += "\tCryptor cryptor;\n";
-							cryptStr += "\tcryptor.rsa_decrypt(input.c_str(), prikey.c_str(), out);\n";
+							cryptStr += "\tcryptor.rsa_decrypt((char*)input_.c_str(), (char*)prikey_.c_str(), out);\n";
 							cryptStr += "\tstd::string content = out;\n";
 							cryptStr += "\tstd::istringstream is(content);\n";
 							cryptStr += "\tboost::archive::text_iarchive ia(is);\n";
@@ -561,9 +562,11 @@ namespace isadt{
 			for(Vertex* v : sm->getVertices()){
 				
 				std::cout << "vertex " + v->getName() << std::endl;
-				casesBody += (caseTab + "case STATE__" + v->getName() + ":") + CR;
+				casesBody += (caseTab + "case STATE__" + v->getName() + ":{") + CR;
 				casesBody += (caseBodyTab + "std::cout << \"--------------------STATE__" + v->getName() + "\" << std::endl;\n");
 				bool elseIf = false;
+				bool elseGen = false;
+				bool hasCondition = false;
 				for(Edge* e : sm->getEdges()){
 					std::cout << "edge loop" << std::endl;
 					if(!e->getFromVertex()->getName().compare(v->getName())){
@@ -573,6 +576,7 @@ namespace isadt{
 						
 						std::cout << "caseBody"<< std::endl;
 						if(e->getGuard() != nullptr){
+							hasCondition = true;
 							std::cout << "generate If branch: " << e->getGuard()->to_string() << std::endl;
 							casesBody += (caseBodyTab + (elseIf ? "else if(" : "if(") + e->getGuard()->to_string() + "){") + CR;
 							for(Action* a : e->getActions()){
@@ -583,21 +587,37 @@ namespace isadt{
 							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
 							std::cout << "generate If branch end" << std::endl;
 							casesBody += (caseBodyTab + "}") + CR;
-							
 							elseIf = true;
 						} else {
+							elseGen = true;
 							casesBody += (caseBodyTab + (elseIf ? "else {"  : "") + CR);
 							for(Action* a : e->getActions()){
 								casesBody += TAB + (caseBodyTab + a->to_string() + ";") + CR;
 							}
 							casesBody += ("\t\t\t\t__currentState = STATE__" + e->getToVertex()->getName()) + ";\n";
 							casesBody += (caseBodyTab + (elseIf ? "}"  : "") + CR);
+							
 						}
 					}
 					
+					
 					std::cout << "edge loop end" << std::endl;
 				}
+				if(!elseGen && hasCondition){
+						casesBody += (caseBodyTab + "else {" + CR);
+						if(DEMO){
+							casesBody += (caseBodyTab + "__currentState = STATE___final;\n");
+						} else {
+							casesBody += (caseBodyTab + "__currentState = -100;\n");
+						}	
+						casesBody += (caseBodyTab + "}\n");
+				}
+				if(!v->getName().compare("_final")){
+					casesBody += (caseBodyTab + "\t__currentState = -100;\n");
+				}
 				casesBody += "\t\t\t\tbreak;\n";
+				
+				casesBody += "\t\t\t}\n";
 			}
 			std::cout << "GenStateBehave Over" << std::endl;
 			return casesBody;
@@ -625,9 +645,15 @@ namespace isadt{
 					outStr += ("class " + u->getName() + "{") + CR;
 				}
 				outStr += "\tpublic:\n";
+				if(!u->getName().compare("ByteVec")){
+					outStr += "\t\tstd::string str;\n";
+				}
 				for(Attribute* a : u->getAttributes())
 				{
 					outStr += "\t\t" + (a->getType()->getName() + " " + a->getIdentifier()) + ";\n";
+				}
+				if(!u->getName().compare("ByteVec")){
+					outStr += "\t\tstd::string getStr();\n";
 				}
 				for(Method* m : u->getMethods()){
 					outStr += "\t\t" + (m->getReturnType()->getName() + " " + m->getName() + "(");
@@ -667,6 +693,9 @@ namespace isadt{
 			for(UserType* ut : model->getUserTypes()){
 				outStr += "\t\ttemplate<class Archive>\n";
 				outStr += "\t\tvoid serialize(Archive & ar, " + ut->getName() + " & d, const unsigned int version){\n";
+				if(!ut->getName().compare("ByteVec")){
+					outStr += "\t\t\tar& d.str;\n";
+				}
 				for(Attribute* a : ut->getAttributes()){
 					outStr += "\t\t\tar& d." + a->getIdentifier() + ";\n";
 				}
