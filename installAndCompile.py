@@ -8,7 +8,6 @@ os.system("sudo apt-get install libboost-dev libboost-all-dev")
 os.system("sudo apt-get install openssl libssl-dev")
 
 #os.system("rm -rf ~/Desktop/generated")
-folderExists = os.path.exists("~/Desktop/generated")
 os.system("mkdir ~/Desktop/generated")
 os.system("mkdir ~/Desktop/generated/CommLib")
 os.system("mkdir ~/Desktop/generated/CryptoLib")
