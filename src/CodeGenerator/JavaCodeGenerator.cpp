@@ -25,7 +25,7 @@ namespace isadt{
         {
             std::ofstream outHeadFile;
 		    //TODO: make sure here
-		    std::string tempFileName = proc->getName() + ".h";
+		    std::string tempFileName = proc->getName() + ".java";
 		    std::string outStr = "";
 		    // if def
 		    outStr += generateHeaderIfDef(proc);
