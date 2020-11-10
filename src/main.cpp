@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         .help("the input file of model");
     program.add_argument("-o", "--output")
         .nargs(1)
-        .default_value(vector<string>({"../../generated"}))
+        .default_value(vector<string>({"~/Desktop/generated"}))
         .help("the output dir for code generator");
     program.add_argument("-v", "--verify")
         .help("verify the properties of a given model")
@@ -43,6 +43,10 @@ int main(int argc, char *argv[]) {
         .implicit_value(true);
     program.add_argument("-g", "--generate")
         .help("generate the codes of a given model")
+        .default_value(false)
+        .implicit_value(true);
+    program.add_argument("-r", "--run")
+        .help("generate and run the codes of a given model")
         .default_value(false)
         .implicit_value(true);
     program.add_argument("-engine=beagle")
@@ -61,6 +65,26 @@ int main(int argc, char *argv[]) {
         .help("set the real engine for generator")
         .default_value(false)
         .implicit_value(true);
+    program.add_argument("-w", "--win")
+        .help("generate (and run) on windows")
+        .default_value(false)
+        .implicit_value(true);    
+    program.add_argument("-lin", "--linux")
+        .help("generate (and run) on linux")
+        .default_value(false)
+        .implicit_value(true);    
+    program.add_argument("--c")
+        .help("generate C code")
+        .default_value(false)
+        .implicit_value(true);    
+    program.add_argument("--cpp")
+        .help("generate c++ code")
+        .default_value(false)
+        .implicit_value(true);    
+    program.add_argument("--java")
+        .help("generate java code")
+        .default_value(false)
+        .implicit_value(true);    
     try {
         program.parse_args(argc, argv);
     } catch (const std::runtime_error& err) {
@@ -92,10 +116,88 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else {
+                if (program["-w"] == true)
+                {
+                    if (program["--c"] == true)
+                    {
+                        /* generate code, windows, C code */
+                        cout << "generate code, windows, C code" << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate code, windows, C++ code */
+                        cout << "generate code, windows, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate code, windows, java code */
+                        cout << "generate code, windows, java code" << endl;
+                    }
+                }else if (program["-lin"] == true)
+                {
+                    if (program["--c"] == true)
+                    {
+                        /* generate code, linux, C code */
+                        cout << "generate code, linux, C code " << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate code, linux, C++ code */
+                        cout << "generate code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate code, linux, java code */
+                        cout << "generate code, linux, java code" << endl;
+                    } 
+                    
+                }
                 //auto path = program.get<vector<string>>("-o")[0];
-                std::string path = "/home/clexma/Desktop/generated";
-                CCodeGenerator gen = CCodeGenerator();
-                gen.generateAll(path, &model);
+                // std::string path = "/home/hejl/Desktop/generated";
+                // CCodeGenerator gen = CCodeGenerator();
+                // gen.generateAll(path, &model);
+            }
+        }else if (program["-r"] == true) {
+            cout << "-r" << endl;
+            if (program["-engine=simulation"] == true) {
+                cout << "simulation" << endl;
+            } else if (program["-engine=real"] == true) {
+                cout << "real" << endl;
+            } else {
+                if (program["-w"] == true)
+                {
+                    if (program["--c"] == true)
+                    {
+                        /* generate and run code, windows, C code */
+                        cout << "generate and run code, windows, C code" << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate and run code, windows, C++ code */
+                        cout << "generate and run code, windows, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate and run code, windows, java code */
+                        cout << "generate and run code, windows, java code" << endl;
+                    }
+                } else if (program["-lin"] == true)
+                {
+                    if (program["--c"] == true)
+                    {
+                        /* generate and run code, linux, C code */
+                        cout << "generate and run code, linux, C code" << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate and run code, linux, C++ code */
+                        cout << "generate and run code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate and run code, linux, java code */
+                        cout << "generate and run code, linux, java code" << endl;
+                    } 
+                    
+                } else {
+                    auto path = program.get<vector<string>>("-o")[0];
+                    std::string path = "/home/hejl/Desktop/generated";
+                    CCodeGenerator gen = CCodeGenerator();
+                    gen.generateAll(path, &model);
+                }
+              
             }
         }
     } catch (const string& e) {
