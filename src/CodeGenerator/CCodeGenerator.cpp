@@ -314,7 +314,7 @@ namespace isadt{
 						commStr += "\tint length_ = 1000;\n";
 						commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
 						commStr += "\t/*Add MAC Address here*/\n";
-						commStr += "\tushort mac[6];\n";
+						commStr += "\tchar mac[6];\n";
 						commStr += "\tEtherReceiver er;\n";
 						commStr += "\tpcap_if_t* dev = er.getDevice();\n";
 						commStr += "\tchar errbuf[500];\n";
@@ -331,7 +331,7 @@ namespace isadt{
 						commStr += "\tint length_ = tempData" + proc->getName() + "Str.size();\n";
 						commStr += "\tu_char* data_ = (u_char*)malloc(length_*sizeof(u_char));\n"; 	
 						commStr += "\t/*Add MAC Address here*/\n";
-						commStr += "\tushort mac[6];\n";
+						commStr += "\tchar mac[6];\n";
 						commStr += "\tEtherSender snd(mac);\n";
 						commStr += "\tsnd.getDevice();\n";
 						commStr += "\t/*add your identifier of the sender*/\n";
