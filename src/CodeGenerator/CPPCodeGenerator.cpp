@@ -1,4 +1,4 @@
-#include "CodeGenerator/CCodeGenerator.hpp"
+#include "CodeGenerator/CPPCodeGenerator.hpp"
 #define INCLUDE_HEADER "#include <stdio.h>\n#include <thread>\n#include <stdlib.h>\n"
 #define SIM_INCLUDE ""
 #define REAL_INCLUDE "#include \"../CommLib/NetComm/include/EtherReceiver.hpp\"\n\
@@ -16,12 +16,12 @@
 #define TAB "\t"
 #define DEMO 1
 namespace isadt{
-        std::list<Plugin*>  CCodeGenerator::getPlugins()
+        std::list<Plugin*>  CPPCodeGenerator::getPlugins()
         { 
             return this->plugins;
         }
         // methods for generating header file 
-        void  CCodeGenerator::generateHeaderFile(std::string path, Process* proc)
+        void  CPPCodeGenerator::generateHeaderFile(std::string path, Process* proc)
         {
             std::ofstream outHeadFile;
 		    //TODO: make sure here
@@ -72,13 +72,13 @@ namespace isadt{
 		    outHeadFile.close();
         }
 
-		std::string CCodeGenerator::generateClassPre(Process* proc){
+		std::string CPPCodeGenerator::generateClassPre(Process* proc){
 			std::string result = "class " + proc->getName() + " {" + CR;
 			result += "\tprivate: \n";
 			return result;
 		}
 
-        std::string  CCodeGenerator::generateCommonIncludes()
+        std::string  CPPCodeGenerator::generateCommonIncludes()
         {
             std::string commonIncludes =
 			"#include <iostream>\n#include <string>\n#include <vector>\n#include <stdlib.h>\n#include <thread>\n#include <stdlib.h>\n#include <sstream>\n";
@@ -87,7 +87,7 @@ namespace isadt{
 			return commonIncludes;
         }
 
-        std::string  CCodeGenerator::generateCommunicationIncludes()
+        std::string  CPPCodeGenerator::generateCommunicationIncludes()
         {
 			// for real world we use libcap or libnet for the ethernet comm
 			// use linux socket for the udp transmission
@@ -96,13 +96,13 @@ namespace isadt{
 		    return communicationIncludes;
         }
 
-		std::string CCodeGenerator::generateCryptoIncludes()
+		std::string CPPCodeGenerator::generateCryptoIncludes()
 		{
 			std::string cryptoIncludes = CRYPTO_INCLUDE;
 			return cryptoIncludes;
 		}
 
-        std::string  CCodeGenerator::generateDependIncludes(Process* currentProc)
+        std::string  CPPCodeGenerator::generateDependIncludes(Process* currentProc)
         {
             //TODO: make sure here
             std::string dependHeaders = CR;
@@ -118,14 +118,14 @@ namespace isadt{
 		    return dependHeaders;
         }
 
-        std::string  CCodeGenerator::appendAttrDef(std::string inStr, Attribute* attr)
+        std::string  CPPCodeGenerator::appendAttrDef(std::string inStr, Attribute* attr)
         {
             std::string result = "";
 		    result += attr->getType()->getName() + " " + attr->getIdentifier() + ";\n";
 		    return result;
         }
 
-        std::string CCodeGenerator::appendMethodDeclaration(std::string inStr, Method* method)
+        std::string CPPCodeGenerator::appendMethodDeclaration(std::string inStr, Method* method)
         {
 			std::cout << "appendMethod Declare" << std::endl;
             std::string result = "";
@@ -145,7 +145,7 @@ namespace isadt{
 		    return result;
         }
 
-		std::string CCodeGenerator::appendCommMethodDeclaration(std::string inStr, CommMethod* method){
+		std::string CPPCodeGenerator::appendCommMethodDeclaration(std::string inStr, CommMethod* method){
 			
 			std::cout << "appendCommMethod Declare" << std::endl;
 			std::string result = "";
@@ -167,7 +167,7 @@ namespace isadt{
 		    return result;
 		} 
 
-        std::string CCodeGenerator::generateHeaderIfDef(Process* proc)
+        std::string CPPCodeGenerator::generateHeaderIfDef(Process* proc)
         {
             std::string result = "#ifndef " + proc->getName() + "_" + "h" + CR;
 		    result += "#define " + proc->getName() + "_" + "h" + CR;
@@ -175,7 +175,7 @@ namespace isadt{
         }
 
         // methods for generating src file
-        void  CCodeGenerator::generateSrcFile(std::string path, Process* proc)
+        void  CPPCodeGenerator::generateSrcFile(std::string path, Process* proc)
         {
             //TODO: imple later
             std::string outStr = "";
@@ -194,7 +194,7 @@ namespace isadt{
 		    outSrcFile.close();
         }
 
-        std::string  CCodeGenerator::generateStateDef(Process* proc)
+        std::string  CPPCodeGenerator::generateStateDef(Process* proc)
         {
             std::string defs = "";
 		    //defs += "#define STATE__START__STATE 0\n";
@@ -214,7 +214,7 @@ namespace isadt{
 		    return defs;
         }
         
-        std::string CCodeGenerator::generateTempStorage(Process* proc){
+        std::string CPPCodeGenerator::generateTempStorage(Process* proc){
 			std::string outStr = "";
 			outStr += "static pcap_t* dev" + proc->getName() + ";\n";
 			outStr += "static char* tempData" + proc->getName() + "\n;";
@@ -222,7 +222,7 @@ namespace isadt{
 			return outStr;
 		}
 
-		std::string  CCodeGenerator::generateSrcIncludes(Process* proc)
+		std::string  CPPCodeGenerator::generateSrcIncludes(Process* proc)
 		{
 			//TODO: add path latter
 			std::string headerPath;
@@ -230,7 +230,7 @@ namespace isadt{
 			return srcIncludeStr;
 		}
 
-        std::string  CCodeGenerator::generateSrcMethods(Process* proc)
+        std::string  CPPCodeGenerator::generateSrcMethods(Process* proc)
 		{		
 			std::string outStr = "";
 			/*code generation for base methods*/
@@ -493,7 +493,7 @@ namespace isadt{
 			return outStr;
 		}
 
-        std::string CCodeGenerator::generateMain(Process* proc)
+        std::string CPPCodeGenerator::generateMain(Process* proc)
 		{
 			std::string outStr = "";
 			// current state 
@@ -506,15 +506,15 @@ namespace isadt{
 			return outStr;
 		}
 
-		std::string CCodeGenerator::generateInstObject(Process* proc){
+		std::string CPPCodeGenerator::generateInstObject(Process* proc){
 			std::string outStr = "";
 			outStr += proc->getName() + " obj;\n";
 			outStr += "/*Initialize the object by user*/\n";
 			return outStr;
 		}
 
-        //std::string  CCodeGenerator::generateGuardVarsDef(Process* proc);
-        std::string  CCodeGenerator::generateSMLoop(Process* proc)
+        //std::string  CPPCodeGenerator::generateGuardVarsDef(Process* proc);
+        std::string  CPPCodeGenerator::generateSMLoop(Process* proc)
 		{
 			std::string outStr = "";
 			std::cout << "generateSMLoopMain" << std::endl;
@@ -553,7 +553,7 @@ namespace isadt{
 			return outStr;
 		}
 
-		std::string CCodeGenerator::generateStateBehavior(StateMachine* sm)
+		std::string CPPCodeGenerator::generateStateBehavior(StateMachine* sm)
 		{
 			std::string casesBody;
 			std::string caseTab = "\t\t\t";
@@ -625,7 +625,7 @@ namespace isadt{
 		}
 
         /*-------------Generate UserTypes-------------*/
-		void CCodeGenerator::generateUserTypes(std::string path, Model* model)
+		void CPPCodeGenerator::generateUserTypes(std::string path, Model* model)
 		{
 			std::ofstream outUserTypeFile;
 		    //TODO: make sure here
@@ -687,7 +687,7 @@ namespace isadt{
 			outUserTypeFile.close();
 		}
 
-		std::string CCodeGenerator::generateSerializeBinding(Model* model){
+		std::string CPPCodeGenerator::generateSerializeBinding(Model* model){
 			std::string outStr = "namespace boost{\n";
 			outStr += "\tnamespace serialization{\n";
 			
@@ -708,7 +708,7 @@ namespace isadt{
 		}
 
 
-		std::string CCodeGenerator::generateTimer(){
+		std::string CPPCodeGenerator::generateTimer(){
 			std::string outStr = "";
 			outStr += "class Timer {\n";
 			outStr += "\tpublic: \n";
@@ -719,7 +719,7 @@ namespace isadt{
 		}
 
 		/*---------Generate Compile Auxiliary--------*/
-		void CCodeGenerator::generateCompileFile(std::string path, Model* model)
+		void CPPCodeGenerator::generateCompileFile(std::string path, Model* model)
 		{
 			std::ofstream outCompileFile;
 			std::cout << "generate compile auxiliary" << std::endl;
@@ -745,13 +745,13 @@ namespace isadt{
 		}
 
 		/*---------Gen---------*/
-        void  CCodeGenerator::generateCodeProc(std::string path, Process* proc)
+        void  CPPCodeGenerator::generateCodeProc(std::string path, Process* proc)
 		{
 			this->generateHeaderFile(path, proc);
 			this->generateSrcFile(path, proc);
 		}
 
-        void CCodeGenerator::generateAll(std::string path, Model* model)
+        void CPPCodeGenerator::generateAll(std::string path, Model* model)
 		{
 			this->generateUserTypes(path, model);
 			for(Process* proc : model->getProcesses())
@@ -763,12 +763,12 @@ namespace isadt{
 
 
         //constructors
-         CCodeGenerator::CCodeGenerator(/*args*/)
+         CPPCodeGenerator::CPPCodeGenerator(/*args*/)
          {
 
          }
 
-         CCodeGenerator::~CCodeGenerator()
+         CPPCodeGenerator::~CPPCodeGenerator()
          {
 
          }

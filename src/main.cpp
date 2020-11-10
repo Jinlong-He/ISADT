@@ -4,6 +4,8 @@
 #include "../include/Parser/XmlParser/XmlParser.hpp"
 #include "../include/Parser/LParser/LParser.hpp"
 #include "../include/CodeGenerator/CCodeGenerator.hpp"
+#include "../include/CodeGenerator/CPPCodeGenerator.hpp"
+#include "../include/CodeGenerator/JavaCodeGenerator.hpp"
 #include "../include/Manage.hpp"
 #include "../include/Parser/ArgParser/argparse.hpp"
 using namespace std;
@@ -121,14 +123,25 @@ int main(int argc, char *argv[]) {
                     if (program["--c"] == true)
                     {
                         /* generate code, windows, C code */
+                        std::string path = "～/Desktop/generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, windows, C code" << endl;
                     }else if (program["--cpp"] == true)
                     {
                         /* generate code, windows, C++ code */
+
+                        std::string path = "./generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, windows, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
                         /* generate code, windows, java code */
+
+                        std::string path = "./generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, windows, java code" << endl;
                     }
                 }else if (program["-lin"] == true)
@@ -136,14 +149,26 @@ int main(int argc, char *argv[]) {
                     if (program["--c"] == true)
                     {
                         /* generate code, linux, C code */
+
+                        std::string path = "./generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, linux, C code " << endl;
                     }else if (program["--cpp"] == true)
                     {
                         /* generate code, linux, C++ code */
+
+                        std::string path = "./generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, linux, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
                         /* generate code, linux, java code */
+
+                        std::string path = "./generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate code, linux, java code" << endl;
                     } 
                     
@@ -165,14 +190,26 @@ int main(int argc, char *argv[]) {
                     if (program["--c"] == true)
                     {
                         /* generate and run code, windows, C code */
-                        cout << "generate and run code, windows, C code" << endl;
+                        std::string path = "./generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        //system("python3 ./generated/compileAndRun.py");
                     }else if (program["--cpp"] == true)
                     {
                         /* generate and run code, windows, C++ code */
+                        std::string path = "./generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate and run code, windows, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
                         /* generate and run code, windows, java code */
+
+                        std::string path = "./generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
                         cout << "generate and run code, windows, java code" << endl;
                     }
                 } else if (program["-lin"] == true)
@@ -180,20 +217,38 @@ int main(int argc, char *argv[]) {
                     if (program["--c"] == true)
                     {
                         /* generate and run code, linux, C code */
+                        std::string path = "./generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
                         cout << "generate and run code, linux, C code" << endl;
                     }else if (program["--cpp"] == true)
                     {
                         /* generate and run code, linux, C++ code */
+                        std::string path = "./generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
                         cout << "generate and run code, linux, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
                         /* generate and run code, linux, java code */
+                        std::string path = "./generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
                         cout << "generate and run code, linux, java code" << endl;
                     } 
                     
                 } else {
                     auto path = program.get<vector<string>>("-o")[0];
-                    std::string path = "/home/hejl/Desktop/generated";
+                    path = "./generated";
                     CCodeGenerator gen = CCodeGenerator();
                     gen.generateAll(path, &model);
                 }
