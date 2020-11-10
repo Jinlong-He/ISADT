@@ -114,7 +114,7 @@ namespace isadt{
 		    	dependHeaders += "#include \"" + headerPath + "\\" + p->getName() + ".h\" \n";
 		    }
             */
-            dependHeaders += "#include \"../UserType.java\" \n";
+            dependHeaders += "#include \"../UserType.hpp\" \n";
 		    return dependHeaders;
         }
 

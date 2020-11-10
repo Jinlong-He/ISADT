@@ -118,67 +118,113 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else {
+                std::cout << "else";
                 if (program["-w"] == true)
                 {
+                    cout << "-w" << endl;
                     if (program["--c"] == true)
                     {
+                        cout << "--c" << endl;
                         /* generate code, windows, C code */
-                        std::string path = "～/Desktop/generated";
+                        std::string path = "../../../generated";
                         CCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, windows, C code" << endl;
                     }else if (program["--cpp"] == true)
                     {
+                        cout << "--cpp" << endl;
                         /* generate code, windows, C++ code */
 
-                        std::string path = "./generated";
+                        std::string path = "../../../generated";
                         CPPCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, windows, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
+                        cout << "--java" << endl;
                         /* generate code, windows, java code */
 
-                        std::string path = "./generated";
+                        std::string path = "../../../generated";
                         JavaCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, windows, java code" << endl;
+                    } else {
+                        
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+                        cout << "generate code, windows, C code" << endl;
                     }
-                }else if (program["-lin"] == true)
+                } else if (program["-lin"] == true)
                 {
+                    std::cout << "-lin" << std::endl;
                     if (program["--c"] == true)
                     {
                         /* generate code, linux, C code */
-
-                        std::string path = "./generated";
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
                         CCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, linux, C code " << endl;
                     }else if (program["--cpp"] == true)
                     {
                         /* generate code, linux, C++ code */
-
-                        std::string path = "./generated";
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
                         CPPCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, linux, C++ code" << endl;
                     }else if (program["--java"] == true)
                     {
                         /* generate code, linux, java code */
-
-                        std::string path = "./generated";
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
                         JavaCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate code, linux, java code" << endl;
-                    } 
+                    } else {
+                        
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+                        cout << "generate code, linux, C code " << endl;
+                    }
                     
+                } else {if (program["--c"] == true)
+                    {
+                        /* generate code, linux, C code */
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+                        cout << "generate code, linux, C code " << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate code, linux, C++ code */
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
+                        cout << "generate code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate code, linux, java code */
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
+                        cout << "generate code, linux, java code" << endl;
+                    } else {
+                        std::cout << "here";
+                        auto path = program.get<vector<string>>("-o")[0];
+                        path = "../../../generated";
+                        CCodeGenerator gen = CCodeGenerator();
+                        gen.generateAll(path, &model);
+
+                    }
                 }
-                //auto path = program.get<vector<string>>("-o")[0];
-                // std::string path = "/home/hejl/Desktop/generated";
-                // CCodeGenerator gen = CCodeGenerator();
-                // gen.generateAll(path, &model);
             }
-        }else if (program["-r"] == true) {
+        } else if (program["-r"] == true) {
             cout << "-r" << endl;
             if (program["-engine=simulation"] == true) {
                 cout << "simulation" << endl;
@@ -187,10 +233,12 @@ int main(int argc, char *argv[]) {
             } else {
                 if (program["-w"] == true)
                 {
+                    cout << "-w" << endl;
                     if (program["--c"] == true)
                     {
+                        cout << "--c" << endl;
                         /* generate and run code, windows, C code */
-                        std::string path = "./generated";
+                        std::string path = "../../../generated";
                         CCodeGenerator gen;
                         gen.generateAll(path, &model);
 
@@ -198,8 +246,9 @@ int main(int argc, char *argv[]) {
                         //system("python3 ./generated/compileAndRun.py");
                     }else if (program["--cpp"] == true)
                     {
+                        cout << "--cpp" << endl;
                         /* generate and run code, windows, C++ code */
-                        std::string path = "./generated";
+                        std::string path = "../../../generated";
                         CPPCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate and run code, windows, C++ code" << endl;
@@ -207,17 +256,20 @@ int main(int argc, char *argv[]) {
                     {
                         /* generate and run code, windows, java code */
 
-                        std::string path = "./generated";
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
                         JavaCodeGenerator gen;
                         gen.generateAll(path, &model);
                         cout << "generate and run code, windows, java code" << endl;
                     }
                 } else if (program["-lin"] == true)
                 {
+                    cout << "-lin" << endl;
                     if (program["--c"] == true)
                     {
                         /* generate and run code, linux, C code */
-                        std::string path = "./generated";
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
                         CCodeGenerator gen;
                         gen.generateAll(path, &model);
 
@@ -227,7 +279,8 @@ int main(int argc, char *argv[]) {
                     }else if (program["--cpp"] == true)
                     {
                         /* generate and run code, linux, C++ code */
-                        std::string path = "./generated";
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
                         CPPCodeGenerator gen;
                         gen.generateAll(path, &model);
 
@@ -237,7 +290,8 @@ int main(int argc, char *argv[]) {
                     }else if (program["--java"] == true)
                     {
                         /* generate and run code, linux, java code */
-                        std::string path = "./generated";
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
                         JavaCodeGenerator gen;
                         gen.generateAll(path, &model);
 
@@ -247,13 +301,50 @@ int main(int argc, char *argv[]) {
                     } 
                     
                 } else {
-                    auto path = program.get<vector<string>>("-o")[0];
-                    path = "./generated";
-                    CCodeGenerator gen = CCodeGenerator();
-                    gen.generateAll(path, &model);
+                    if (program["--c"] == true)
+                    {
+                        /* generate and run code, linux, C code */
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
+                        cout << "generate and run code, linux, C code" << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate and run code, linux, C++ code */
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
+                        CPPCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
+                        cout << "generate and run code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate and run code, linux, java code */
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
+                        JavaCodeGenerator gen;
+                        gen.generateAll(path, &model);
+
+                        cout << "generate and run code,PCodeGenerator windows, C code" << endl;
+                        system("python3 ./generatedcompileAndRun.py");
+                        cout << "generate and run code, linux, java code" << endl;
+                    } else {
+                        auto path = program.get<vector<string>>("-o")[0];
+                        path = "../../../generated";
+                        CCodeGenerator gen = CCodeGenerator();
+                        gen.generateAll(path, &model);
+                    }
                 }
               
             }
+        } else {
+            std::cout << "here" << std::endl;
         }
     } catch (const string& e) {
         cout << e << endl;
