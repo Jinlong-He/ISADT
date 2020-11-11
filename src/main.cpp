@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
             } else if(program["--refine"] == true){
-
+                std::cout << "heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" << std::endl;
                 std::cout << "refine";
                 if (program["-w"] == true)
                 {
@@ -195,7 +195,8 @@ int main(int argc, char *argv[]) {
                         cout << "generate code, linux, C code " << endl;
                     }
                     
-                } else {if (program["--c"] == true)
+                } else {
+                    if (program["--c"] == true)
                     {
                         /* generate code, linux, C code */
                         cout << "--c" << endl;
