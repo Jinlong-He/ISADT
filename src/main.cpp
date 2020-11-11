@@ -87,6 +87,10 @@ int main(int argc, char *argv[]) {
         .help("generate java code")
         .default_value(false)
         .implicit_value(true);    
+    program.add_argument("--refine")
+        .help("generate refine code")
+        .default_value(false)
+        .implicit_value(true);
     try {
         program.parse_args(argc, argv);
     } catch (const std::runtime_error& err) {
@@ -117,7 +121,115 @@ int main(int argc, char *argv[]) {
                 cout << "simulation" << endl;
             } else if (program["-engine=real"] == true) {
                 cout << "real" << endl;
-            } else {
+            } else if(program["--refine"] == true){
+
+                std::cout << "refine";
+                if (program["-w"] == true)
+                {
+                    cout << "-w" << endl;
+                    if (program["--c"] == true)
+                    {
+                        cout << "--c" << endl;
+                        /* generate code, windows, C code */
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, windows, C code" << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        cout << "--cpp" << endl;
+                        /* generate code, windows, C++ code */
+
+                        std::string path = "../../../generated";
+                        CPPCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, windows, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        cout << "--java" << endl;
+                        /* generate code, windows, java code */
+
+                        std::string path = "../../../generated";
+                        JavaCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, windows, java code" << endl;
+                    } else {
+                        
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, windows, C code" << endl;
+                    }
+                } else if (program["-lin"] == true)
+                {
+                    std::cout << "-lin" << std::endl;
+                    if (program["--c"] == true)
+                    {
+                        /* generate code, linux, C code */
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, C code " << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate code, linux, C++ code */
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
+                        CPPCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate code, linux, java code */
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
+                        JavaCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, java code" << endl;
+                    } else {
+                        
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, C code " << endl;
+                    }
+                    
+                } else {if (program["--c"] == true)
+                    {
+                        /* generate code, linux, C code */
+                        cout << "--c" << endl;
+                        std::string path = "../../../generated";
+                        CCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, C code " << endl;
+                    }else if (program["--cpp"] == true)
+                    {
+                        /* generate code, linux, C++ code */
+                        cout << "--cpp" << endl;
+                        std::string path = "../../../generated";
+                        CPPCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, C++ code" << endl;
+                    }else if (program["--java"] == true)
+                    {
+                        /* generate code, linux, java code */
+                        cout << "--java" << endl;
+                        std::string path = "../../../generated";
+                        JavaCodeGenerator gen;
+                        gen.generateRefine(path, &model);
+                        cout << "generate code, linux, java code" << endl;
+                    } else {
+                        std::cout << "here";
+                        auto path = program.get<vector<string>>("-o")[0];
+                        path = "../../../generated";
+                        CCodeGenerator gen = CCodeGenerator();
+                        gen.generateRefine(path, &model);
+
+                    }
+                }
+            } 
+            else {
                 std::cout << "else";
                 if (program["-w"] == true)
                 {

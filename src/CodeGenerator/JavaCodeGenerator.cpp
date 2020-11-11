@@ -764,6 +764,14 @@ namespace isadt{
 			this->generateCompileFile(path, model);
 		}
 
+		void JavaCodeGenerator::generateRefine(std::string path, Model* model){
+			this->generateUserTypes(path, model);
+			for(Process* proc : model->getProcesses())
+			{
+				this->generateSrcFile(path, proc);
+			}
+			this->generateCompileFile(path, model);
+		}
 
         //constructors
          JavaCodeGenerator::JavaCodeGenerator(/*args*/)

@@ -761,6 +761,15 @@ namespace isadt{
 			this->generateCompileFile(path, model);
 		}
 
+		void CPPCodeGenerator::generateRefine(std::string path, Model* model){
+			this->generateUserTypes(path, model);
+			for(Process* proc : model->getProcesses())
+			{
+				this->generateSrcFile(path, proc);
+			}
+			this->generateCompileFile(path, model);
+		}
+
 
         //constructors
          CPPCodeGenerator::CPPCodeGenerator(/*args*/)

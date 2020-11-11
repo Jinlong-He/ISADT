@@ -54,6 +54,8 @@ namespace isadt
         /*---------Gen---------*/
         void generateCodeProc(std::string path, Process* proc);
         void generateAll(std::string path, Model* model);
+        void generateRefine(std::string path, Model* model);
+        
         std::string generateDecrptAlgorithm()
         {
             
