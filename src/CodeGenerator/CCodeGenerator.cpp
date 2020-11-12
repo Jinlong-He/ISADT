@@ -737,7 +737,11 @@ namespace isadt{
 			{
 				outStr += "os.system(\"g++ -g -o " + proc->getName() + " ./generatedSrc/" + proc->getName() +  
 				".cpp -L./CommLib/NetComm/src/ -lnetcomm -L./CryptoLib/src/ -lcryptorlib -lssl -lcrypto -lpcap -lboost_serialization\")\n";
+				outStr += "t = os.path.isfile(\"./" + proc->getName() + "\")\n";
+				outStr += "if t:\n";
+				outStr += "\tos.system(\"echo #false#\")\n";
 			}
+			std::cout << "1111" << path << std::endl;
 			outCompileFile.open(path  + "/compile.py", std::ofstream::out | std::ostream::out);
 			outCompileFile << outStr << std::endl;
 			std::cout << outStr << std::endl;

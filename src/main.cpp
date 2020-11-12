@@ -91,6 +91,10 @@ int main(int argc, char *argv[]) {
         .help("generate refine code")
         .default_value(false)
         .implicit_value(true);
+    program.add_argument("-k", "--check")
+        .help("generate java code")
+        .default_value(false)
+        .implicit_value(true);
     try {
         program.parse_args(argc, argv);
     } catch (const std::runtime_error& err) {
@@ -100,6 +104,12 @@ int main(int argc, char *argv[]) {
     }
     auto file = program.get<vector<string>>("-i")[0];
     try {
+        if(program["-k"] == true){
+            Model model;
+            XmlParser::parse(file.c_str(), &model);
+            cout << "#true#";
+        }
+
         Model model;
         XmlParser::parse(file.c_str(), &model);
         if (program["-v"] == true) {
@@ -115,6 +125,7 @@ int main(int argc, char *argv[]) {
                 model.mkCommProductStateMahine();
             }
         }
+        
         if (program["-g"] == true) {
             cout << "-g" << endl;
             if (program["-engine=simulation"] == true) {

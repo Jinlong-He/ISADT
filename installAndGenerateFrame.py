@@ -1,6 +1,6 @@
 import os
 import sys
-xmlPath = "../backxml/backxml.xml"
+xmlPath = "../backxml/current.xml"
 
 #os.system("rm -rf ~/Desktop/generated")
 
